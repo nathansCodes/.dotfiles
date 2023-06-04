@@ -1,0 +1,9 @@
+# tmux plugins dir
+tmux/tpm/plugins/*
+
+# compiled packer file directory
+nvim/plugin/packer_compiled.lua
+
+# undo files directory
+nvim/undodir/*
+nvim/undodir
