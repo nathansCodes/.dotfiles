@@ -1,3 +1,6 @@
 [submodule "nvim"]
 	url = https://github.com/NathansCodes/nvim.git
 	path = nvim
+[submodule "btop/themes"]
+	path = btop/themes
+	url = https://github.com/rose-pine/btop.git
