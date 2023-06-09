@@ -1,6 +1,6 @@
 # tmux plugins dir
-tmux/tpm/plugins/*
-tmux/tpm/plugins/
+tmux/plugins/*
+tmux/plugins/
 
 # compiled packer file directory
 nvim/plugin/packer_compiled.lua
