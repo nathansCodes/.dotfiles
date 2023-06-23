@@ -4,3 +4,21 @@
 [submodule "btop/themes"]
 	path = btop/themes
 	url = https://github.com/rose-pine/btop.git
+[submodule "eww"]
+	path = eww
+	url = https://github.com/saimoomedits/eww-widgets.git
+[submodule "awesome/ui/widgets"]
+	path = awesome/ui/widgets
+	url = https://github.com/streetturtle/awesome-wm-widgets.git
+[submodule "awesome/awesome-buttons"]
+	path = awesome/awesome-buttons
+	url = https://github.com/streetturtle/awesome-buttons.git
+[submodule "awesome/awesome-wm-widgets"]
+	path = awesome/awesome-wm-widgets
+	url = https://github.com/streetturtle/awesome-wm-widgets.git
+[submodule "awesome/net_widgets"]
+	path = awesome/net_widgets
+	url = https://github.com/pltanton/net_widgets.git
+[submodule "awesome/vicious"]
+	path = awesome/vicious
+	url = https://github.com/vicious-widgets/vicious.git
