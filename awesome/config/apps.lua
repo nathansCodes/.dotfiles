@@ -17,7 +17,7 @@ return {
 		--- Default file manager
 		file_manager = "pcmanfm",
 		--- Default network manager
-		network_manager = "alacritty -e nmtui",
+		network_manager = "nm-connection-editor",
 		--- Default bluetooth manager
 		bluetooth_manager = "blueman-manager",
 		--- Default power manager
