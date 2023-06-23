@@ -1,10 +1,10 @@
 local awful = require("awful")
 
+-- screen layout
+awful.spawn("/home/nathan/.screenlayout/default.sh")
+
 -- compositor
-awful.spawn.with_shell("picom --animations --animation-for-open-window zoom")
+awful.spawn.with_shell("picom")
 
 -- wallpaper
 awful.spawn.with_shell("nitrogen --restore")
-
--- screen layout
-awful.spawn("/home/nathan/.screenlayout/default.sh")
