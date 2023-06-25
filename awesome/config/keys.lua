@@ -30,8 +30,22 @@ awful.keyboard.append_global_keybindings({
               {description = "open firefox", group = "launcher"}),
     awful.key({ modkey,           }, "e", function () awful.spawn(apps.default.file_manager) end,
               {description = "open file manager (pcmanfm)", group = "launcher"}),
-    awful.key({ modkey },            "r",     function () awful.util.spawn(apps.default.app_launcher) end,
+    awful.key({ modkey,           }, "r",     function () awful.util.spawn(apps.default.app_launcher) end,
               {description = "run prompt", group = "launcher"}),
+})
+
+-- Rofi scripts
+awful.keyboard.append_global_keybindings({
+    awful.key({ modkey },            "r",     function () awful.util.spawn(apps.default.app_launcher) end,
+              {description = "start rofi", group = "rofi"}),
+    awful.key({ modkey },            "'",     function () awful.util.spawn("rofi -modi emoji -show emoji") end,
+              {description = "run prompt", group = "rofi"}),
+    awful.key({ modkey },            "c",     function () awful.spawn.with_shell("CM_LAUNCHER=rofi clipmenu") end,
+              {description = "show clipboard menu", group = "rofi"}),
+    awful.key({ modkey },            "/",     function () awful.spawn.with_shell("rofi -show calc -modi calc -no-show-match -no-sort -calc-command \"echo -n '{result}' | xsel\"") end,
+              {description = "show clipboard menu", group = "rofi"}),
+    awful.key({ modkey },            "o",     function () awful.spawn.with_shell("rofi-mpc") end,
+              {description = "show clipboard menu", group = "rofi"}),
 })
 
 -- Tags related keybindings
