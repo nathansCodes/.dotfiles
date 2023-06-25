@@ -13,11 +13,12 @@
 local awful = require("awful")
 local watch = require("awful.widget.watch")
 local wibox = require("wibox")
+local beautiful = require("beautiful")
 local clickable_container = require("ui.widgets.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 
-local PATH_TO_ICONS = gears.filesystem.get_configuration_dir() .. "ui/icons/bluetooth/"
+local is_on
 local checker
 
 
@@ -28,9 +29,11 @@ local checker
 
 local widget = wibox.widget {
    {
-      id = "icon",
-      widget = wibox.widget.imagebox,
-      resize = true
+      id = "text",
+      text = "󰂯",
+      widget = wibox.widget.textbox,
+      resize = true,
+      font = beautiful.font .. " Medium 14",
    },
    layout = wibox.layout.align.horizontal
 }
@@ -40,43 +43,50 @@ widget_button:buttons(
    gears.table.join(
       awful.button({}, 1, nil,
          function()
-            awful.spawn("blueman-manager")
+             awful.spawn("blueman-manager")
+         end
+      ),
+      awful.button({}, 3, nil,
+         function()
+             if is_on then
+                 awful.spawn("bluetoothctl power off")
+             else
+                 awful.spawn("bluetoothctl power on")
+             end
+             is_on = not is_on
          end
       )
    )
 )
 
-awful.tooltip(
-   {
-      objects = {widget_button},
-      mode = "outside",
-      align = "right",
-      timer_function = function()
-         if checker ~= nil then
+awful.tooltip {
+    objects = {widget_button},
+    mode = "outside",
+    align = "right",
+    timer_function = function()
+        if is_on then
             return "Bluetooth is on"
-         else
+        else
             return "Bluetooth is off"
-         end
-      end,
-      preferred_positions = {"right", "left", "top", "bottom"}
-   }
-)
+        end
+    end,
+    preferred_positions = {"right", "left", "top", "bottom"}
+}
 
 local last_bluetooth_check = os.time()
-watch("bluetoothctl --monitor list", 5,
-   function(_, stdout)
-      -- Check if there  bluetooth
-      checker = stdout:match("Controller") -- If 'Controller' string is detected on stdout
-      local widget_icon_name
-      if (checker ~= nil) then
-         widget_icon_name = "bluetooth"
-      else
-         widget_icon_name = "bluetooth-off"
-      end
-      widget.icon:set_image(PATH_TO_ICONS .. widget_icon_name .. ".svg")
-      collectgarbage("collect")
-   end,
-   widget
+watch("bluetoothctl", 5, function(_, stdout)
+        -- Check if there bluetooth is on or off
+        checker = stdout:match("PowerState: off")
+        if (checker ~= nil) then
+            widget.text.set_text("󰂯")
+            is_on = true
+        else
+            widget.text.set_text("󰂲")
+            is_on = false
+        end
+        collectgarbage("collect")
+    end,
+    widget
 )
 
 return widget_button
