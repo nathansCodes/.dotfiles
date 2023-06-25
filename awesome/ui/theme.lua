@@ -49,11 +49,12 @@ theme.wibar_fg       = theme.rose
 theme.wibar_bg       = theme.bg_normal .. theme.wibar_transparency
 --theme.wibar_border_color = theme.
 
-theme.useless_gap    = dpi(0)
-theme.border_width   = dpi(4)
-theme.border_normal  = theme.base
-theme.border_focus   = theme.rose
-theme.border_marked  = theme.gold
+theme.useless_gap       = dpi(6)
+theme.border_width      = dpi(4)
+theme.gap_single_client = true
+theme.border_normal     = theme.base
+theme.border_focus      = theme.rose
+theme.border_marked     = theme.gold
 
 -- There are other variable sets
 -- overriding the default one when
