@@ -15,4 +15,7 @@ export FZF_DEFAULT_OPTS="
 	--color=spinner:#f6c177,info:#9ccfd8,separator:#44415a
 	--color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
 
+# configure clipmenu to use rofi
+export CM_LAUNCHER=rofi
+
 neofetch
