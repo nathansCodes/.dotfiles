@@ -46,7 +46,7 @@ mouse:
 
 key_bindings:
   - { key: P,              mods: Control,        mode: ~Vi,        action: Paste            }
-  - { key: Y,              mods: Control,                          action: Copy             }
+  - { key: Y,              mods: Control,        mode: Vi|~Search, action: Copy             }
   - { key: Slash,          mods: Control,        mode: ~Search,    action: SearchForward    }
   - { key: Slash,          mods: Control|Shift,  mode: ~Search,    action: SearchBackward   }
   - { key: C,              mods: Control|Shift,  mode: Vi|~Search, action: ClearSelection   }
@@ -69,8 +69,6 @@ key_bindings:
   - { key: F,      mods: Control,       mode: Vi|~Search, action: ScrollPageDown          }
   - { key: U,      mods: Control,       mode: Vi|~Search, action: ScrollHalfPageUp        }
   - { key: D,      mods: Control,       mode: Vi|~Search, action: ScrollHalfPageDown      }
-  - { key: Y,                           mode: Vi|~Search, action: Copy                    }
-  - { key: Y,                           mode: Vi|~Search, action: ClearSelection          }
   - { key: Copy,                        mode: Vi|~Search, action: ClearSelection          }
   - { key: V,                           mode: Vi|~Search, action: ToggleNormalSelection   }
   - { key: V,      mods: Shift,         mode: Vi|~Search, action: ToggleLineSelection     }
