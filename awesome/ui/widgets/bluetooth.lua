@@ -18,75 +18,83 @@ local clickable_container = require("ui.widgets.clickable-container")
 local gears = require("gears")
 local dpi = require("beautiful").xresources.apply_dpi
 
-local is_on
-local checker
+local apps = require("config.apps")
+
+local checker_on
+local checker_connected
 
 
 -- ===================================================================
 -- Initialization
 -- ===================================================================
 
+return function(size)
+    local widget = wibox.widget {
+		{
+			id = 'icon',
+			text = '󰂯',
+			widget = wibox.widget.textbox,
+            font = beautiful.font .. " Regular " .. (size or 18) - 6,
+		},
+        resize = true,
+		layout = wibox.layout.align.horizontal,
+        expand = "none",
+    }
 
-local widget = wibox.widget {
-   {
-      id = "text",
-      text = "󰂯",
-      widget = wibox.widget.textbox,
-      resize = true,
-      font = beautiful.font .. " Medium 14",
-   },
-   layout = wibox.layout.align.horizontal
-}
-
-local widget_button = clickable_container(wibox.container.margin(widget, dpi(7), dpi(7), dpi(7), dpi(7)))
-widget_button:buttons(
-   gears.table.join(
-      awful.button({}, 1, nil,
-         function()
-             awful.spawn("blueman-manager")
-         end
-      ),
-      awful.button({}, 3, nil,
-         function()
-             if is_on then
-                 awful.spawn("bluetoothctl power off")
-             else
-                 awful.spawn("bluetoothctl power on")
-             end
-             is_on = not is_on
-         end
-      )
-   )
-)
-
-awful.tooltip {
-    objects = {widget_button},
-    mode = "outside",
-    align = "right",
-    timer_function = function()
-        if is_on then
-            return "Bluetooth is on"
+    watch("/home/nathan/.dotfiles/scripts/check_bluetooth.sh", 1, function(_, stdout)
+        checker_connected = stdout:match("connected")
+        checker_on = stdout:match("on")
+        local icon
+        if (checker_connected ~= nil) then
+            icon = "󰂱"
+            widget.icon.font = beautiful.font .. " Regular " .. (size or 18)
+        elseif (checker_on ~= nil) then
+            icon = "󰂯"
+            widget.icon.font = beautiful.font .. " Regular " .. (size or 18) - 6
         else
-            return "Bluetooth is off"
+            icon = "󰂲"
+            widget.icon.font = beautiful.font .. " Regular " .. (size or 18) - 6
         end
-    end,
-    preferred_positions = {"right", "left", "top", "bottom"}
-}
-
-local last_bluetooth_check = os.time()
-watch("bluetoothctl", 5, function(_, stdout)
-        -- Check if there bluetooth is on or off
-        checker = stdout:match("PowerState: off")
-        if (checker ~= nil) then
-            widget.text.set_text("󰂯")
-            is_on = true
-        else
-            widget.text.set_text("󰂲")
-            is_on = false
-        end
+        widget.icon:set_text(icon)
         collectgarbage("collect")
-    end,
-    widget
-)
+    end, widget)
 
-return widget_button
+	local widget_button = wibox.widget {
+		{
+			widget,
+			top = dpi(0),
+			bottom = dpi(0),
+			widget = wibox.container.margin
+		},
+		widget = clickable_container
+	}
+
+	widget_button:buttons(
+		gears.table.join(
+			awful.button({}, 2, nil,
+				function()
+					awful.spawn(apps.default.bluetooth_manager, false)
+				end
+			)
+		)
+	)
+
+
+    awful.tooltip( {
+        objects = {widget_button},
+        mode = "outside",
+        align = "right",
+        timer_function = function()
+            if checker_connected ~= nil then
+                return "Bluetooth connected"
+            elseif checker_on ~= nil then
+                return "Bluetooth is on"
+            else
+                return "Bluetooth is off"
+            end
+        end,
+        preferred_positions = {"right", "left", "top", "bottom"}
+    } )
+
+    return widget_button
+end

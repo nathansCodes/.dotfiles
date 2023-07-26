@@ -28,26 +28,32 @@ theme.highlight_low  = "#2a283e"
 theme.highlight_med  = "#44415a"
 theme.highlight_high = "#56526e"
 
-theme.transparent    = "#00000000"
+theme.opaque            = "ff"
+theme.semi_transparent  = "bf"
+theme.transparent       = "55"
+theme.fully_transparent = "00"
+theme.bg_transparent    = "#00000000"
+
+theme.opacity_active    = 0.8
+theme.opacity_normal    = 0.6
+theme.opacity_new       = 0.6
+theme.opacity_fullscreen= 1.0
 
 theme.font = "CaskaydiaCoveNerdFontMono"
 
-theme.bg             = theme.base
 theme.bg_normal      = theme.base
 theme.bg_focus       = theme.overlay
 theme.bg_urgent      = theme.highlight_med
-theme.bg_minimize    = theme.subtle
+theme.bg_minimize    = theme.muted
 
-theme.fg             = theme.rose
-theme.fg_normal      = theme.rose
+theme.fg_normal      = theme.text
 theme.fg_focus       = theme.text
+theme.fg_unfocus     = theme.subtle
 theme.fg_urgent      = theme.love
-theme.fg_minimize    = theme.text
+theme.fg_minimize    = theme.highlight_high
 
-theme.wibar_transparency = "ff"
-theme.wibar_fg       = theme.rose
-theme.wibar_bg       = theme.bg_normal .. theme.wibar_transparency
---theme.wibar_border_color = theme.
+theme.wibar_fg       = theme.text
+theme.wibar_bg       = theme.base .. theme.semi_transparent
 
 theme.useless_gap       = dpi(6)
 theme.border_width      = dpi(4)
@@ -55,6 +61,8 @@ theme.gap_single_client = true
 theme.border_normal     = theme.base
 theme.border_focus      = theme.rose
 theme.border_marked     = theme.gold
+theme.broder_primary    = theme.border_focus
+theme.border_secondary  = theme.pine
 
 -- There are other variable sets
 -- overriding the default one when
@@ -67,13 +75,16 @@ theme.border_marked     = theme.gold
 -- prompt_[fg|bg|fg_cursor|bg_cursor|font]
 -- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
 -- Example:
-theme.taglist_bg_focus = theme.bg_focus
-theme.taglist_fg_focus = theme.rose
+theme.taglist_bg_focus = theme.bg_normal .. theme.opaque
+theme.taglist_fg_focus = theme.bg_normal
 theme.taglist_shape_border_width_focus = 2
-theme.taglist_shape_border_color = theme.transparent
-theme.taglist_shape_border_color_focus = theme.pine .. theme.wibar_transparency
+theme.taglist_shape_border_color = theme.fully_transparent
+theme.taglist_shape_border_color_focus = theme.pine .. theme.opaque
+theme.taglist_shape_border_width_urgent = 2
+theme.taglist_shape_border_color = theme.fully_transparent
+theme.taglist_shape_border_color_urgent = theme.love .. theme.opaque
 
-theme.prompt_bg = theme.transparent
+theme.prompt_bg = theme.fully_transparent
 
 -- Variables set for theming notifications:
 -- notification_font
@@ -83,8 +94,11 @@ theme.prompt_bg = theme.transparent
 theme.notification_font = theme.font
 theme.notification_border_width = 4
 theme.notification_fg = theme.fg_focus
+theme.notification_bg = theme.wibar_bg
+theme.notification_border_color = theme.pine
+theme.notification_border_width = 2
 theme.notification_shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height, 10)
+    gears.shape.rounded_rect(cr, width, height, 20)
 end
 
 -- Variables set for theming the menu:
@@ -93,38 +107,6 @@ end
 theme.menu_submenu_icon = themes_path.."default/submenu.png"
 theme.menu_height = dpi(15)
 theme.menu_width  = dpi(100)
-
--- You can add as many variables as
--- you wish and access them by using
--- beautiful.variable in your rc.lua
---theme.bg_widget = "#cc0000"
-
--- Define the image to load
-theme.titlebar_close_button_normal = themes_path.."default/titlebar/close_normal.png"
-theme.titlebar_close_button_focus  = themes_path.."default/titlebar/close_focus.png"
-
-theme.titlebar_minimize_button_normal = themes_path.."default/titlebar/minimize_normal.png"
-theme.titlebar_minimize_button_focus  = themes_path.."default/titlebar/minimize_focus.png"
-
-theme.titlebar_ontop_button_normal_inactive = themes_path.."default/titlebar/ontop_normal_inactive.png"
-theme.titlebar_ontop_button_focus_inactive  = themes_path.."default/titlebar/ontop_focus_inactive.png"
-theme.titlebar_ontop_button_normal_active = themes_path.."default/titlebar/ontop_normal_active.png"
-theme.titlebar_ontop_button_focus_active  = themes_path.."default/titlebar/ontop_focus_active.png"
-
-theme.titlebar_sticky_button_normal_inactive = themes_path.."default/titlebar/sticky_normal_inactive.png"
-theme.titlebar_sticky_button_focus_inactive  = themes_path.."default/titlebar/sticky_focus_inactive.png"
-theme.titlebar_sticky_button_normal_active = themes_path.."default/titlebar/sticky_normal_active.png"
-theme.titlebar_sticky_button_focus_active  = themes_path.."default/titlebar/sticky_focus_active.png"
-
-theme.titlebar_floating_button_normal_inactive = themes_path.."default/titlebar/floating_normal_inactive.png"
-theme.titlebar_floating_button_focus_inactive  = themes_path.."default/titlebar/floating_focus_inactive.png"
-theme.titlebar_floating_button_normal_active = themes_path.."default/titlebar/floating_normal_active.png"
-theme.titlebar_floating_button_focus_active  = themes_path.."default/titlebar/floating_focus_active.png"
-
-theme.titlebar_maximized_button_normal_inactive = themes_path.."default/titlebar/maximized_normal_inactive.png"
-theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar/maximized_focus_inactive.png"
-theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
-theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
 
 theme.wallpaper = themes_path.."default/background.png"
 

@@ -1,4 +1,5 @@
-local filesystem = require("gears.filesystem") local config_dir = filesystem.get_configuration_dir()
+local filesystem = require("gears.filesystem")
+local config_dir = filesystem.get_configuration_dir()
 local utils_dir = config_dir .. "utilities/"
 
 return {
@@ -23,7 +24,7 @@ return {
 		--- Default power manager
 		power_manager = "xfce4-power-manager",
 		--- Default rofi global menu
-		app_launcher = "rofi -no-lazy-grab -show drun -modi drun -icon-theme \"Papirus\" -show-icons"
+		app_launcher = "/home/nathan/.config/rofi/scripts/launcher_t1"
 	},
 
 	--- List of binaries/shell scripts that will execute for a certain task

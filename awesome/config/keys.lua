@@ -115,25 +115,21 @@ awful.keyboard.append_global_keybindings({
 awful.keyboard.append_global_keybindings({
     awful.key({ alt,     ctrl     }, "j", function (c)
             awful.client.swap.global_bydirection("down")
-            c:lower()
         end,
         { description = "swap with window below", group = "client" }
     ),
     awful.key({ alt,     ctrl     }, "k", function (c)
             awful.client.swap.global_bydirection("up")
-            c:lower()
         end,
         { description = "swap with window above", group = "client" }
     ),
     awful.key({ alt,     ctrl     }, "h", function (c)
             awful.client.swap.global_bydirection("left")
-            c:lower()
         end,
         { description = "swap with window to the left", group = "client" }
     ),
     awful.key({ alt,     ctrl     }, "l", function (c)
             awful.client.swap.global_bydirection("right")
-            c:lower()
         end,
         { description = "swap with window to the right", group = "client" }
     ),

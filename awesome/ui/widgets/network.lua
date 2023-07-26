@@ -13,6 +13,7 @@ local awful = require('awful')
 local wibox = require('wibox')
 local gears = require('gears')
 local naughty = require('naughty')
+local beautiful = require('beautiful')
 local dpi = require('beautiful').xresources.apply_dpi
 local clickable_container = require('ui.widgets.clickable-container')
 
@@ -25,29 +26,42 @@ local network_interfaces = { wlan = "wlo1", lan = "eno1" }
 
 local network_mode = nil
 
-local return_button = function()
+local get_icon = function(strength, alert)
+    local icons = {
+        "󰤟",
+        "󰤢",
+        "󰤥",
+        "󰤨",
+        "󰤠",
+        "󰤣",
+        "󰤦",
+        "󰤩",
+    }
+    return icons[strength + (alert and 4 or 0)]
+end
 
-	local update_notify_no_access = true
-	local notify_no_access_quota = 0
+local return_button = function(size)
 
 	local startup = true
-	local reconnect_startup = true
-	local notify_new_wifi_conn = false
+	local reconnect_startup = false
 
 	local widget = wibox.widget {
 		{
 			id = 'icon',
-			image = widget_icon_dir .. 'loading.svg',
-			widget = wibox.widget.imagebox,
-			resize = true
+			text = '󰤯',
+			widget = wibox.widget.textbox,
+            font = beautiful.font .. " Regular " .. (size or 18),
 		},
-		layout = wibox.layout.align.horizontal
+        resize = true,
+		layout = wibox.layout.align.horizontal,
+        expand = "none",
 	}
 
 	local widget_button = wibox.widget {
 		{
 			widget,
-			margins = dpi(7),
+			top = dpi(0),
+			bottom = dpi(0),
 			widget = wibox.container.margin
 		},
 		widget = clickable_container
@@ -55,7 +69,7 @@ local return_button = function()
 
 	widget_button:buttons(
 		gears.table.join(
-			awful.button({}, 1, nil,
+			awful.button({}, 2, nil,
 				function()
 					awful.spawn(apps.default.network_manager, false)
 				end
@@ -163,18 +177,18 @@ local return_button = function()
 			awful.spawn.easy_async_with_shell(
 				check_internet_health,
 				function(stdout)
-					local widget_icon_name = 'wifi-strength'
+					local icon = '󰤯'
 					if not stdout:match('Connected but no internet') then
 						if startup or reconnect_startup then
 							awesome.emit_signal('system::network_connected')
 						end
-						widget_icon_name = widget_icon_name .. '-' .. tostring(strength)
+						icon = get_icon(strength, false)
 						update_wireless_data(wifi_strength_rounded, true)
 					else
-						widget_icon_name = widget_icon_name .. '-' .. tostring(strength) .. '-alert'
+						icon = get_icon(strength, true)
 						update_wireless_data(wifi_strength_rounded, false)
 					end
-					widget.icon:set_image(widget_icon_dir .. widget_icon_name .. '.svg')
+					widget.icon:set_text(icon)
 				end
 			)
 		end
@@ -190,7 +204,7 @@ local return_button = function()
 						return
 					end
 					wifi_strength = tonumber(stdout)
-					local wifi_strength_rounded = math.floor(wifi_strength / 25 + 0.5)
+					wifi_strength_rounded = math.floor(wifi_strength / 25 + 0.5)
 					update_wireless_icon(wifi_strength_rounded)
 				end
 			)
@@ -216,10 +230,10 @@ local return_button = function()
 			check_internet_health,
 			function(stdout)
 
-				local widget_icon_name = 'wired'
+				local icon = '󰛳'
 
 				if stdout:match('Connected but no internet') then
-					widget_icon_name = widget_icon_name .. '-alert'
+					icon = '󰲜'
 					update_tooltip(
 						'<b>Connected but no internet!</b>' ..
 						'\nEthernet Interface: <b>' .. network_interfaces.lan .. '</b>'
@@ -233,7 +247,7 @@ local return_button = function()
 					end
 					update_reconnect_startup(false)
 				end
-				widget.icon:set_image(widget_icon_dir .. widget_icon_name .. '.svg')
+				widget.icon:set_image(widget_icon_dir .. icon .. '.svg')
 			end
 		)
 	end
@@ -256,23 +270,24 @@ local return_button = function()
 			network_notify(message, title, app_name, icon)
 		end
 
-		local widget_icon_name = 'wifi-strength-off'
+		local icon = '󰤮'
 
 		if network_mode == 'wireless' then
-			widget_icon_name = 'wifi-strength-off'
+			icon = '󰤮'
 			if not reconnect_startup then
 				update_reconnect_startup(true)
 				notify_wireless_disconnected()
 			end
 		elseif network_mode == 'wired' then
-			widget_icon_name = 'wired-off'
+			icon = '󰲜'
 			if not reconnect_startup then
 				update_reconnect_startup(true)
 				notify_wired_disconnected()
 			end
 		end
 		update_tooltip('Network is currently disconnected')
-		widget.icon:set_image(widget_icon_dir .. widget_icon_name .. '.svg')
+		widget.icon:set_text(icon)
+        awesome.emit_signal("system::network_disconnected")
 	end
 
 	local check_network_mode = function()
@@ -342,7 +357,7 @@ local return_button = function()
 		call_now = true,
 		callback = function()
 			check_network_mode()
-		end	
+		end
 	}
 
 	return widget_button
