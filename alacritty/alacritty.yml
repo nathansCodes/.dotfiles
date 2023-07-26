@@ -6,10 +6,10 @@ window:
     x: 4
     y: 4
 
-  dynamic_padding: false
+  dynamic_padding: true
 
   decorations: full
-  opacity: 1.0
+  opacity: 0.75
   inactive_opacity: 0.9
 
   startup_mode: Windowed
@@ -23,7 +23,7 @@ window:
 
 font:
   normal:
-    family: CaskaydiaCoveNerdFontMono
+    family: JetBrainsMonoNerdFont
     style: Regular
 
   builtin_box_drawing: true
