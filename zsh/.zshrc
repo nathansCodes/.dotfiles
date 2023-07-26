@@ -18,4 +18,6 @@ export FZF_DEFAULT_OPTS="
 # configure clipmenu to use rofi
 export CM_LAUNCHER=rofi
 
+export PATH=$HOME/.config/rofi/scripts:$PATH
+
 neofetch
