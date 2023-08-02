@@ -1,19 +1,29 @@
 local wibox = require("wibox")
 local awful = require("awful")
 local gears = require("gears")
+local naughty = require("naughty")
+local gfs = gears.filesystem
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
-local net_icon = require("ui.widgets.network")
 require("helpers.widget")
 
-local bg_inactive = beautiful.bg_minimize .. beautiful.transparent
-local bg_loading = beautiful.bg_minimize .. beautiful.semi_transparent
-local bg_active = beautiful.pine .. beautiful.transparent
-
-local on
+_G.dont_disturb = false
 
 return function(size)
+    local icon = wibox.widget {
+		{
+			id = 'icon',
+			text = '',
+			widget = wibox.widget.textbox,
+            font = beautiful.font .. " Regular " .. (size or 18) - 6,
+		},
+        resize = true,
+		layout = wibox.layout.align.horizontal,
+        expand = "none",
+    }
+
+
     local widget = wibox.widget {
         id = "icon_bg",
         widget = wibox.container.background,
@@ -31,31 +41,35 @@ return function(size)
                 layout = wibox.layout.align.horizontal,
                 expand = "outside",
                 nil,
-                net_icon(size),
+                icon,
                 nil,
             },
             nil,
         }
     }
 
-    awful.widget.watch("/home/nathan/.dotfiles/scripts/check_network.sh", 1, function(_, stdout)
-        on = stdout:match("disconnected")
-            or stdout:match("connecting")
-            or stdout:match("connected")
-
-        if on ~= nil then
-            widget.bg = beautiful.button_bg_on
-            widget.fg = beautiful.bg_focus
-        else
-            widget.bg = beautiful.button_bg_off
-            widget.fg = beautiful.fg_normal
+    widget:connect_signal("button::press", function(_, _, _, button)
+        if button == 1 then
+            if _G.dont_disturb == true then
+                _G.dont_disturb = false
+                icon.icon:set_markup_silently("")
+                icon.icon.font = beautiful.font .. " Regular " .. size - 4
+                widget.bg = beautiful.button_bg_off
+                widget.fg = beautiful.fg_normal
+            else
+                _G.dont_disturb = true
+                icon.icon:set_markup_silently("")
+                icon.icon.font = beautiful.font .. " Regular " .. size
+                widget.bg = beautiful.button_bg_on
+                widget.fg = beautiful.bg_focus
+            end
         end
     end)
 
     local old_cursor, old_wibox
 
     widget:connect_signal( 'mouse::enter', function()
-        local w = _G.mouse.current_wibox
+        local w = mouse.current_wibox
         if w then
             old_cursor, old_wibox = w.cursor, w
             w.cursor = 'hand1'
@@ -66,16 +80,6 @@ return function(size)
         if old_wibox then
             old_wibox.cursor = old_cursor
             old_wibox = nil
-        end
-    end)
-
-    widget:connect_signal("button::press", function(_, _, _, button)
-        if button == 1 then
-            if on ~= nil then
-                awful.spawn.once("nmcli n off")
-            else
-                awful.spawn.once("nmcli n on")
-            end
         end
     end)
 

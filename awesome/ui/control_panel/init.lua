@@ -1,6 +1,7 @@
 local wibox = require("wibox")
 local awful = require("awful")
 local gears = require("gears")
+local naughty = require("naughty")
 local gfs = gears.filesystem
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
@@ -9,29 +10,20 @@ local rubato = require("rubato")
 
 local net_icon = require("ui.control_panel.net_icon")
 local bluetooth_icon = require("ui.control_panel.bluetooth_icon")
-local volume_widget = require("ui.widgets.volume")
-local slider = require("ui.control_panel.slider")
+local dnd_icon = require("ui.control_panel.dnd")
+local right_ctrl = require("ui.control_panel.right_ctrl")
+
+local notif_center = require("ui.control_panel.notification_center")
 
 require("helpers.widget")
-
-
-local volume_slider = slider({}, function(value)
-    awful.spawn.once("amixer -D pulse sset Master " .. value .. "%", false)
-end)
-
-local volume_icon = volume_widget {
-    device = "pipewire",
-    size = 30,
-}
 
 local control_panel = awful.popup {
     screen = screen[1],
     type = "popup_menu",
 
-    width = dpi(400),
-    maximum_width = dpi(400),
-    minimum_width = dpi(400),
-    maximum_height = dpi(250),
+    width = dpi(500),
+    maximum_width = dpi(500),
+    maximum_height = dpi(900),
     minimum_height = dpi(250),
 
     visible = false,
@@ -40,9 +32,9 @@ local control_panel = awful.popup {
     border_width = 2,
     border_color = beautiful.border_focus .. beautiful.opaque,
     bg           = beautiful.bg_normal .. beautiful.transparent,
-    shape        = function(cr, w, h)
+    shape        = gears.shape.transform(function(cr, w, h)
         gears.shape.partially_rounded_rect(cr, w, h, false, false, true, true, 20)
-    end,
+    end),
 
     placement = function(w)
         awful.placement.top_right(w, {
@@ -52,66 +44,60 @@ local control_panel = awful.popup {
 
     widget = {
         widget = wibox.container.margin,
-        top = dpi(24),
+        top = dpi(20),
         bottom = dpi(14),
         left = dpi(14),
         right = dpi(14),
         {
-            layout = wibox.layout.fixed.horizontal,
-            spacing = dpi(16),
-            forced_height = dpi(200),
+            layout = wibox.layout.fixed.vertical,
+            spacing = 16,
             {
-                widget = wibox.container.background,
-                bg = beautiful.bg_focus .. beautiful.semi_transparent,
-                forced_width = dpi(200),
+                layout = wibox.layout.fixed.horizontal,
+                spacing = dpi(16),
                 forced_height = dpi(200),
-                shape = function(cr, w, h)
-                    gears.shape.rounded_rect(cr, w, h, 20)
-                end,
                 {
-                    widget = wibox.container.margin,
-                    margins = dpi(20),
+                    widget = wibox.container.background,
+                    bg = beautiful.bg_focus .. beautiful.semi_transparent,
+                    forced_width = dpi(200),
+                    forced_height = dpi(200),
+                    shape = function(cr, w, h)
+                        gears.shape.rounded_rect(cr, w, h, 20)
+                    end,
                     {
-                        layout = wibox.layout.grid,
-                        margins = dpi(10),
-                        expand = "none",
-                        homogeneous = false,
-                        forced_num_cols = 2,
-                        forced_num_rows = 2,
-                        spacing = dpi(16),
-                        net_icon(34),
-                        bluetooth_icon(34),
-                        bluetooth_icon(34),
-                        net_icon(34),
-                    }
-                }
-            },
-            {
-                layout = wibox.layout.fixed.vertical,
-                format_item {
-                    spacing = dpi(10),
-                    layout = wibox.layout.align.horizontal,
-                    {
-                        widget = wibox.container.background,
-                        bg = beautiful.transparent,
-                        shape = function (cr, w, h)
-                            gears.shape.rounded_rect(cr, w, h, 15)
-                        end,
+                        widget = wibox.container.margin,
+                        margins = dpi(20),
                         {
-                            widget = wibox.container.margin,
-                            margins = dpi(5),
-                            volume_icon,
-                        },
-                    },
-                    volume_slider,
+                            layout = wibox.layout.grid,
+                            margins = dpi(10),
+                            expand = "none",
+                            homogeneous = false,
+                            forced_num_cols = 2,
+                            forced_num_rows = 2,
+                            spacing = dpi(16),
+                            net_icon(34),
+                            bluetooth_icon(34),
+                            dnd_icon(34),
+                            net_icon(34),
+                        }
+                    }
                 },
-            }
+                right_ctrl()
+            },
+            notif_center(),
         },
     },
 }
 
 function control_panel.toggle()
-    control_panel.visible = not control_panel.visible
+    if control_panel.visible then
+        control_panel.visible = false
+        if not _G.dont_disturb then
+            naughty.resume()
+        end
+    else
+        control_panel.visible = true
+        naughty.suspend()
+    end
 end
 
 return control_panel
