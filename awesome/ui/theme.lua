@@ -30,9 +30,14 @@ theme.highlight_high = "#56526e"
 
 theme.opaque            = "ff"
 theme.semi_transparent  = "bf"
-theme.transparent       = "55"
+theme.transparent       = "5f"
 theme.fully_transparent = "00"
 theme.bg_transparent    = "#00000000"
+
+theme.accent           = theme.rose
+theme.primary_accent   = theme.rose
+theme.secondary_accent = theme.pine
+theme.tertiary_accent  = theme.foam
 
 theme.opacity_active    = 0.8
 theme.opacity_normal    = 0.6
@@ -59,10 +64,13 @@ theme.useless_gap       = dpi(6)
 theme.border_width      = dpi(4)
 theme.gap_single_client = true
 theme.border_normal     = theme.base
-theme.border_focus      = theme.rose
+theme.border_focus      = theme.accent
 theme.border_marked     = theme.gold
 theme.broder_primary    = theme.border_focus
-theme.border_secondary  = theme.pine
+theme.border_secondary  = theme.secondary_accent
+
+theme.button_bg_off   = theme.subtle .. theme.transparent
+theme.button_bg_on    = theme.secondary_accent .. theme.semi_transparent
 
 -- There are other variable sets
 -- overriding the default one when
