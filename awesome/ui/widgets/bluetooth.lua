@@ -53,7 +53,7 @@ return function(size)
             widget.icon.font = beautiful.font .. " Regular " .. (size or 18) - 6
         else
             icon = "󰂲"
-            widget.icon.font = beautiful.font .. " Regular " .. (size or 18) - 6
+            widget.icon.font = beautiful.font .. " Regular " .. (size or 18) - 2
         end
         widget.icon:set_text(icon)
         collectgarbage("collect")
@@ -95,6 +95,15 @@ return function(size)
         end,
         preferred_positions = {"right", "left", "top", "bottom"}
     } )
+
+    function widget_button.get_state()
+        if checker_connected ~= nil then
+            return "connected"
+        elseif checker_on ~= nil then
+            return "on"
+        end
+        return "off"
+    end
 
     return widget_button
 end
