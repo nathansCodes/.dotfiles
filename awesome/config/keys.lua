@@ -1,4 +1,5 @@
 local awful = require("awful")
+local naughty = require("naughty")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local apps = require("config.apps")
 
@@ -24,6 +25,11 @@ awful.keyboard.append_global_keybindings({
                   }
               end,
               {description = "lua execute prompt", group = "awesome"}),
+              awful.key({ modkey,           }, "g", function() naughty.notify {
+                  title = "Test",
+                  text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+              } end,
+              {description="test notification", group="awesome"}),
     awful.key({ modkey,           }, "t", function () awful.spawn(apps.default.terminal) end,
               {description = "open a new alacritty window", group = "launcher"}),
     awful.key({ modkey,           }, "b", function () awful.spawn(apps.default.web_browser) end,
@@ -33,6 +39,17 @@ awful.keyboard.append_global_keybindings({
     awful.key({ modkey,           }, "r",     function () awful.util.spawn(apps.default.app_launcher) end,
               {description = "run prompt", group = "launcher"}),
 })
+
+awful.keyboard.append_global_keybindings {
+    awful.key({                   }, "Print", function () awful.spawn("flameshot gui") end,
+              {description = "create screen selection for a screenshot", group = "screenshot"}),
+    awful.key({ ctrl,             }, "Print", function () awful.spawn("flameshot screen") end,
+              {description = "screenshot the current screen", group = "screenshot"}),
+    awful.key({ shift,            }, "Print", function () awful.spawn("flameshot full") end,
+              {description = "screenshot the entire desktop (all screens)", group = "screenshot"}),
+    awful.key({ modkey,           }, "Print", function () awful.spawn("flameshot config") end,
+              {description = "configure flameshot", group = "screenshot"}),
+}
 
 -- Rofi scripts
 awful.keyboard.append_global_keybindings({
