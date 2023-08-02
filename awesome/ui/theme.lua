@@ -91,15 +91,9 @@ theme.prompt_bg = theme.fully_transparent
 -- notification_[bg|fg]
 -- notification_[width|height|margin]
 -- notification_[border_color|border_width|shape|opacity]
-theme.notification_font = theme.font
-theme.notification_border_width = 4
-theme.notification_fg = theme.fg_focus
-theme.notification_bg = theme.wibar_bg
-theme.notification_border_color = theme.pine
-theme.notification_border_width = 2
-theme.notification_shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height, 20)
-end
+theme.notification_max_height = 350
+theme.notification_max_width = 350
+theme.notification_margin = 4
 
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]
