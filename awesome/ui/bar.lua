@@ -130,9 +130,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
     end)
 
     local volume = volume_widget {
-        font = "CaskaydiaCoveNerdFontMono Regular 12",
-        icon_dir = gfs.get_configuration_dir() .. "ui/icons/volume/",
-        size = 24,
+        size = 26,
         widget_type = 'icon',
     }
 
@@ -145,35 +143,32 @@ screen.connect_signal("request::desktop_decoration", function(s)
     local control_widget = wibox.container.background {
         layout = wibox.layout.fixed.horizontal,
         bg = beautiful.wibar_bg,
-        spacing = dpi(2),
         {
+            top = dpi(0),
+            bottom = dpi(0),
+            left = dpi(10),
+            right = dpi(10),
+            widget = wibox.container.margin,
             {
-                layout = wibox.layout.fixed.horizontal,
-                spacing = dpi(5),
+                layout = wibox.layout.align.horizontal,
+                expand = "none",
+                forced_width = dpi(90),
                 {
                     widget = wibox.container.margin,
-                    top = dpi(2),
-                    bottom = dpi(2),
+                    margins = dpi(2),
                     network_widget(32),
                 },
                 {
                     widget = wibox.container.margin,
-                    top = dpi(2),
-                    bottom = dpi(2),
+                    margins = dpi(2),
                     bluetooth_widget(24),
                 },
                 {
                     widget = wibox.container.margin,
-                    top = dpi(2),
-                    bottom = dpi(2),
+                    margins = dpi(2),
                     volume,
                 },
             },
-            top = dpi(0),
-            bottom = dpi(0),
-            left = dpi(15),
-            right = dpi(15),
-            widget = wibox.container.margin,
         },
     }
 
@@ -218,52 +213,70 @@ screen.connect_signal("request::desktop_decoration", function(s)
         shape_border_width = 2,
         shape_border_color = beautiful.border_focus,
         shape = s.mywibox.shape,
+        bg = beautiful.accent,
         {
             layout = wibox.layout.align.horizontal,
-            expand = "none",
-            {
-                layout = wibox.layout.fixed.horizontal,
-                spacing = dpi(7),
-                background = beautiful.bg_normal,
-                logout_popup.widget {
-                    text_color = beautiful.wibar_fg,
-                    accent_color = beautiful.bg_focus,
-                    icon = gfs.get_configuration_dir() .. "ui/icons/power.svg",
-                    onlock = function() awful.spawn("betterlockscreen -l") end,
-                },
-                taglist,
-                s.mypromptbox,
+            expand = "inside",
+            logout_popup.widget {
+                text_color = beautiful.wibar_fg,
+                accent_color = beautiful.bg_focus,
+                onlock = function() awful.spawn("betterlockscreen -l") end,
+                size = 25,
+                fg = beautiful.bg_focus,
+                bg = beautiful.accent,
+                left = 8,
+                right = 6,
             },
             {
-                layout = wibox.layout.fixed.horizontal,
-                textclock,
+                widget = wibox.container.background,
+                shape = gears.shape.rounded_bar,
+                border_width = 2,
+                border_color = beautiful.accent,
+                bg = beautiful.bg_normal,
+                {
+                    layout = wibox.layout.align.horizontal,
+                    expand = "none",
+                    {
+                        layout = wibox.layout.fixed.horizontal,
+                        spacing = dpi(7),
+                        taglist,
+                        s.mypromptbox,
+                    },
+                    {
+                        layout = wibox.layout.fixed.horizontal,
+                        textclock,
+                    },
+                    {
+                        layout = wibox.layout.fixed.horizontal,
+                        spacing = dpi(5),
+                        spotify_widget(),
+                        {
+                            widget = wibox.container.margin,
+                            top = dpi(2),
+                            bottom = dpi(2),
+                            control_widget,
+                        },
+                        battery_widget {
+                            font = "CaskaydiaCoveNerdFontMono Regular 12",
+                            path_to_icons = "/usr/share/icons/Rose-Pine/status/symbolic/",
+                            show_current_level = true,
+                            display_notification = true,
+                        },
+                        mykeyboardlayout,
+                    },
+                }
             },
             {
-                layout = wibox.layout.fixed.horizontal,
-                spacing = dpi(7),
-                spotify_widget(),
-                control_widget,
-                battery_widget {
-                    font = "CaskaydiaCoveNerdFontMono Regular 12",
-                    path_to_icons = "/usr/share/icons/Rose-Pine/status/symbolic/",
-                    show_current_level = true,
-                    display_notification = true,
-                },
-                brightness_widget {
-                    font = "CaskaydiaCoveNerdFontMono Regular 12",
-                    type = "icon_and_text",
-                    program = "light",
-                    percentage = true,
-                },
-                mykeyboardlayout,
+                widget = wibox.container.background,
+                bg = beautiful.accent,
                 {
                     widget = wibox.container.margin,
-                    top = dpi(3),
-                    bottom = dpi(3),
-                    left = dpi(0),
+                    top = dpi(1),
+                    bottom = dpi(1),
+                    left = dpi(3),
                     right = dpi(8),
                     awful.widget.layoutbox(),
-                },
+                }
             },
         }
     }
