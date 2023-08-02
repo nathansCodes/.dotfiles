@@ -165,63 +165,34 @@ local function worker(user_args)
     local icon_widget = wibox.widget {
         {
             id = "icon",
-            resize = true,
             widget = wibox.widget.textbox,
             text = "󰕿",
             font = beautiful.font .. " Regular " .. size - 6,
         },
         valign = 'center',
+        forced_width = size,
         layout = wibox.container.place,
-        set_volume_level = function(self, new_value)
-            local icon
-            local font_size
-            if self.is_muted then
-                icon = '󰝟'
-                self.icon.font = beautiful.font .. " Regular " .. font_size
-            else
-                local new_value_num = tonumber(new_value)
-                if (new_value_num >= 0 and new_value_num < 33) then
-                    icon="󰕿"
-                    font_size = size - 6
-                elseif (new_value_num < 66) then
-                    icon="󰖀"
-                    font_size = size
-                else
-                    icon="󰕾"
-                    font_size = size
-                end
-            end
-            self:get_children_by_id('icon')[1]:set_text(icon)
-            self.icon.font = beautiful.font .. " Regular " .. font_size
-        end,
-        mute = function(self)
-            self.is_muted = true
-            self:get_children_by_id('icon')[1]:set_text("󰝟")
-        end,
-        unmute = function(self)
-            self.is_muted = false
-        end
     }
 
     volume.widget = icon_widget
 
     local function update_graphic(widget, stdout)
         local icon
-        local font_size
+        local font_size = size
         local mute = string.match(stdout, "%[(o%D%D?)%]")   -- \[(o\D\D?)\] - [on] or [off]
         local volume_level = string.match(stdout, "(%d?%d?%d)%%") -- (\d?\d?\d)\%)
         volume_level = string.format("% 3d", volume_level)
         if mute == 'off' then
-            icon = '󰝟'
+            icon = '󰖁'
             font_size = size
         else
             local new_value_num = tonumber(volume_level)
             if (new_value_num >= 0 and new_value_num < 33) then
                 icon="󰕿"
-                font_size = size - 6
+                font_size = size - 14
             elseif (new_value_num < 66) then
                 icon="󰖀"
-                font_size = size
+                font_size = size - 7
             else
                 icon="󰕾"
                 font_size = size
