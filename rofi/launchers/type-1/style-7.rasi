@@ -65,7 +65,7 @@ window {
     enabled:                     true;
     margin:                      0px;
     padding:                     0px;
-    border:                      2px 2px 4px 2px;
+    border:                      0px 2px 2px 2px;
     border-radius:               0px 0px 20px 20px;
     border-color:                @border-colour-outer;
     cursor:                      "default";
@@ -171,7 +171,7 @@ listview {
     spacing:                     5px;
     margin:                      0px;
     padding:                     10px;
-    border:                      0px 2px 4px 2px ;
+    border:                      0px 2px 2px 2px ;
     border-radius:               0px 0px 10px 10px;
     border-color:                @border-colour;
     background-color:            transparent;
