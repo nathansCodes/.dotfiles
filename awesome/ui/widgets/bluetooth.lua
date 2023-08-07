@@ -30,15 +30,10 @@ local checker_connected
 
 return function(size)
     local widget = wibox.widget {
-		{
-			id = 'icon',
-			text = '󰂯',
-			widget = wibox.widget.textbox,
-            font = beautiful.font .. " Regular " .. (size or 18) - 6,
-		},
-        resize = true,
-		layout = wibox.layout.align.horizontal,
-        expand = "none",
+        text = '󰂯',
+        widget = wibox.widget.textbox,
+        font = beautiful.font .. " Regular " .. (size or 18),
+        halign = "center",
     }
 
     watch("/home/nathan/.dotfiles/scripts/check_bluetooth.sh", 1, function(_, stdout)
@@ -47,15 +42,12 @@ return function(size)
         local icon
         if (checker_connected ~= nil) then
             icon = "󰂱"
-            widget.icon.font = beautiful.font .. " Regular " .. (size or 18)
         elseif (checker_on ~= nil) then
             icon = "󰂯"
-            widget.icon.font = beautiful.font .. " Regular " .. (size or 18) - 6
         else
             icon = "󰂲"
-            widget.icon.font = beautiful.font .. " Regular " .. (size or 18) - 2
         end
-        widget.icon:set_text(icon)
+        widget:set_text(icon)
         collectgarbage("collect")
     end, widget)
 

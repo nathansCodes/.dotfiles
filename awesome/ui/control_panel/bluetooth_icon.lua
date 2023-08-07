@@ -21,21 +21,11 @@ return function(size)
         shape = gears.shape.circle,
         bg = beautiful.button_bg_off,
         {
-            layout = wibox.layout.align.vertical,
-            forced_height = dpi(size),
-            forced_width = dpi(size),
-            margins = dpi(0),
-            expand = "outside",
-            nil,
-            {
-                id = "icon",
-                layout = wibox.layout.align.horizontal,
-                expand = "outside",
-                nil,
-                icon,
-                nil,
-            },
-            nil,
+            widget = wibox.container.place,
+            valgin = "center",
+            halgin = "left",
+            content_fill_horizontal = true,
+            icon,
         }
     }
 
@@ -55,10 +45,12 @@ return function(size)
     end)
 
     widget:connect_signal("button::press", function(_, _, _, button)
-        if on == nil then
-            awful.spawn("bluetoothctl power on")
-        else
-            awful.spawn("bluetoothctl power off")
+        if button == 1 then
+            if on == nil then
+                awful.spawn("bluetoothctl power on")
+            else
+                awful.spawn("bluetoothctl power off")
+            end
         end
     end)
 

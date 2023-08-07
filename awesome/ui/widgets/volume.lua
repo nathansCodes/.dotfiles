@@ -167,10 +167,13 @@ local function worker(user_args)
             id = "icon",
             widget = wibox.widget.textbox,
             text = "󰕿",
-            font = beautiful.font .. " Regular " .. size - 6,
+            font = beautiful.font .. " Regular " .. size,
+            halign = "left",
+            valign = "center",
+            forced_width = user_args.forced_width or size,
         },
         valign = 'center',
-        forced_width = size,
+        halign = 'center',
         layout = wibox.container.place,
     }
 
@@ -178,28 +181,22 @@ local function worker(user_args)
 
     local function update_graphic(widget, stdout)
         local icon
-        local font_size = size
         local mute = string.match(stdout, "%[(o%D%D?)%]")   -- \[(o\D\D?)\] - [on] or [off]
         local volume_level = string.match(stdout, "(%d?%d?%d)%%") -- (\d?\d?\d)\%)
         volume_level = string.format("% 3d", volume_level)
         if mute == 'off' then
             icon = '󰖁'
-            font_size = size
         else
             local new_value_num = tonumber(volume_level)
             if (new_value_num >= 0 and new_value_num < 33) then
                 icon="󰕿"
-                font_size = size - 14
             elseif (new_value_num < 66) then
                 icon="󰖀"
-                font_size = size - 7
             else
                 icon="󰕾"
-                font_size = size
             end
         end
         widget.icon:set_text(icon)
-        widget.icon.font = beautiful.font .. " Regular " .. font_size
     end
 
     function volume:inc(s)

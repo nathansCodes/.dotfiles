@@ -37,6 +37,10 @@ return function(args, on_value_changed)
         nil,
     }
 
+    function widget:set_value(val)
+        slider.value = val
+    end
+
     return widget
 end
 

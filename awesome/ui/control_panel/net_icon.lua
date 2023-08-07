@@ -7,10 +7,6 @@ local dpi = beautiful.xresources.apply_dpi
 local net_icon = require("ui.widgets.network")
 require("helpers.widget")
 
-local bg_inactive = beautiful.bg_minimize .. beautiful.transparent
-local bg_loading = beautiful.bg_minimize .. beautiful.semi_transparent
-local bg_active = beautiful.pine .. beautiful.transparent
-
 local on
 
 return function(size)
@@ -20,21 +16,11 @@ return function(size)
         shape = gears.shape.circle,
         bg = beautiful.button_bg_off,
         {
-            layout = wibox.layout.align.vertical,
-            forced_height = dpi(size),
-            forced_width = dpi(size),
-            margins = dpi(0),
-            expand = "outside",
-            nil,
-            {
-                id = "icon",
-                layout = wibox.layout.align.horizontal,
-                expand = "outside",
-                nil,
-                net_icon(size),
-                nil,
-            },
-            nil,
+            widget = wibox.container.place,
+            valgin = "center",
+            halgin = "center",
+            content_fill_horizontal = true,
+            net_icon(size),
         }
     }
 

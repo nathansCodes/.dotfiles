@@ -23,7 +23,6 @@ local apps = require("config.apps")
 
 local network_interfaces = { wlan = "wlo1", lan = "eno1" }
 
-
 local network_mode = nil
 
 local get_icon = function(strength, alert)
@@ -46,15 +45,20 @@ local return_button = function(size)
 	local reconnect_startup = false
 
 	local widget = wibox.widget {
+        layout = wibox.layout.align.horizontal,
+        resize = true,
+        expand = "none",
+        nil,
 		{
 			id = 'icon',
 			text = '󰤯',
+            forced_width = size + dpi(8),
 			widget = wibox.widget.textbox,
             font = beautiful.font .. " Regular " .. (size or 18),
+            halign = "left",
+            valign = "center",
 		},
-        resize = true,
-		layout = wibox.layout.align.horizontal,
-        expand = "none",
+        nil,
 	}
 
 	local widget_button = wibox.widget {
@@ -62,7 +66,9 @@ local return_button = function(size)
 			widget,
 			top = dpi(0),
 			bottom = dpi(0),
-			widget = wibox.container.margin
+			left = dpi(0),
+			right = dpi(0),
+			widget = wibox.container.margin,
 		},
 		widget = clickable_container
 	}

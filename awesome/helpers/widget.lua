@@ -35,33 +35,3 @@ function format_item(widget)
     }
 end
 
-function format_item_no_fix_height(widget)
-    return wibox.widget {
-        {
-            {
-                layout = wibox.layout.align.vertical,
-                spacing = widget.spacing or dpi(10),
-                expand = 'none',
-                nil,
-                widget,
-                nil
-            },
-            margins = widget.margins or dpi(10),
-            left    = widget.margins or widget.left or dpi(10),
-            right   = widget.margins or widget.right or dpi(10),
-            top     = widget.margins or widget.top or dpi(10),
-            bottom  = widget.margins or widget.bottom or dpi(10),
-            widget  = wibox.container.margin,
-        },
-        forced_height = widget.forced_height,
-        border_width  = widget.border_width or dpi(0),
-        border_color  = widget.border_color or beautiful.border_normal,
-        bg = widget.bg or beautiful.bg_focus .. beautiful.semi_transparent,
-        shape = widget.shape or function(cr, width, height)
-            gears.shape.rounded_rect(cr, width, height, 20)
-        end,
-        widget = wibox.container.background,
-        id = widget.id,
-    }
-end
-

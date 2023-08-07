@@ -8,17 +8,13 @@ local dpi = beautiful.xresources.apply_dpi
 -------------------- widgets --------------------
 local battery_widget = require("awesome-wm-widgets.battery-widget.battery")
 local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
-local logout_popup = require("awesome-wm-widgets.logout-popup-widget.logout-popup")
-local brightness_widget = require("awesome-wm-widgets.brightness-widget.brightness")
 local spotify_widget = require("awesome-wm-widgets.spotify-widget.spotify")
 local network_widget = require("ui.widgets.network")
 local bluetooth_widget = require("ui.widgets.bluetooth")
+local keyboardlayout = require("ui.widgets.locale")
 
 local control_panel = require("ui.control_panel")
 local volume_widget = require("ui.widgets.volume")
-
--- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
 
 local taglist_buttons = gears.table.join(
 	awful.button({ }, 1, function(t) t:view_only() end),
@@ -130,7 +126,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
     end)
 
     local volume = volume_widget {
-        size = 26,
+        size = dpi(22),
         widget_type = 'icon',
     }
 
@@ -152,16 +148,15 @@ screen.connect_signal("request::desktop_decoration", function(s)
             {
                 layout = wibox.layout.align.horizontal,
                 expand = "none",
-                forced_width = dpi(90),
                 {
                     widget = wibox.container.margin,
                     margins = dpi(2),
-                    network_widget(32),
+                    network_widget(20),
                 },
                 {
                     widget = wibox.container.margin,
                     margins = dpi(2),
-                    bluetooth_widget(24),
+                    bluetooth_widget(20),
                 },
                 {
                     widget = wibox.container.margin,
@@ -194,11 +189,29 @@ screen.connect_signal("request::desktop_decoration", function(s)
         end
     end)
 
+    local power_button = wibox.widget {
+        widget = wibox.container.margin,
+        left = dpi(8),
+        right = dpi(6),
+        forced_width = dpi(36),
+        {
+            widget = wibox.widget.textbox,
+            text = "⏻",
+            font = beautiful.font .. " Regular 20",
+        },
+    }
+
+    power_button:connect_signal("button::press", function(_, _, _, button)
+        if button == 1 then
+            awful.spawn.with_shell(gfs.get_configuration_dir() .. "../rofi/scripts/powermenu_t2")
+        end
+    end)
+
     -- Create the wibox
     s.mywibox = awful.wibar {
         screen = s,
         type = "dock",
-        height = 32,
+        height = dpi(32),
         width = s.geometry.width * 0.99,
         ontop = false,
         shape = gears.shape.rounded_bar,
@@ -210,29 +223,22 @@ screen.connect_signal("request::desktop_decoration", function(s)
 
     s.mywibox:setup {
         widget = wibox.container.background,
-        shape_border_width = 2,
+        shape_border_width = dpi(2),
         shape_border_color = beautiful.border_focus,
         shape = s.mywibox.shape,
         bg = beautiful.accent,
+        fg = beautiful.bg_normal,
         {
             layout = wibox.layout.align.horizontal,
             expand = "inside",
-            logout_popup.widget {
-                text_color = beautiful.wibar_fg,
-                accent_color = beautiful.bg_focus,
-                onlock = function() awful.spawn("betterlockscreen -l") end,
-                size = 25,
-                fg = beautiful.bg_focus,
-                bg = beautiful.accent,
-                left = 8,
-                right = 6,
-            },
+            power_button,
             {
                 widget = wibox.container.background,
                 shape = gears.shape.rounded_bar,
                 border_width = 2,
                 border_color = beautiful.accent,
                 bg = beautiful.bg_normal,
+                fg = beautiful.fg_normal,
                 {
                     layout = wibox.layout.align.horizontal,
                     expand = "none",
@@ -262,7 +268,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
                             show_current_level = true,
                             display_notification = true,
                         },
-                        mykeyboardlayout,
+                        keyboardlayout { "us", "de" },
                     },
                 }
             },

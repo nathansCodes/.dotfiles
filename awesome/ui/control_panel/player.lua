@@ -118,10 +118,13 @@ next:connect_signal("button::press", function(_, _, _, button)
 end)
 
 return function()
-    return format_item_no_fix_height {
+    return format_item {
         layout = wibox.layout.stack,
         margins = dpi(0),
         bg = beautiful.bg_transparent,
+        shape = function(cr, w, h)
+            gears.shape.rounded_rect(cr, w, h, 20)
+        end,
         {
             layout = wibox.layout.align.horizontal,
             expand = 'none',
@@ -131,7 +134,12 @@ return function()
         },
         {
             widget = wibox.container.background,
-            bg = beautiful.bg_focus .. beautiful.semi_transparent,
+            bg = beautiful.bg_focus .. beautiful.transparent,
+            border_width = 1,
+            border_color = beautiful.bg_minimize .. beautiful.transparent,
+            shape = function(cr, w, h)
+                gears.shape.rounded_rect(cr, w, h, 20)
+            end,
             {
                 widget = wibox.container.margin,
                 margins = dpi(10),

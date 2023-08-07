@@ -6,23 +6,15 @@ local gfs = gears.filesystem
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
-require("helpers.widget")
-
 _G.dont_disturb = false
 
 return function(size)
     local icon = wibox.widget {
-		{
-			id = 'icon',
-			text = '',
-			widget = wibox.widget.textbox,
-            font = beautiful.font .. " Regular " .. (size or 18) - 6,
-		},
-        resize = true,
-		layout = wibox.layout.align.horizontal,
-        expand = "none",
+        widget = wibox.widget.textbox,
+        text = '',
+        font = beautiful.font .. " Regular " .. (size or dpi(18)),
+        halign = "center",
     }
-
 
     local widget = wibox.widget {
         id = "icon_bg",
@@ -30,21 +22,16 @@ return function(size)
         shape = gears.shape.circle,
         bg = beautiful.button_bg_off,
         {
-            layout = wibox.layout.align.vertical,
-            forced_height = dpi(size),
-            forced_width = dpi(size),
-            margins = dpi(0),
-            expand = "outside",
-            nil,
+            widget = wibox.container.place,
+            valgin = "center",
+            halgin = "center",
+            content_fill_horizontal = true,
             {
-                id = "icon",
-                layout = wibox.layout.align.horizontal,
-                expand = "outside",
-                nil,
+                id = "margin",
+                widget = wibox.container.margin,
+                right = dpi(10),
                 icon,
-                nil,
             },
-            nil,
         }
     }
 
@@ -52,16 +39,16 @@ return function(size)
         if button == 1 then
             if _G.dont_disturb == true then
                 _G.dont_disturb = false
-                icon.icon:set_markup_silently("")
-                icon.icon.font = beautiful.font .. " Regular " .. size - 4
+                icon:set_markup_silently("")
                 widget.bg = beautiful.button_bg_off
                 widget.fg = beautiful.fg_normal
+                widget:get_children_by_id("margin")[1].right = 10
             else
                 _G.dont_disturb = true
-                icon.icon:set_markup_silently("")
-                icon.icon.font = beautiful.font .. " Regular " .. size
+                icon:set_markup_silently("")
                 widget.bg = beautiful.button_bg_on
                 widget.fg = beautiful.bg_focus
+                widget:get_children_by_id("margin")[1].right = 18
             end
         end
     end)

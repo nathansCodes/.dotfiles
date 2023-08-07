@@ -23,17 +23,17 @@ local control_panel = awful.popup {
 
     width = dpi(500),
     maximum_width = dpi(500),
-    maximum_height = dpi(900),
-    minimum_height = dpi(250),
+    minimum_height = dpi(800),
+    maximum_height = dpi(800),
 
     visible = false,
     ontop = true,
 
-    border_width = 2,
+    border_width = dpi(2),
     border_color = beautiful.border_focus .. beautiful.opaque,
     bg           = beautiful.bg_normal .. beautiful.transparent,
     shape        = gears.shape.transform(function(cr, w, h)
-        gears.shape.partially_rounded_rect(cr, w, h, false, false, true, true, 20)
+        gears.shape.partially_rounded_rect(cr, w, h, false, false, true, true, dpi(20))
     end),
 
     placement = function(w)
@@ -50,18 +50,21 @@ local control_panel = awful.popup {
         right = dpi(14),
         {
             layout = wibox.layout.fixed.vertical,
-            spacing = 16,
+            fill_space = true,
+            spacing = dpi(16),
             {
                 layout = wibox.layout.fixed.horizontal,
                 spacing = dpi(16),
                 forced_height = dpi(200),
                 {
                     widget = wibox.container.background,
-                    bg = beautiful.bg_focus .. beautiful.semi_transparent,
+                    bg = beautiful.bg_focus .. beautiful.transparent,
+                    border_width = dpi(1),
+                    border_color = beautiful.bg_minimize .. beautiful.transparent,
                     forced_width = dpi(200),
                     forced_height = dpi(200),
                     shape = function(cr, w, h)
-                        gears.shape.rounded_rect(cr, w, h, 20)
+                        gears.shape.rounded_rect(cr, w, h, dpi(20))
                     end,
                     {
                         widget = wibox.container.margin,
@@ -74,16 +77,16 @@ local control_panel = awful.popup {
                             forced_num_cols = 2,
                             forced_num_rows = 2,
                             spacing = dpi(16),
-                            net_icon(34),
+                            net_icon(30),
                             bluetooth_icon(34),
-                            dnd_icon(34),
-                            net_icon(34),
+                            dnd_icon(28),
+                            net_icon(30),
                         }
                     }
                 },
                 right_ctrl()
             },
-            notif_center(),
+            notif_center.notif_center,
         },
     },
 }
@@ -91,13 +94,10 @@ local control_panel = awful.popup {
 function control_panel.toggle()
     if control_panel.visible then
         control_panel.visible = false
-        if not _G.dont_disturb then
-            naughty.resume()
-        end
     else
         control_panel.visible = true
-        naughty.suspend()
     end
+    _G.control_panel_vilible = control_panel.visible
 end
 
 return control_panel

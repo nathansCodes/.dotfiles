@@ -38,13 +38,14 @@ theme.accent           = theme.rose
 theme.primary_accent   = theme.rose
 theme.secondary_accent = theme.pine
 theme.tertiary_accent  = theme.foam
+theme.error            = theme.love
 
 theme.opacity_active    = 0.8
 theme.opacity_normal    = 0.6
 theme.opacity_new       = 0.6
 theme.opacity_fullscreen= 1.0
 
-theme.font = "CaskaydiaCoveNerdFontMono"
+theme.font = "CaskaydiaCoveNerdFont"
 
 theme.bg_normal      = theme.base
 theme.bg_focus       = theme.overlay
@@ -101,7 +102,6 @@ theme.prompt_bg = theme.fully_transparent
 -- notification_[border_color|border_width|shape|opacity]
 theme.notification_max_height = 350
 theme.notification_max_width = 350
-theme.notification_margin = 4
 
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]
@@ -109,8 +109,6 @@ theme.notification_margin = 4
 theme.menu_submenu_icon = themes_path.."default/submenu.png"
 theme.menu_height = dpi(15)
 theme.menu_width  = dpi(100)
-
-theme.wallpaper = themes_path.."default/background.png"
 
 -- You can use your own layout icons like this:
 theme.layout_fairh = themes_path.."default/layouts/fairh.png"
