@@ -10,6 +10,10 @@
 /*****----- Configuration -----*****/
 configuration {
     show-icons:                 false;
+	kb-select-1:                "s";
+	kb-select-2:                "r";
+	kb-select-3:                "l";
+	kb-select-4:                "k";
 }
 
 /*****----- Global Properties -----*****/
@@ -24,12 +28,9 @@ USE_BUTTONS=YES
 window {
     /* properties for window widget */
     transparency:                "real";
-    location:                    east;
-    anchor:                      east;
-    fullscreen:                  false;
-    width:                       95px;
-    x-offset:                    -20px;
-    y-offset:                    0px;
+    location:                    center;
+    anchor:                      center;
+    fullscreen:                  true;
 
     /* properties for all widgets */
     enabled:                     true;
@@ -122,22 +123,19 @@ error-message {
 /*****----- Listview -----*****/
 listview {
     enabled:                     true;
-    columns:                     1;
-    lines:                       5;
+    columns:                     2;
     cycle:                       true;
-    dynamic:                     true;
+    dynamic:                     false;
     scrollbar:                   false;
-    layout:                      vertical;
     reverse:                     false;
-    fixed-height:                true;
-    fixed-columns:               true;
+    flow:                        horizontal;
     
-    spacing:                     15px;
+    spacing:                     10px;
     margin:                      0px;
     padding:                     0px;
-    border:                      0px solid;
-    border-radius:               0px;
-    border-color:                @selected;
+    border:                      280px 700px solid;
+    border-radius:               20px;
+    border-color:                transparent;
     background-color:            transparent;
     text-color:                  @foreground;
     cursor:                      "default";
@@ -146,18 +144,19 @@ listview {
 /*****----- Elements -----*****/
 element {
     enabled:                     true;
+    expand:                      true;
     spacing:                     0px;
     margin:                      0px;
-    padding:                     25px 10px;
+    padding:                     7.3% 0px;
     border:                      0px solid;
-    border-radius:               100%;
+    border-radius:               8px;
     border-color:                @selected;
     background-color:            @background-alt;
     text-color:                  @foreground;
     cursor:                      pointer;
 }
 element-text {
-    font:                        "feather bold 24";
+    font:                        "feather bold 48";
     background-color:            transparent;
     text-color:                  inherit;
     cursor:                      inherit;
