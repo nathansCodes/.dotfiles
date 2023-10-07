@@ -1,8 +1,7 @@
 local gears = require("gears")
+local beautiful = require("beautiful")
 
-local client_shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height, 20)
-end
+local client_shape = beautiful.base_shape
 
 local client_shape_max = function(cr, w, h)
     gears.shape.rectangle(cr, w, h)

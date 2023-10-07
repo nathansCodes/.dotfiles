@@ -4,10 +4,7 @@ local awful = require("awful")
 awful.spawn.with_shell("/usr/libexec/polkit-gnome-authentication-agent-1")
 
 -- screen layout
-awful.spawn("/home/nathan/.screenlayout/default.sh")
-
--- wallpaper
-awful.spawn.with_shell("nitrogen --restore")
+awful.spawn.once("/home/nathan/.screenlayout/default.sh")
 
 -- compositor
 awful.spawn.with_shell("picom --experimental-backends")

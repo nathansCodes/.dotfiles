@@ -8,9 +8,9 @@ local dpi = beautiful.xresources.apply_dpi
 local current_layout_index = 1
 
 return function(layouts)
-    local widget =  awful.widget.keyboardlayout()
+    local layout = awful.widget.keyboardlayout()
 
-    widget:connect_signal("button::press", function(_, _, _, button)
+    layout:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
             current_layout_index = current_layout_index + 1
 
@@ -20,6 +20,16 @@ return function(layouts)
             awful.spawn("setxkbmap " .. layouts[current_layout_index])
         end
     end)
+
+    local widget = wibox.widget {
+        widget = wibox.container.margin,
+        right = dpi(5),
+        {
+            widget = wibox.container.place,
+            valign = "center",
+            layout,
+        }
+    }
 
     return widget
 end

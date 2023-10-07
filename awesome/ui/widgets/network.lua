@@ -39,7 +39,9 @@ local get_icon = function(strength, alert)
     return icons[strength + (alert and 4 or 0)]
 end
 
-local return_button = function(size)
+local return_button = function(size, show_notifications)
+
+    show_notifications = show_notifications == nil and true or show_notifications
 
 	local startup = true
 	local reconnect_startup = false
@@ -128,12 +130,13 @@ local return_button = function(size)
 	end
 
 	local network_notify = function(message, title, app_name, icon)
-		naughty.notify({
+        if not show_notifications then return end
+		naughty.notify {
 			message = message,
 			title = title,
 			app_name = app_name,
 			icon = icon
-		})
+		}
 	end
 
 	-- Wireless mode / Update
@@ -143,7 +146,7 @@ local return_button = function(size)
 
 		-- Create wireless connection notification
 		local notify_connected = function(essid)
-			local message = 'You are now connected to <b>\"' .. essid .. '\"</b>'
+			local message = 'You are now connected to ' .. essid
 			local title = 'Connection Established'
 			local app_name = 'System Notification'
 			local icon = widget_icon_dir .. 'connected_notification.svg'
@@ -171,7 +174,9 @@ local return_button = function(size)
 					end
 
 					if reconnect_startup or startup then
-						notify_connected(essid)
+                        if essid ~= 'N/A' then
+                            notify_connected(essid)
+                        end
 						update_reconnect_startup(false)
 					end
 				end
@@ -225,7 +230,7 @@ local return_button = function(size)
 		network_mode = 'wired'
 
 		local notify_connected = function()
-			local message = 'Connected to internet with <b>\"' .. network_interfaces.lan .. '\"</b>'
+			local message = 'Connected to internet with ' .. network_interfaces.lan
 			local title = 'Connection Established'
 			local app_name = 'System Notification'
 			local icon = widget_icon_dir .. 'wired.svg'
@@ -358,7 +363,7 @@ local return_button = function(size)
 	end
 
 	local network_updater = gears.timer {
-		timeout = 5,
+		timeout = 1,
 		autostart = true,
 		call_now = true,
 		callback = function()

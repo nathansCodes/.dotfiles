@@ -20,9 +20,9 @@ local name_widget = wibox.widget {
 
 local title_widget = wibox.widget {
     markup = 'Nothing Playing',
-    font = beautiful.font .. " Regular 12",
+    font = "Inter Regular 12",
     ellipsize = "end",
-    forced_height = dpi(20),
+    forced_height = dpi(22),
     align = 'center',
     valign = 'center',
     widget = wibox.widget.textbox
@@ -61,10 +61,11 @@ local progressbar = wibox.widget {
     color = {
         type  = "linear",
         from  = { 0  , 0 },
-        to    = { 100, 0 },
+        to    = { 100, 100 },
         stops = {
-            { 0  , beautiful.tertiary_accent  },
-            { 1  , beautiful.secondary_accent }
+            { 0,   beautiful.forth_accent },
+            { 0.5, beautiful.second_accent },
+            { 1,   beautiful.third_accent }
         }
     },
 }
@@ -135,8 +136,6 @@ return function()
         {
             widget = wibox.container.background,
             bg = beautiful.bg_focus .. beautiful.transparent,
-            border_width = 1,
-            border_color = beautiful.bg_minimize .. beautiful.transparent,
             shape = function(cr, w, h)
                 gears.shape.rounded_rect(cr, w, h, 20)
             end,

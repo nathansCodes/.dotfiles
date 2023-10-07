@@ -8,11 +8,10 @@
 
 configuration {
 	/*---------- General setting ----------*/
-	modi: "drun,run,filebrowser,window";
 	case-sensitive: false;
 	cycle: true;
 	filter: "";
-	scroll-method: 0;
+	scroll-method: 1;
 	normalize-match: true;
 	show-icons: true;
 	icon-theme: "Papirus";

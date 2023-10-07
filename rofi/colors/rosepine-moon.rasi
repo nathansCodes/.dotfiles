@@ -4,6 +4,7 @@
     foreground:     #e0def4ff;
     foreground-alt: #ea9a97ff;
     selected:       #3e8fb0ff;
+    selected-alt:   #9ccfd8ff;
     active:         #393552ff;
     urgent:         #eb6f92ff;
 }

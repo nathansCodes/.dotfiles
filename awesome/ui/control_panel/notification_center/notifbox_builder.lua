@@ -66,26 +66,21 @@ function builder.actions(n)
 			widget  = wibox.container.margin,
             margins = 4,
 			{
-				widget         = wibox.container.background,
-				bg             = beautiful.groups_bg,
-				shape          = gears.shape.rounded_rect,
-				forced_height  = 35,
-				{
-                    widget = clickable_container,
+                widget = clickable_container,
+                {
+                    widget = wibox.container.background,
+                    bg = beautiful.highlight_med .. beautiful.semi_transparent,
+                    forced_height = dpi(35),
+                    shape = gears.shape.rounded_rect,
                     {
-                        widget = wibox.container.background,
-                        bg = beautiful.bg_minimize .. beautiful.semi_transparent,
-                        shape = gears.shape.rounded_rect,
+                        widget = wibox.container.place,
                         {
-                            widget = wibox.container.place,
-                            {
-                                id     = 'text_role',
-                                font   = 'Inter Regular 11',
-                                widget = wibox.widget.textbox
-                            },
+                            id     = 'text_role',
+                            font   = 'Inter Regular 11',
+                            widget = wibox.widget.textbox
                         },
                     },
-				},
+                },
 			},
 		},
 	}
@@ -152,21 +147,21 @@ function builder.build_notifbox(n, icon, title, message, app)
 
     local box = wibox.widget {
         widget = wibox.container.margin,
-        left = 8,
-        right = 8,
+        left = dpi(8),
+        right = dpi(8),
         {
             widget = wibox.container.background,
-            bg = beautiful.bg_focus,
+            bg = n.urgency == "critical" and beautiful.error .. beautiful.transparent or beautiful.bg_focus .. beautiful.transparent,
             shape = gears.shape.rounded_rect,
             {
                 layout = wibox.layout.fixed.vertical,
                 spacing = 0,
                 {
                     widget = wibox.container.margin,
-                    top = 4,
+                    top = dpi(4),
                     bottom = 0,
-                    left = 4,
-                    right = 8,
+                    left = dpi(4),
+                    right = dpi(8),
                     {
                         layout = wibox.layout.align.horizontal,
                         builder.icon(icon),
@@ -176,15 +171,15 @@ function builder.build_notifbox(n, icon, title, message, app)
                 },
                 {
                     widget = wibox.container.margin,
-                    left = 8,
+                    left = dpi(8),
                     builder.app_name(app),
                 },
                 {
                     widget = wibox.container.margin,
-                    left = 8,
-                    right = 8,
+                    left = dpi(8),
+                    right = dpi(8),
                     top = 0,
-                    bottom = 4,
+                    bottom = dpi(4),
                     {
                         widget = wibox.widget.textbox,
                         text = message,
@@ -199,8 +194,8 @@ function builder.build_notifbox(n, icon, title, message, app)
 
     box:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
-            notif_list:remove_widgets(box, true)
-            if #notif_list.children == 0 then
+            notif_list:remove_widgets(box)
+            if #notif_list:get_children() == 0 then
                 notif_core:reset_notifbox_layout()
             end
         end

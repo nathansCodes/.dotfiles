@@ -72,7 +72,7 @@ return function(size)
 	)
 
 
-    awful.tooltip( {
+    awful.tooltip {
         objects = {widget_button},
         mode = "outside",
         align = "right",
@@ -86,7 +86,7 @@ return function(size)
             end
         end,
         preferred_positions = {"right", "left", "top", "bottom"}
-    } )
+    }
 
     function widget_button.get_state()
         if checker_connected ~= nil then

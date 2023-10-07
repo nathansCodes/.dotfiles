@@ -69,41 +69,24 @@ tmux_conf_24b_colour=true
 #   - tmux_conf_theme_synchronized
 tmux_conf_theme=enabled
 
-# default theme
-tmux_conf_theme_colour_1="#232136"    # base
-tmux_conf_theme_colour_2="#2a273f"    # surface
-tmux_conf_theme_colour_3="#393552"    # overlay
-tmux_conf_theme_colour_4="#6e6a86"    # muted
-tmux_conf_theme_colour_5="#908caa"    # subtle
-tmux_conf_theme_colour_6="#e0def4"    # text
-tmux_conf_theme_colour_7="#eb6f92"    # love
-tmux_conf_theme_colour_8="#f6c177"    # gold
-tmux_conf_theme_colour_9="#ea9a97"    # rose
-tmux_conf_theme_colour_10="#3e8fb0"   # pine
-tmux_conf_theme_colour_11="#9ccfd8"   # foam
-tmux_conf_theme_colour_12="#c4a7e7"   # iris
-tmux_conf_theme_colour_13="#2a283e"   # highlight low
-tmux_conf_theme_colour_14="#44415a"   # highlight med
-tmux_conf_theme_colour_15="#56526e"   # highlight high
-
 # default theme (ansi)
-#tmux_conf_theme_colour_1="colour0"
-#tmux_conf_theme_colour_2="colour8"
-#tmux_conf_theme_colour_3="colour8"
-#tmux_conf_theme_colour_4="colour14"
-#tmux_conf_theme_colour_5="colour11"
-#tmux_conf_theme_colour_6="colour0"
-#tmux_conf_theme_colour_7="colour15"
-#tmux_conf_theme_colour_8="colour0"
-#tmux_conf_theme_colour_9="colour11"
-#tmux_conf_theme_colour_10="colour13"
-#tmux_conf_theme_colour_11="colour10"
-#tmux_conf_theme_colour_12="colour8"
-#tmux_conf_theme_colour_13="colour15"
-#tmux_conf_theme_colour_14="colour0"
-#tmux_conf_theme_colour_15="colour0"
-#tmux_conf_theme_colour_16="colour1"
-#tmux_conf_theme_colour_17="colour15"
+tmux_conf_theme_colour_1="colour0"
+tmux_conf_theme_colour_2="colour8"
+tmux_conf_theme_colour_3="colour8"
+tmux_conf_theme_colour_4="colour14"
+tmux_conf_theme_colour_5="colour11"
+tmux_conf_theme_colour_6="colour0"
+tmux_conf_theme_colour_7="colour15"
+tmux_conf_theme_colour_8="colour0"
+tmux_conf_theme_colour_9="colour11"
+tmux_conf_theme_colour_10="colour13"
+tmux_conf_theme_colour_11="colour10"
+tmux_conf_theme_colour_12="colour8"
+tmux_conf_theme_colour_13="colour15"
+tmux_conf_theme_colour_14="colour0"
+tmux_conf_theme_colour_15="colour0"
+tmux_conf_theme_colour_16="colour1"
+tmux_conf_theme_colour_17="colour15"
 
 # window style
 tmux_conf_theme_window_fg="default"
@@ -176,7 +159,7 @@ tmux_conf_theme_terminal_title="#h ❐ #S ● #I #W"
 #     - #{hostname_full_ssh}
 #     - #{username}
 #     - #{username_ssh}
-tmux_conf_theme_window_status_fg="$tmux_conf_theme_colour_4"
+tmux_conf_theme_window_status_fg="$tmux_conf_theme_colour_3"
 tmux_conf_theme_window_status_bg="default"
 tmux_conf_theme_window_status_attr="none"
 tmux_conf_theme_window_status_format="#I #W#{?#{||:#{window_bell_flag},#{window_zoomed_flag}}, ,}#{?window_bell_flag,!,}#{?window_zoomed_flag,Z,}"
@@ -193,7 +176,7 @@ tmux_conf_theme_window_status_format="#I #W#{?#{||:#{window_bell_flag},#{window_
 #     - #{hostname_full_ssh}
 #     - #{username}
 #     - #{username_ssh}
-tmux_conf_theme_window_status_current_fg="$tmux_conf_theme_colour_10"
+tmux_conf_theme_window_status_current_fg="$tmux_conf_theme_colour_11"
 tmux_conf_theme_window_status_current_bg="default"
 tmux_conf_theme_window_status_current_attr="bold"
 tmux_conf_theme_window_status_current_format="#I #W#{?#{||:#{window_bell_flag},#{window_zoomed_flag}}, ,}#{?window_bell_flag,!,}#{?window_zoomed_flag,Z,}"
@@ -211,7 +194,7 @@ tmux_conf_theme_window_status_bell_bg="default"
 tmux_conf_theme_window_status_bell_attr="blink,bold"
 
 # window last status style
-tmux_conf_theme_window_status_last_fg="$tmux_conf_theme_colour_6"
+tmux_conf_theme_window_status_last_fg="$tmux_conf_theme_colour_7"
 tmux_conf_theme_window_status_last_bg="default"
 tmux_conf_theme_window_status_last_attr="none"
 
@@ -252,7 +235,7 @@ tmux_conf_theme_status_left="#S"
 tmux_conf_theme_status_right=""
 
 # status left style
-tmux_conf_theme_status_left_fg="$tmux_conf_theme_colour_9,$tmux_conf_theme_colour_9,$tmux_conf_theme_colour_8"
+tmux_conf_theme_status_left_fg="$tmux_conf_theme_colour_4,$tmux_conf_theme_colour_9,$tmux_conf_theme_colour_8"
 tmux_conf_theme_status_left_bg="default,$tmux_conf_theme_colour_3,$tmux_conf_theme_colour_11"
 tmux_conf_theme_status_left_attr="bold,none,none"
 

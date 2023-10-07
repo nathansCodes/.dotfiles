@@ -1,5 +1,11 @@
 eval "$(starship init zsh)"
 
+# options
+setopt AUTO_CD
+setopt CD_SILENT
+setopt APPEND_HISTORY
+setopt -h # HIST_IGNORE_DUPS
+
 # aliases
 alias l="exa --icons"
 alias ls="exa --icons --git -l"
@@ -14,6 +20,9 @@ export FZF_DEFAULT_OPTS="
 	--color=border:#44415a,header:#3e8fb0,gutter:#232136
 	--color=spinner:#f6c177,info:#9ccfd8,separator:#44415a
 	--color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
+
+# set bat's theme (no shit)
+export BAT_THEME="Catppuccin-mocha"
 
 # configure clipmenu to use rofi
 export CM_LAUNCHER=rofi

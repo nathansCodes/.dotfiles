@@ -15,98 +15,11 @@ local keyboardlayout = require("ui.widgets.locale")
 
 local control_panel = require("ui.control_panel")
 local volume_widget = require("ui.widgets.volume")
-
-local taglist_buttons = gears.table.join(
-	awful.button({ }, 1, function(t) t:view_only() end),
-	awful.button({ modkey }, 1, function(t)
-	    if client.focus then
-	        client.focus:move_to_tag(t)
-	    end
-	end),
-	awful.button({ }, 3, awful.tag.viewtoggle),
-	awful.button({ modkey }, 3, function(t)
-	    if client.focus then
-	        client.focus:toggle_tag(t)
-	    end
-	end),
-	awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
-	awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
-)
-
+local taglist = require("ui.widgets.taglist")
 
 screen.connect_signal("request::desktop_decoration", function(s)
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
-
-    screen.connect_signal("tag::history::update", function(s)
-        local tag_icons_normal = gfs.get_configuration_dir() .. "ui/icons/tags/normal/"
-        local tag_icons_focus = gfs.get_configuration_dir() .. "ui/icons/tags/focus/"
-        -- TODO: local tag_icons_urgent = gfs.get_configuration_dir() .. "ui/icons/tags/urgent/"
-
-        local set_icon = function(name)
-            local tag = awful.tag.find_by_name(s, name)
-            local icon
-
-            if tag.selected then
-                icon = tag_icons_focus .. name .. ".svg"
-            else
-                icon = tag_icons_normal .. name .. ".svg"
-            end
-
-            tag.icon = icon
-        end
-
-        set_icon("main")
-        set_icon("web")
-        set_icon("file")
-        set_icon("chat")
-        set_icon("misc")
-    end)
-
-    local taglist = awful.widget.taglist {
-        screen  = s,
-        buttons = taglist_buttons,
-        filter  = awful.widget.taglist.filter.all,
-        style   = {
-            shape = gears.shape.rounded_bar,
-            shape_border_width = dpi(0),
-            shape_border_width_focus = dpi(0),
-        },
-        layout  = {
-            layout = wibox.layout.fixed.horizontal,
-            spacing = dpi(6),
-        },
-        widget_template = {
-            {
-                {
-                    {
-                        {
-                            {
-                                id     = "icon_role",
-                                widget = wibox.widget.imagebox,
-                                vertical_fit_policy = "fit",
-                                horizontal_fit_policy = "fit",
-                                valign = "center",
-                                align = "center",
-                            },
-                            margins = dpi(3),
-                            widget  = wibox.container.margin,
-                        },
-                        layout = wibox.layout.align.horizontal,
-                        expand = "outside",
-                    },
-                    layout = wibox.layout.fixed.vertical
-                },
-                top    = dpi(2),
-                bottom = dpi(2),
-                left   = dpi(6),
-                right  = dpi(6),
-                widget = wibox.container.margin
-            },
-            id     = "background_role",
-            widget = wibox.container.background,
-        },
-    }
 
     local textclock = wibox.container.place {
         widget = wibox.widget.textclock,
@@ -170,22 +83,31 @@ screen.connect_signal("request::desktop_decoration", function(s)
     control_widget:set_shape(gears.shape.rounded_bar)
 
     control_widget:connect_signal("mouse::enter", function()
-        control_widget.bg = beautiful.bg_focus
-        control_widget.shape_border_width = 2
+        control_widget.bg = {
+            type = 'linear',
+            from = { 0, 0 },
+            to   = { 100, 0 },
+            stops = {
+                { 0, '#89b4fa' },
+                { 1, '#cba6f7' },
+            },
+        }
+
+        control_widget.fg = beautiful.bg_normal
     end)
     control_widget:connect_signal("mouse::leave", function()
-        control_widget.bg = beautiful.transparency
-        control_widget.shape_border_width = 0
+        control_widget.bg = beautiful.bg_transparent
+        control_widget.fg = beautiful.fg_normal
     end)
     control_widget:connect_signal("button::press", function(_, _, _, button)
         if button == 1 then
             control_panel.toggle()
-            s.mywibox.shape = s.mywibox.shape == gears.shape.rounded_bar and function(cr, w, h)
+            s.mywibox.shape = s.mywibox.shape == beautiful.bar_shape and function(cr, w, h)
                 gears.shape.partially_rounded_rect(cr, w, h, true, true, false, true, 16)
-            end or gears.shape.rounded_bar
-            s.mywibox.widget.shape = s.mywibox.widget.shape == gears.shape.rounded_bar and function(cr, w, h)
+            end or beautiful.bar_shape
+            s.mywibox.widget.shape = s.mywibox.widget.shape == beautiful.bar_shape and function(cr, w, h)
                 gears.shape.partially_rounded_rect(cr, w, h, true, true, false, true, 16)
-            end or gears.shape.rounded_bar
+            end or beautiful.bar_shape
         end
     end)
 
@@ -207,16 +129,20 @@ screen.connect_signal("request::desktop_decoration", function(s)
         end
     end)
 
+    client.connect_signal("property::fullscreen", function(c)
+        s.mywibox.ontop = not c.fullscreen
+    end)
+
     -- Create the wibox
     s.mywibox = awful.wibar {
         screen = s,
         type = "dock",
         height = dpi(32),
-        width = s.geometry.width * 0.99,
-        ontop = false,
-        shape = gears.shape.rounded_bar,
+        width = dpi(1900),
+        ontop = true,
+        shape = beautiful.bar_shape,
         visible = true,
-        bg = beautiful.wibar_bg,
+        bg = "#00000000",
     }
 
     s.mywibox:struts { top = s.mywibox.height - 4, bottom = 0, left = 0, right = 0 }
@@ -224,63 +150,77 @@ screen.connect_signal("request::desktop_decoration", function(s)
     s.mywibox:setup {
         widget = wibox.container.background,
         shape_border_width = dpi(2),
-        shape_border_color = beautiful.border_focus,
+        shape_border_color = beautiful.wibar_border_color,
         shape = s.mywibox.shape,
-        bg = beautiful.accent,
-        fg = beautiful.bg_normal,
+        bg = beautiful.bg_transparent,
         {
             layout = wibox.layout.align.horizontal,
             expand = "inside",
-            power_button,
             {
                 widget = wibox.container.background,
-                shape = gears.shape.rounded_bar,
-                border_width = 2,
-                border_color = beautiful.accent,
-                bg = beautiful.bg_normal,
-                fg = beautiful.fg_normal,
+                shape = function(cr, w, h)
+                    gears.shape.transform(gears.shape.rectangular_tag)
+                        : rotate_at(20, 16, math.pi) (cr, w, h, -9)
+                end,
+                bg = beautiful.wibar_border_color,
+                fg = beautiful.bg_normal,
+                forced_width = dpi(40),
+                power_button,
+            },
+            {
+                layout = wibox.container.margin,
+                left = dpi(-9),
+                right = dpi(-9),
                 {
-                    layout = wibox.layout.align.horizontal,
-                    expand = "none",
+                    widget = wibox.container.background,
+                    shape = s.mywibox.shape,
+                    border_width = dpi(2),
+                    border_color = beautiful.wibar_border_color,
+                    border_strategy = "inner",
+                    bg = beautiful.wibar_bg .. beautiful.fully_transparent,
+                    fg = beautiful.fg_normal,
                     {
-                        layout = wibox.layout.fixed.horizontal,
-                        spacing = dpi(7),
-                        taglist,
-                        s.mypromptbox,
-                    },
-                    {
-                        layout = wibox.layout.fixed.horizontal,
-                        textclock,
-                    },
-                    {
-                        layout = wibox.layout.fixed.horizontal,
-                        spacing = dpi(5),
-                        spotify_widget(),
+                        layout = wibox.layout.align.horizontal,
+                        expand = "none",
                         {
-                            widget = wibox.container.margin,
-                            top = dpi(2),
-                            bottom = dpi(2),
+                            layout = wibox.layout.fixed.horizontal,
+                            spacing = dpi(7),
+                            taglist(s),
+                            s.mypromptbox,
+                        },
+                        {
+                            layout = wibox.layout.fixed.horizontal,
+                            textclock,
+                        },
+                        {
+                            layout = wibox.layout.fixed.horizontal,
+                            spacing = dpi(5),
+                            spotify_widget(),
                             control_widget,
+                            battery_widget {
+                                font = beautiful.font .. " Regular 12",
+                                path_to_icons = "/usr/share/icons/Rose-Pine/status/symbolic/",
+                                show_current_level = true,
+                                display_notification = true,
+                            },
+                            keyboardlayout { "us", "de" },
                         },
-                        battery_widget {
-                            font = "CaskaydiaCoveNerdFontMono Regular 12",
-                            path_to_icons = "/usr/share/icons/Rose-Pine/status/symbolic/",
-                            show_current_level = true,
-                            display_notification = true,
-                        },
-                        keyboardlayout { "us", "de" },
-                    },
+                    }
                 }
             },
             {
                 widget = wibox.container.background,
-                bg = beautiful.accent,
+                shape = function(cr, w, h)
+                    gears.shape.rectangular_tag(cr, w, h, -9)
+                end,
+                forced_width = dpi(50),
+                bg = beautiful.wibar_border_color,
+                fg = beautiful.bg_normal,
                 {
                     widget = wibox.container.margin,
                     top = dpi(1),
                     bottom = dpi(1),
-                    left = dpi(3),
-                    right = dpi(8),
+                    left = dpi(12),
                     awful.widget.layoutbox(),
                 }
             },

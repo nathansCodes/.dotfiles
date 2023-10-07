@@ -1,5 +1,6 @@
 local awful = require("awful")
 local naughty = require("naughty")
+local beautiful = require("beautiful")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local apps = require("config.apps")
 
@@ -60,19 +61,15 @@ awful.keyboard.append_global_keybindings {
 awful.keyboard.append_global_keybindings({
     awful.key({ modkey }, " ", function() awful.util.spawn(apps.default.app_launcher) end,
         { description = "start rofi", group = "rofi" }),
-    awful.key({ modkey }, "'", function() awful.util.spawn("rofi -modi emoji -show emoji") end,
+    awful.key({ modkey }, "'", function() awful.util.spawn("rofi -modi emoji -show emoji -theme ~/.config/rofi/applets/emoji.rasi") end,
         { description = "run prompt", group = "rofi" }),
-    awful.key({ modkey }, "c", function() awful.spawn.with_shell("CM_LAUNCHER=rofi clipmenu") end,
+    awful.key({ modkey }, "c", function() awful.spawn.with_shell("CM_LAUNCHER=rofi clipmenu -theme ~/.config/rofi/applets/clipboard.rasi") end,
         { description = "show clipboard menu", group = "rofi" }),
-    awful.key({ modkey }, "/",
-        function()
-            awful.spawn.with_shell(
-                "rofi -show calc -modi calc -no-show-match -no-sort -calc-command \"echo -n '{result}' | xsel\"")
-        end,
+    awful.key({ modkey }, "/", function() awful.spawn.with_shell("~/.config/rofi/scripts/calc") end,
         { description = "show clipboard menu", group = "rofi" }),
     awful.key({ modkey }, "o", function() awful.spawn.with_shell("rofi-mpc") end,
         { description = "show clipboard menu", group = "rofi" }),
-    awful.key({ modkey }, "v", function() awful.spawn.with_shell("/home/nathan/.config/rofi/scripts/powermenu_t2") end,
+    awful.key({ modkey }, "v", function() awful.spawn.with_shell("~/.config/rofi/scripts/powermenu_t2") end,
         { description = "show clipboard menu", group = "rofi" }),
 })
 
@@ -281,7 +278,7 @@ client.connect_signal("request::default_keybindings", function()
             { description = "move to master", group = "client" }),
         awful.key({ modkey, }, "o", function(c) c:move_to_screen() end,
             { description = "move to screen", group = "client" }),
-        awful.key({ modkey, }, "t", function(c) c.ontop = not c.ontop end,
+        awful.key({ modkey, ctrl }, "t", function(c) c.ontop = not c.ontop end,
             { description = "toggle keep on top", group = "client" }),
         awful.key({ modkey, }, "n",
             function(c)

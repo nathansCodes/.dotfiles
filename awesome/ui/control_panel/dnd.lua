@@ -8,11 +8,11 @@ local dpi = beautiful.xresources.apply_dpi
 
 _G.dont_disturb = false
 
-return function(size)
+return function()
     local icon = wibox.widget {
         widget = wibox.widget.textbox,
         text = '',
-        font = beautiful.font .. " Regular " .. (size or dpi(18)),
+        font = beautiful.font .. " Regular 28",
         halign = "center",
     }
 
@@ -23,8 +23,8 @@ return function(size)
         bg = beautiful.button_bg_off,
         {
             widget = wibox.container.place,
-            valgin = "center",
-            halgin = "center",
+            valign = "center",
+            halign = "center",
             content_fill_horizontal = true,
             {
                 id = "margin",

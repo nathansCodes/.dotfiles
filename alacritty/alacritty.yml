@@ -1,5 +1,5 @@
 import:
-  - ~/.config/alacritty/rose-pine-moon.yml
+  - ~/.config/alacritty/colors/theme.yml
 
 window:
   padding:
@@ -9,8 +9,6 @@ window:
   dynamic_padding: true
 
   decorations: full
-  opacity: 0.75
-  inactive_opacity: 0.9
 
   startup_mode: Windowed
 
