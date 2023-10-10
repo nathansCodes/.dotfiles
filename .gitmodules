@@ -10,9 +10,6 @@
 [submodule "awesome/ui/widgets"]
 	path = awesome/ui/widgets
 	url = https://github.com/streetturtle/awesome-wm-widgets.git
-[submodule "awesome/awesome-buttons"]
-	path = awesome/awesome-buttons
-	url = https://github.com/streetturtle/awesome-buttons.git
 [submodule "awesome/net_widgets"]
 	path = awesome/net_widgets
 	url = https://github.com/pltanton/net_widgets.git
