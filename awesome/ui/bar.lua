@@ -7,8 +7,6 @@ local dpi = beautiful.xresources.apply_dpi
 
 -------------------- widgets --------------------
 local battery_widget = require("ui.widgets.battery")
-local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
-local spotify_widget = require("awesome-wm-widgets.spotify-widget.spotify")
 local network_widget = require("ui.widgets.network")
 local bluetooth_widget = require("ui.widgets.bluetooth")
 local keyboardlayout = require("ui.widgets.locale")
@@ -28,15 +26,6 @@ screen.connect_signal("request::desktop_decoration", function(s)
         refresh = 60,
         font = "CaskaydiaCoveNerdFontMono " .. "Medium 18",
     }
-
-    local calendar = calendar_widget {
-        radius = 20,
-        previous_month_button = 1,
-        next_month_button = 3,
-    }
-    textclock:connect_signal("button::press", function(_, _, _, button)
-        if button == 1 then calendar.toggle() end
-    end)
 
     local volume = volume_widget {
         size = dpi(22),
@@ -195,7 +184,6 @@ screen.connect_signal("request::desktop_decoration", function(s)
                         {
                             layout = wibox.layout.fixed.horizontal,
                             spacing = dpi(5),
-                            spotify_widget(),
                             control_widget,
                             battery_widget(),
                             keyboardlayout { "us", "de" },
