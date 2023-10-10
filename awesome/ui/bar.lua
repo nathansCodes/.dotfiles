@@ -6,7 +6,7 @@ local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
 -------------------- widgets --------------------
-local battery_widget = require("awesome-wm-widgets.battery-widget.battery")
+local battery_widget = require("ui.widgets.battery")
 local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
 local spotify_widget = require("awesome-wm-widgets.spotify-widget.spotify")
 local network_widget = require("ui.widgets.network")
@@ -197,12 +197,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
                             spacing = dpi(5),
                             spotify_widget(),
                             control_widget,
-                            battery_widget {
-                                font = beautiful.font .. " Regular 12",
-                                path_to_icons = "/usr/share/icons/Rose-Pine/status/symbolic/",
-                                show_current_level = true,
-                                display_notification = true,
-                            },
+                            battery_widget(),
                             keyboardlayout { "us", "de" },
                         },
                     }

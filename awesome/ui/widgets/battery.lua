@@ -25,32 +25,49 @@ return function()
 
     local widget = wibox.widget {
         widget = wibox.container.margin,
+        left = dpi(-2),
         top = dpi(4),
         bottom = dpi(4),
-        forced_width = dpi(37),
+        forced_width = dpi(42),
         {
-            widget = wibox.container.background,
-            bg = beautiful.bg_transparent,
-            fg = beautiful.bg_normal,
-            shape = function(cr, w, h)
-                gears.shape.rounded_rect(cr, w, h, 3)
-            end,
-            border_color = beautiful.text,
-            border_width = dpi(2),
+            layout = wibox.layout.fixed.horizontal,
+            spacing = dpi(2),
             {
-                layout = wibox.layout.stack,
-                progressbar,
+                widget = wibox.container.background,
+                forced_width = dpi(37),
+                bg = beautiful.bg_transparent,
+                fg = beautiful.bg_normal,
+                shape = function(cr, w, h)
+                    gears.shape.rounded_rect(cr, w, h, 3)
+                end,
+                border_color = beautiful.text,
+                border_width = dpi(2),
                 {
-                    widget = wibox.container.rotate,
-                    direction = "west",
-                    battery_icon,
-                }
+                    layout = wibox.layout.stack,
+                    progressbar,
+                    {
+                        widget = wibox.container.rotate,
+                        direction = "west",
+                        battery_icon,
+                    }
+                },
             },
+            {
+                widget = wibox.container.place,
+                valign = "center",
+                {
+                    widget = wibox.container.background,
+                    shape = gears.shape.rounded_bar,
+                    forced_width = dpi(2),
+                    forced_height = dpi(8),
+                    bg = beautiful.text,
+                }
+            }
         }
     }
 
 	local tooltip = awful.tooltip {
-		text = 'Loading...',
+		markup = 'Loading...',
 		objects = { widget },
 		mode = 'outside',
 		align = 'right',
@@ -72,7 +89,7 @@ return function()
             progressbar.color = beautiful.warn
         elseif percent <= 60 then
             progressbar.color = beautiful.cyan
-        elseif is_charging then
+        elseif is_charging or percent == 100 then
             progressbar.color = beautiful.green
         else
             progressbar.color = beautiful.inactive .. beautiful.semi_transparent
@@ -84,7 +101,18 @@ return function()
             battery_icon:set_text("")
         end
 
-        tooltip:set_text(stdout)
+        local tooltip_text = percent == 100 and "Battery <b>Full</b>\n"
+                                            or  "Battery: <b>" .. percent_str .. "%</b>\n"
+
+        if stdout:match("online") ~= nil then
+            tooltip_text = tooltip_text .. "AC Adapter: <b>Online</b>"
+        elseif percent <= 20 then
+            tooltip_text = tooltip_text .. "Battery low, connect device to power source ASAP."
+        else
+            tooltip_text = tooltip_text .. "AC Adapter: <b>Offline</b>"
+        end
+
+        tooltip:set_markup(tooltip_text)
     end)
 
     return widget
