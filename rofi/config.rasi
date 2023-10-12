@@ -11,7 +11,7 @@ configuration {
 	case-sensitive: false;
 	cycle: true;
 	filter: "";
-	scroll-method: 1;
+	scroll-method: 0;
 	normalize-match: true;
 	show-icons: true;
 	icon-theme: "Papirus";
