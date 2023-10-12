@@ -27,6 +27,8 @@ export BAT_THEME="Catppuccin-mocha"
 # configure clipmenu to use rofi
 export CM_LAUNCHER=rofi
 
+export EDITOR=nvim
+
 export PATH=$HOME/.config/rofi/scripts:$PATH
 
 neofetch
