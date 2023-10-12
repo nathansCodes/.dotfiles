@@ -28,10 +28,13 @@ local checker_connected
 -- Initialization
 -- ===================================================================
 
-return function(size)
+return function(size, cursor_focus)
+    cursor_focus = cursor_focus == nil and true or cursor_focus
+
     local widget = wibox.widget {
         text = '󰂯',
         widget = wibox.widget.textbox,
+        forced_width = dpi(size + 6),
         font = beautiful.font .. " Regular " .. (size or 18),
         halign = "center",
     }
@@ -58,6 +61,7 @@ return function(size)
 			bottom = dpi(0),
 			widget = wibox.container.margin
 		},
+        change_cursor = cursor_focus,
 		widget = clickable_container
 	}
 

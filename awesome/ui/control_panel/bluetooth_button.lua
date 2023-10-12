@@ -13,7 +13,7 @@ local connected
 local on
 
 return function(size)
-    local icon = bluetooth_icon(size)
+    local icon = bluetooth_icon(size, false)
 
     local widget = wibox.widget {
         id = "icon_bg",

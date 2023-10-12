@@ -33,7 +33,7 @@ return function(size)
                     end
                 end)
             },
-            net_icon(size, false),
+            net_icon(size, false, false),
         }
     }
 

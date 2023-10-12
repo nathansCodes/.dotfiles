@@ -22,6 +22,7 @@ function build(widget)
     local old_cursor, old_wibox
 
     container:connect_signal('mouse::enter', function()
+        if not container.children[1].change_cursor then return end
         local w = _G.mouse.current_wibox
         if w then
             old_cursor, old_wibox = w.cursor, w
@@ -30,6 +31,7 @@ function build(widget)
     end)
 
     container:connect_signal('mouse::leave', function()
+        if not container.children[1].change_cursor then return end
         if old_wibox then
             old_wibox.cursor = old_cursor
             old_wibox = nil

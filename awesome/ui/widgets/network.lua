@@ -39,7 +39,9 @@ local get_icon = function(strength, alert)
     return icons[strength + (alert and 4 or 0)]
 end
 
-local return_button = function(size, show_notifications)
+local return_button = function(size, show_notifications, cursor_focus)
+
+    cursor_focus = cursor_focus == nil and true or cursor_focus
 
     show_notifications = show_notifications == nil and true or show_notifications
 
@@ -72,6 +74,7 @@ local return_button = function(size, show_notifications)
 			right = dpi(0),
 			widget = wibox.container.margin,
 		},
+        change_cursor = cursor_focus,
 		widget = clickable_container
 	}
 
