@@ -14,6 +14,16 @@ alias lt="eza --icons --git --tree"
 alias v="nvim"
 alias t="tmux"
 
+alias gs="git status"
+alias ga="git add"
+alias gr="git restore"
+alias grm="git rm"
+alias gd="git diff"
+alias gc="git commit"
+alias gp="git push"
+alias gb="git branch"
+alias gm="git submodule"
+
 export FZF_DEFAULT_OPTS="
 	--color=fg:#908caa,hl:#ea9a97
 	--color=fg+:#e0def4,hl+:#ea9a97
@@ -29,6 +39,6 @@ export CM_LAUNCHER=rofi
 
 export EDITOR=nvim
 
-export PATH=$HOME/.config/rofi/scripts:$PATH
+export PATH="$HOME/.config/rofi/scripts:$PATH"
 
 neofetch
