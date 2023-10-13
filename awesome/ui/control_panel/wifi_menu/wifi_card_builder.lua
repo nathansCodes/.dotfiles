@@ -9,7 +9,7 @@ local popup = require("ui.widgets.popup")
 
 local builder = {}
 
-function builder.icon(strength)
+function builder.icon(strength, password_needed)
     return wibox.widget {
         layout = wibox.layout.align.horizontal,
         resize = true,
@@ -17,10 +17,10 @@ function builder.icon(strength)
         nil,
 		{
 			id = 'icon',
-			text =    tonumber(strength) >= 75 and '󰤨'
-                   or tonumber(strength) >= 50 and '󰤥'
-                   or tonumber(strength) >= 25 and '󰤢'
-                   or                              '󰤟',
+			text =    tonumber(strength) >= 75 and ( password_needed and '󰤪' or '󰤨' )
+                   or tonumber(strength) >= 50 and ( password_needed and '󰤧' or '󰤥' )
+                   or tonumber(strength) >= 25 and ( password_needed and '󰤤' or '󰤢' )
+                   or                              ( password_needed and '󰤡' or '󰤟' ),
             forced_width = dpi(32),
 			widget = wibox.widget.textbox,
             font = beautiful.font .. " Regular 24",
@@ -155,7 +155,7 @@ function builder.build_wifi_card(ssid, strength, is_connected, password_needed)
                         {
                             id = "left",
                             layout = wibox.layout.fixed.horizontal,
-                            builder.icon(strength),
+                            builder.icon(strength, password_needed),
                             ssid_text,
                         },
                         nil,
@@ -173,11 +173,6 @@ function builder.build_wifi_card(ssid, strength, is_connected, password_needed)
     }
 
     function widget:update(new_ssid, new_strength, connected, new_password_needed)
-        if was_connected == true and connected == false then
-            widget = nil
-            self = nil
-            return nil
-        end
         local left = self:get_children_by_id("left")[1]
         local right = self:get_children_by_id("right")[1]
         local bg = self:get_children_by_id("background")[1]
@@ -193,7 +188,7 @@ function builder.build_wifi_card(ssid, strength, is_connected, password_needed)
                           or                        beautiful.error
 
         left:reset(left)
-        left:insert(1, builder.icon(new_strength))
+        left:insert(1, builder.icon(new_strength, new_password_needed))
         ssid_text:set_text(new_ssid)
         left:insert(2, ssid_text)
 
