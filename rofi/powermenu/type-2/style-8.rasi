@@ -14,6 +14,13 @@ configuration {
 	kb-select-2:                "r";
 	kb-select-3:                "l";
 	kb-select-4:                "k";
+
+    kb-row-right:               "Control+l";
+    kb-row-left:                "Control+h";
+    kb-row-up:                  "Control+k";
+    kb-row-down:                "Control+j";
+
+    hover-select:               true;
 }
 
 /*****----- Global Properties -----*****/
@@ -151,8 +158,8 @@ element {
     border:                      0px solid;
     border-radius:               8px;
     border-color:                @selected;
-    background-color:            @background-alt;
-    text-color:                  @foreground;
+    background-color:            @background;
+    text-color:                  @selected;
     cursor:                      pointer;
 }
 element-text {
@@ -165,5 +172,5 @@ element-text {
 }
 element selected.normal {
     background-color:            var(selected);
-    text-color:                  var(background);
+    text-color:                  var(background-alt);
 }

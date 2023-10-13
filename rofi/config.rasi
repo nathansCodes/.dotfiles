@@ -123,8 +123,6 @@ configuration {
 	kb-accept-custom-alt: "Control+Shift+Return";
 	kb-accept-alt: "Shift+Return";
 	kb-delete-entry: "Shift+Delete";
-	kb-mode-next: "Control+l,Shift+Right";
-	kb-mode-previous: "Control+h,Shift+Left";
 	kb-mode-complete: "";
 	kb-row-left: "Control+Page_Up";
 	kb-row-right: "Control+Page_Down";

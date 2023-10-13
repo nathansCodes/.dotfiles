@@ -16,8 +16,11 @@ configuration {
     display-filebrowser:        " Files";
     display-window:             " Windows";
 	drun-display-format:        "{name}";
-	window-format:              "{w} · {c} · {t}";
+	window-format:              "{c} · {t}";
     icon-theme:                 "Papirus";
+
+	kb-mode-next: "Control+l,Shift+Right";
+	kb-mode-previous: "Control+h,Shift+Left";
 }
 
 /*****----- Global Properties -----*****/
@@ -38,11 +41,11 @@ configuration {
     active-background:           var(active);
     active-foreground:           var(background);
     selected-normal-background:  var(selected);
-    selected-normal-foreground:  var(background);
+    selected-normal-foreground:  var(background-alt);
     selected-urgent-background:  var(active);
-    selected-urgent-foreground:  var(background);
+    selected-urgent-foreground:  var(background-alt);
     selected-active-background:  var(urgent);
-    selected-active-foreground:  var(background);
+    selected-active-foreground:  var(background-alt);
     alternate-normal-background: var(background);
     alternate-normal-foreground: var(foreground);
     alternate-urgent-background: var(urgent);
