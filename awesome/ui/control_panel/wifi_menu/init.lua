@@ -60,6 +60,8 @@ local function update()
     local builder = require("ui.control_panel.wifi_menu.wifi_card_builder")
     local i = 1
 
+    local connection_found = false
+
     local children = layout:get_children()
     awful.spawn.with_line_callback("nmcli --get-values ssid,security,in-use,signal d wifi", {
         stdout = function(line)
@@ -79,6 +81,7 @@ local function update()
                 else
                     connected_network.children[1]:update(ssid, strength, is_connected, password_needed)
                 end
+                connection_found = true
             else
                 if children[i] ~= nil then
                     children[i]:update(ssid, strength, is_connected, password_needed)
@@ -87,10 +90,16 @@ local function update()
                 end
                 i = i + 1
             end
-        end
+        end,
+        output_done = function()
+            for _ = i, #children do
+                layout:remove(i)
+            end
+            if not connection_found then
+                connected_network:reset()
+            end
+        end,
     })
-
-    --TODO: reset the connected_network widget if it's not connected
 end
 
 local reload_button = wibox.widget {
