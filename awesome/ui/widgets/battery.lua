@@ -86,23 +86,40 @@ return function()
         if percent <= 20 then
             progressbar.color = beautiful.error
         elseif percent <= 40 then
-            progressbar.color = beautiful.warn
+            progressbar.color = beautiful.warn2
         elseif percent <= 60 then
+            progressbar.color = beautiful.warn
+        elseif percent <= 75 then
             progressbar.color = beautiful.cyan
-        elseif is_charging or percent == 100 then
+        elseif is_charging or percent <= 85 then
             progressbar.color = beautiful.green
         else
             progressbar.color = beautiful.inactive .. beautiful.semi_transparent
         end
 
-        if is_charging then
-            battery_icon:set_text("󱐋")
-        else
-            battery_icon:set_text("")
-        end
-
         local tooltip_text = percent == 100 and "Battery <b>Full</b>\n"
                                             or  "Battery: <b>" .. percent_str .. "%</b>\n"
+
+        local time_left = stdout:match("..:..:..")
+
+        local time_left_hours = time_left ~= nil and tonumber(time_left:sub(1, 2))
+        local time_left_min = time_left ~= nil and tonumber(time_left:sub(4, 5))
+
+        if is_charging then
+            battery_icon:set_text("󱐋")
+            if time_left ~= nil then
+                tooltip_text = tooltip_text .. "Time left until charged: <b>"
+                                            .. tostring(time_left_hours) .. " h "
+                                            .. tostring(time_left_min) .. " min</b>\n"
+            end
+        else
+            battery_icon:set_text("")
+            if time_left ~= nil then
+                tooltip_text = tooltip_text .. "Time left on charge: <b>"
+                                            .. tostring(time_left_hours) .. "h "
+                                            .. tostring(time_left_min) .. " min</b>\n"
+            end
+        end
 
         if stdout:match("online") ~= nil then
             tooltip_text = tooltip_text .. "AC Adapter: <b>Online</b>"
