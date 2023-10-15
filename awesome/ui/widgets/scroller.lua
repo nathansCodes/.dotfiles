@@ -21,7 +21,7 @@ return function(args)
     }
 
     container:add_button(awful.button({}, 5, function()
-        if not remove_empty_widget or #layout.children == 0 then
+        if not remove_empty_widget or not #layout.children == 0 then
             container.top = container.top - 15
         end
     end))
@@ -40,6 +40,14 @@ return function(args)
         shape = gears.shape.rounded_rect,
         container
     }
+
+    function widget:remove(i)
+        layout:remove(i)
+        if #layout.children == 0 then
+            layout:insert(1, args.empty_widget)
+            remove_empty_widget = true
+        end
+    end
 
     function widget:remove_widgets(w)
         layout:remove_widgets(w)
