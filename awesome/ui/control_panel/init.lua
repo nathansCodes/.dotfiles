@@ -17,8 +17,6 @@ local right_ctrl = require("ui.control_panel.right_ctrl")
 local notif_center = require("ui.control_panel.notification_center")
 local wifi_menu = require("ui.control_panel.wifi_menu")
 
-require("helpers.widget")
-
 local control_panel = awful.popup {
     screen = screen[1],
     type = "popup_menu",

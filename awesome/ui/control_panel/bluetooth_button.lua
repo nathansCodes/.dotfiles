@@ -5,8 +5,6 @@ local gfs = gears.filesystem
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
-require("helpers.widget")
-
 local bluetooth_icon = require("ui.widgets.bluetooth")
 
 local connected

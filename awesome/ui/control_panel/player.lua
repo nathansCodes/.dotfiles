@@ -119,7 +119,7 @@ next:connect_signal("button::press", function(_, _, _, button)
 end)
 
 return function()
-    return format_item {
+    return wibox.widget {
         layout = wibox.layout.stack,
         margins = dpi(0),
         bg = beautiful.bg_transparent,

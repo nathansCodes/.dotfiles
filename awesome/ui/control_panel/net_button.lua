@@ -6,7 +6,6 @@ local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
 local net_icon = require("ui.widgets.network")
-require("helpers.widget")
 
 local on
 
