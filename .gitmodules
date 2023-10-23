@@ -25,3 +25,6 @@
 [submodule "awesome/rubato"]
 	path = awesome/rubato
 	url = https://github.com/andOrlando/rubato.git
+[submodule "awesome/color"]
+	path = awesome/color
+	url = https://github.com/andOrlando/color.git

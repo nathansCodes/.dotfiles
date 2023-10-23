@@ -15,7 +15,7 @@ return {
 		--- Default web browser
 		web_browser = "flatpak run org.mozilla.firefox",
 		--- Default file manager
-		file_manager = "nautilus",
+		file_manager = "thunar",
 		--- Default network manager
 		network_manager = "nm-connection-editor",
 		--- Default bluetooth manager
