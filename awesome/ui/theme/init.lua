@@ -10,6 +10,9 @@ local themes_path = gfs.get_themes_dir()
 
 local theme = require("ui.theme.selected_color_scheme")
 
+local icons_path = gfs.get_configuration_dir() .. "/ui/icons/"
+
+theme.icon_font = "Material Symbols Rounded "
 theme.font = "Inter"
 
 theme.base_shape = function(cr, w, h)
@@ -64,7 +67,8 @@ theme.border_normal     = theme.surface .. "99"
 theme.border_focus      = theme.accent
 theme.border_marked     = theme.yellow
 
-theme.button_bg_off   = theme.inactive .. theme.transparent
+theme.button_bg_off   = theme.transparency_enabled and theme.inactive .. theme.transparent
+                                                   or  theme.highlight_med
 theme.button_bg_on    = theme.second_accent
 
 -- There are other variable sets
@@ -90,13 +94,33 @@ theme.hotkeys_modifiers_fg = theme.fg_normal
 theme.hotkeys_shape = theme.base_shape
 
 theme.tag_preview_widget_border_radius = dpi(7)
-theme.tag_preview_widget_border_width = dpi(3)
+theme.tag_preview_widget_border_width = dpi(2)
 theme.tag_preview_widget_border_color = theme.border_focus
 theme.tag_preview_widget_bg = theme.bg_normal
 theme.tag_preview_widget_margin = dpi(4)
 theme.tag_preview_client_border_radius = dpi(7)
-theme.tag_preview_client_border_width = dpi(2)
-theme.tag_preview_client_border_color = theme.border_focus
+theme.tag_preview_client_border_width = dpi(1)
+theme.tag_preview_client_border_color = theme.border_normal
+
+theme.titlebar_close_button_normal       = icons_path .. "titlebar/titlebutton.svg"
+theme.titlebar_close_button_normal_hover = icons_path .. "titlebar/close.svg"
+theme.titlebar_close_button_focus        = icons_path .. "titlebar/close.svg"
+theme.titlebar_close_button_focus_hover  = icons_path .. "titlebar/close_hover.svg"
+
+theme.titlebar_maximized_button_normal_inactive      = icons_path .. "titlebar/titlebutton.svg"
+theme.titlebar_maximized_button_normal_hover         = icons_path .. "titlebar/maximize.svg"
+theme.titlebar_maximized_button_focus_inactive       = icons_path .. "titlebar/maximize.svg"
+theme.titlebar_maximized_button_focus_inactive_hover = icons_path .. "titlebar/maximize_hover.svg"
+
+theme.titlebar_minimize_button_normal       = icons_path .. "titlebar/titlebutton.svg"
+theme.titlebar_minimize_button_normal_hover = icons_path .. "titlebar/minimize.svg"
+theme.titlebar_minimize_button_focus        = icons_path .. "titlebar/minimize.svg"
+theme.titlebar_minimize_button_focus_hover  = icons_path .. "titlebar/minimize_hover.svg"
+
+theme.titlebar_floating_button_normal_inactive      = icons_path .. "titlebar/titlebutton.svg"
+theme.titlebar_floating_button_normal_hover         = icons_path .. "titlebar/float.svg"
+theme.titlebar_floating_button_focus_inactive       = icons_path .. "titlebar/float.svg"
+theme.titlebar_floating_button_focus_inactive_hover = icons_path .. "titlebar/float_hover.svg"
 
 theme.prompt_bg = theme.fully_transparent
 
