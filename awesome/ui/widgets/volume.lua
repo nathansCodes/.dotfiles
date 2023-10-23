@@ -265,18 +265,11 @@ local function worker(user_args)
     local size = args.size or 18
 
     local icon_widget = wibox.widget {
-        {
-            id = "icon",
-            widget = wibox.widget.textbox,
-            text = "󰕿",
-            font = beautiful.font .. " Regular " .. size,
-            halign = "left",
-            valign = "center",
-            forced_width = user_args.forced_width or size,
-        },
-        valign = 'center',
-        halign = 'center',
-        layout = wibox.container.place,
+        widget = wibox.widget.textbox,
+        text = "\u{e04e}",
+        font = beautiful.icon_font .. size,
+        halign = "left",
+        valign = "center",
     }
 
     volume.widget = icon_widget
@@ -287,18 +280,18 @@ local function worker(user_args)
         local volume_level = string.match(stdout, "(%d?%d?%d)%%") -- (\d?\d?\d)\%)
         volume_level = string.format("% 3d", volume_level)
         if mute == 'off' then
-            icon = '󰖁'
+            icon = '\u{e04f}'
         else
             local new_value_num = tonumber(volume_level)
             if (new_value_num >= 0 and new_value_num < 33) then
-                icon="󰕿"
+                icon="\u{e04e}"
             elseif (new_value_num < 66) then
-                icon="󰖀"
+                icon="\u{e04d}"
             else
-                icon="󰕾"
+                icon="\u{e050}"
             end
         end
-        widget.icon:set_text(icon)
+        widget:set_text(icon)
     end
 
     function volume:inc(s)

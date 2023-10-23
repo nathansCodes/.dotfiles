@@ -6,32 +6,36 @@ local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
 local net_icon = require("ui.widgets.network")
+local button = require("ui.widgets.button")
 
 local on
 
 local stop_toggle = false
 
 return function(size)
-    local button = wibox.widget {
+    local button_widget = button {
         id = "icon_bg",
         widget = wibox.container.background,
         shape = gears.shape.circle,
+        top = true,
+        left = true,
         bg = beautiful.button_bg_off,
+        callback = function(_, _, _, b)
+            if b == 1 then
+                if stop_toggle then return end
+
+                if on ~= nil then
+                    awful.spawn.once("nmcli n off")
+                else
+                    awful.spawn.once("nmcli n on")
+                end
+            end
+        end,
         wibox.widget {
             widget = wibox.container.place,
             valgin = "center",
             halgin = "center",
             content_fill_horizontal = true,
-            buttons = {
-                awful.button({ }, 1, function()
-                    if stop_toggle then return end
-                    if on ~= nil then
-                        awful.spawn.once("nmcli n off")
-                    else
-                        awful.spawn.once("nmcli n on")
-                    end
-                end)
-            },
             net_icon(size, false, false),
         }
     }
@@ -41,29 +45,14 @@ return function(size)
             or stdout:match("connecting")
             or stdout:match("connected")
 
+        if button_widget.pressed then return end
+
         if on ~= nil then
-            button.bg = beautiful.button_bg_on
-            button.fg = beautiful.bg_focus
+            button_widget:set_bg(beautiful.button_bg_on)
+            button_widget:set_fg(beautiful.bg_focus)
         else
-            button.bg = beautiful.button_bg_off
-            button.fg = beautiful.fg_normal
-        end
-    end)
-
-    local old_cursor, old_wibox
-
-    button:connect_signal( 'mouse::enter', function()
-        local w = _G.mouse.current_wibox
-        if w then
-            old_cursor, old_wibox = w.cursor, w
-            w.cursor = 'hand1'
-        end
-    end)
-
-    button:connect_signal( 'mouse::leave', function()
-        if old_wibox then
-            old_wibox.cursor = old_cursor
-            old_wibox = nil
+            button_widget:set_bg(beautiful.button_bg_off)
+            button_widget:set_fg(beautiful.fg_normal)
         end
     end)
 
@@ -108,9 +97,13 @@ return function(size)
   </g>
 </svg> ]]
 
-    local expand_button = wibox.widget {
+    local expand_button = button {
         id = "icon",
         widget = wibox.widget.imagebox,
+        change_cursor = false,
+        right = true,
+        bottom = true,
+        distance = 2,
         valign = "bottom",
         halign = "right",
         forced_width = dpi(14),
@@ -125,20 +118,27 @@ return function(size)
 
     expand_button:connect_signal( 'mouse::enter', function()
         stop_toggle = true
+        button_widget:stop_animations()
     end)
 
     expand_button:connect_signal( 'mouse::leave', function()
         stop_toggle = false
+        button_widget:continue_animations()
     end)
 
     local widget = wibox.widget {
         layout = wibox.layout.stack,
-        button,
+        button_widget,
         wibox.widget {
             widget = wibox.container.place,
             valign = "bottom",
             halign = "right",
-            expand_button,
+            {
+                widget = wibox.container.margin,
+                right = dpi(-2),
+                bottom = dpi(-2),
+                expand_button,
+            }
         },
     }
 

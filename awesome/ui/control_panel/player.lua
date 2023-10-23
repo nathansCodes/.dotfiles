@@ -75,8 +75,8 @@ playerctl:connect_signal("position", function(_, interval_sec, length_sec, _)
 end)
 
 local prev = wibox.widget {
-    text = "󰒮",
-    font = beautiful.font .. " Regular 20",
+    text = "\u{e045}",
+    font = beautiful.icon_font .. "20",
     widget = wibox.widget.textbox,
 }
 
@@ -87,8 +87,8 @@ prev:connect_signal("button::press", function(_, _, _, button)
 end)
 
 local play_pause = wibox.widget {
-    text = "󰐊",
-    font = beautiful.font .. " Regular 20",
+    text = "\u{e037}",
+    font = beautiful.icon_font .. "20",
     widget = wibox.widget.textbox,
 }
 
@@ -100,15 +100,15 @@ end)
 
 playerctl:connect_signal("playback_status", function(_, playing, _)
     if playing == true then
-        play_pause:set_text("󰏤")
+        play_pause:set_text("\u{e034}")
     else
-        play_pause:set_text("󰐊")
+        play_pause:set_text("\u{e037}")
     end
 end)
 
 local next = wibox.widget {
-    text = "󰒭",
-    font = beautiful.font .. " Regular 20",
+    text = "\u{e044}",
+    font = beautiful.icon_font .. "20",
     widget = wibox.widget.textbox,
 }
 

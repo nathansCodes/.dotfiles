@@ -16,6 +16,7 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local clickable_container = require("ui.widgets.clickable-container")
 local gears = require("gears")
+local gfs = gears.filesystem
 local dpi = require("beautiful").xresources.apply_dpi
 
 local apps = require("config.apps")
@@ -32,37 +33,31 @@ return function(size, cursor_focus)
     cursor_focus = cursor_focus == nil and true or cursor_focus
 
     local widget = wibox.widget {
-        text = '󰂯',
+        text = '\u{e1a7}',
         widget = wibox.widget.textbox,
-        forced_width = dpi(size + 6),
-        font = beautiful.font .. " Regular " .. (size or 18),
+        font = beautiful.icon_font .. (size or 18),
         halign = "center",
     }
 
-    watch("/home/nathan/.dotfiles/scripts/check_bluetooth.sh", 1, function(_, stdout)
+    watch(gfs.get_configuration_dir() .. "/../scripts/check_bluetooth.sh", 1, function(_, stdout)
         checker_connected = stdout:match("connected")
         checker_on = stdout:match("on")
         local icon
         if (checker_connected ~= nil) then
-            icon = "󰂱"
+            icon = "\u{e1a8}"
         elseif (checker_on ~= nil) then
-            icon = "󰂯"
+            icon = "\u{e1a7}"
         else
-            icon = "󰂲"
+            icon = "\u{e1a9}"
         end
         widget:set_text(icon)
         collectgarbage("collect")
     end, widget)
 
 	local widget_button = wibox.widget {
-		{
-			widget,
-			top = dpi(0),
-			bottom = dpi(0),
-			widget = wibox.container.margin
-		},
+        widget = clickable_container,
         change_cursor = cursor_focus,
-		widget = clickable_container
+        widget,
 	}
 
 	widget_button:buttons(

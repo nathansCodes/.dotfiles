@@ -27,10 +27,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
         font = "CaskaydiaCoveNerdFontMono " .. "Medium 18",
     }
 
-    local volume = volume_widget {
-        size = dpi(22),
-        widget_type = 'icon',
-    }
+    local volume = volume_widget { size = 22 }
 
     volume:buttons( gears.table.join(
         awful.button({}, 2, function() volume_widget:toggle() end),
@@ -50,21 +47,9 @@ screen.connect_signal("request::desktop_decoration", function(s)
             {
                 layout = wibox.layout.align.horizontal,
                 expand = "none",
-                {
-                    widget = wibox.container.margin,
-                    margins = dpi(2),
-                    network_widget(20),
-                },
-                {
-                    widget = wibox.container.margin,
-                    margins = dpi(2),
-                    bluetooth_widget(20),
-                },
-                {
-                    widget = wibox.container.margin,
-                    margins = dpi(2),
-                    volume,
-                },
+                network_widget(22),
+                bluetooth_widget(22),
+                volume,
             },
         },
     }
@@ -102,21 +87,18 @@ screen.connect_signal("request::desktop_decoration", function(s)
 
     local power_button = wibox.widget {
         widget = wibox.container.margin,
-        left = dpi(8),
-        right = dpi(6),
-        forced_width = dpi(36),
+        left = dpi(4),
+        buttons = {
+            awful.button({}, 1, function()
+                awful.spawn(gfs.get_configuration_dir() .. "/../rofi/scripts/powermenu")
+            end),
+        },
         {
             widget = wibox.widget.textbox,
-            text = "⏻",
-            font = beautiful.font .. " Regular 20",
+            text = "\u{f8c7}",
+            font = beautiful.icon_font .. "Bold 22",
         },
     }
-
-    power_button:connect_signal("button::press", function(_, _, _, button)
-        if button == 1 then
-            awful.spawn.with_shell(gfs.get_configuration_dir() .. "../rofi/scripts/powermenu_t2")
-        end
-    end)
 
     client.connect_signal("property::fullscreen", function(c)
         s.mywibox.ontop = not c.fullscreen

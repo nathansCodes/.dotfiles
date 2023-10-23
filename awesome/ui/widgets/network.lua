@@ -25,18 +25,14 @@ local network_interfaces = { wlan = "wlo1", lan = "eno1" }
 
 local network_mode = nil
 
-local get_icon = function(strength, alert)
+local get_icon = function(strength)
     local icons = {
-        "󰤟",
-        "󰤢",
-        "󰤥",
-        "󰤨",
-        "󰤠",
-        "󰤣",
-        "󰤦",
-        "󰤩",
+        "\u{ebe4}",
+        "\u{ebd6}",
+        "\u{ebe1}",
+        "\u{f065}",
     }
-    return icons[strength + (alert and 4 or 0)]
+    return icons[strength]
 end
 
 local return_button = function(size, show_notifications, cursor_focus)
@@ -54,13 +50,30 @@ local return_button = function(size, show_notifications, cursor_focus)
         expand = "none",
         nil,
 		{
-			id = 'icon',
-			text = '󰤯',
-            forced_width = size + dpi(8),
-			widget = wibox.widget.textbox,
-            font = beautiful.font .. " Regular " .. (size or 18),
-            halign = "left",
-            valign = "center",
+            id = "stack",
+            widget = wibox.layout.stack,
+            top_only = false,
+            {
+                id = 'icon',
+                text = '\u{f0b0}',
+                widget = wibox.widget.textbox,
+                font = beautiful.icon_font .. (size or 18),
+                halign = "left",
+                valign = "center",
+            },
+            {
+                id = 'alert',
+                widget = wibox.container.margin,
+                visible = false,
+                right = dpi(-(size / 4)),
+                {
+                    widget = wibox.widget.textbox,
+                    text = "\u{e645}",
+                    valign = "bottom",
+                    halign = "right",
+                    font = beautiful.icon_font .. "Bold " .. (size or 18) - 14,
+                }
+            },
 		},
         nil,
 	}
@@ -102,15 +115,11 @@ local return_button = function(size, show_notifications, cursor_focus)
 	status_ping=0
 
 	packets="$(ping -q -w2 -c2 example.com | grep -o "100% packet loss")"
-	if [ ! -z "${packets}" ];
-	then
-		status_ping=0
-	else
+	if [ -z "${packets}" ]; then
 		status_ping=1
 	fi
 
-	if [ $status_ping -eq 0 ];
-	then
+	if [ $status_ping -eq 0 ]; then
 		echo 'Connected but no internet'
 	fi
 	]=]
@@ -191,18 +200,20 @@ local return_button = function(size, show_notifications, cursor_focus)
 			awful.spawn.easy_async_with_shell(
 				check_internet_health,
 				function(stdout)
-					local icon = '󰤯'
+					local icon = '\u{f0b0}'
 					if not stdout:match('Connected but no internet') then
 						if startup or reconnect_startup then
 							awesome.emit_signal('system::network_connected')
 						end
-						icon = get_icon(strength, false)
+						icon = get_icon(strength)
+                        widget.stack.alert.visible = false
 						update_wireless_data(wifi_strength_rounded, true)
 					else
-						icon = get_icon(strength, true)
+						icon = get_icon(strength)
+                        widget.stack.alert.visible = true
 						update_wireless_data(wifi_strength_rounded, false)
 					end
-					widget.icon:set_text(icon)
+					widget.stack.icon:set_text(icon)
 				end
 			)
 		end
@@ -244,7 +255,7 @@ local return_button = function(size, show_notifications, cursor_focus)
 			check_internet_health,
 			function(stdout)
 
-				local icon = '󰛳'
+				local icon = '\u{eb2f}'
 
 				if stdout:match('Connected but no internet') then
 					icon = '󰲜'
@@ -261,7 +272,7 @@ local return_button = function(size, show_notifications, cursor_focus)
 					end
 					update_reconnect_startup(false)
 				end
-				widget.icon:set_image(widget_icon_dir .. icon .. '.svg')
+				widget.stack.icon:set_text(icon)
 			end
 		)
 	end
@@ -284,23 +295,21 @@ local return_button = function(size, show_notifications, cursor_focus)
 			network_notify(message, title, app_name, icon)
 		end
 
-		local icon = '󰤮'
+		local icon = '\u{e1da}'
 
 		if network_mode == 'wireless' then
-			icon = '󰤮'
 			if not reconnect_startup then
 				update_reconnect_startup(true)
 				notify_wireless_disconnected()
 			end
 		elseif network_mode == 'wired' then
-			icon = '󰲜'
 			if not reconnect_startup then
 				update_reconnect_startup(true)
 				notify_wired_disconnected()
 			end
 		end
 		update_tooltip('Network is currently disconnected')
-		widget.icon:set_text(icon)
+		widget.stack.icon:set_text(icon)
         awesome.emit_signal("system::network_disconnected")
 	end
 

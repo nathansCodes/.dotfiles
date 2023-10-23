@@ -70,8 +70,8 @@ local control_panel = awful.popup {
                         {
                             layout = wibox.layout.grid,
                             margins = dpi(10),
-                            expand = "none",
-                            homogeneous = false,
+                            expand = true,
+                            homogeneous = true,
                             forced_num_cols = 2,
                             forced_num_rows = 2,
                             spacing = dpi(16),

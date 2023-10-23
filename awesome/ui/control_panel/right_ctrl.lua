@@ -27,13 +27,15 @@ local brightness_slider = slider {
 
 local brightness_icon = wibox.widget {
     {
-        text = "󰃟",
-        font = beautiful.font .. " Regular 16",
+        text = "\u{e3aa}",
+        font = beautiful.icon_font .. "16",
         widget = wibox.widget.textbox,
         forced_width = dpi(28),
+        valign = 'center',
+        halign = 'center',
     },
     valign = 'center',
-    halign = 'center',
+    halign = 'left',
     layout = wibox.container.place,
 }
 
@@ -61,7 +63,6 @@ awesome.connect_signal("system::update_brightness", update_brightness)
 local volume_icon = volume_widget {
     device = "pipewire",
     size = 19,
-    forced_width = dpi(28),
 }
 
 local volume_percent = wibox.widget {
@@ -124,7 +125,11 @@ return function()
                         bg = beautiful.bg_transparent,
                         forced_height = dpi(40),
                         spacing = dpi(4),
-                        volume_icon,
+                        {
+                            layout = wibox.layout.fixed.horizontal,
+                            forced_width = dpi(28),
+                            volume_icon,
+                        },
                         volume_slider,
                         {
                             widget = wibox.container.margin,

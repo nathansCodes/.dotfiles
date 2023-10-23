@@ -17,13 +17,13 @@ function builder.icon(strength, password_needed)
         nil,
 		{
 			id = 'icon',
-			text =    tonumber(strength) >= 75 and ( password_needed and '󰤪' or '󰤨' )
-                   or tonumber(strength) >= 50 and ( password_needed and '󰤧' or '󰤥' )
-                   or tonumber(strength) >= 25 and ( password_needed and '󰤤' or '󰤢' )
-                   or                              ( password_needed and '󰤡' or '󰤟' ),
+			text =    tonumber(strength) >= 75 and ( password_needed and '\u{f532}' or '\u{eb1a}' )
+                   or tonumber(strength) >= 50 and ( password_needed and '\u{f58d}' or '\u{ebe1}' )
+                   or tonumber(strength) >= 25 and ( password_needed and '\u{f58e}' or '\u{ebd6}' )
+                   or                              ( password_needed and '\u{f58f}' or '\u{ebe4}' ),
             forced_width = dpi(32),
 			widget = wibox.widget.textbox,
-            font = beautiful.font .. " Regular 24",
+            font = beautiful.icon_font .. "24",
             halign = "left",
             valign = "center",
 		},
@@ -66,11 +66,7 @@ local function try_connect(ssid)
     passwd_request:start()
 end
 
-local was_connected = false
-
 function builder.build_wifi_card(ssid, strength, is_connected, password_needed)
-
-    was_connected = is_connected
 
     local ssid_text = wibox.widget {
         id = "ssid",
@@ -82,9 +78,9 @@ function builder.build_wifi_card(ssid, strength, is_connected, password_needed)
 
     local expand_button = wibox.widget {
         widget = wibox.widget.textbox,
-        font = "JetBrainsNerdFontMono Regular 24",
+        font = beautiful.icon_font .. "24",
         valign = "center",
-        text = ' ',
+        text = '\u{e5cc}',
     }
 
     local lower_section = wibox.widget {
@@ -144,10 +140,10 @@ function builder.build_wifi_card(ssid, strength, is_connected, password_needed)
                         buttons = {
                             awful.button({}, 1, function()
                                 if lower_section.visible then
-                                    expand_button:set_text(" ")
+                                    expand_button:set_text("\u{e5cc}")
                                     lower_section.visible = false
                                 else
-                                    expand_button:set_text(" ")
+                                    expand_button:set_text("\u{e5cf}")
                                     lower_section.visible = true
                                 end
                             end),

@@ -21,9 +21,9 @@ local layout = scroller {
 
 local back_button = wibox.widget {
     widget = wibox.widget.textbox,
-    font = "JetBrainsNerdFontMono Regular 24",
+    font = beautiful.icon_font .. "28",
     valign = "center",
-    text = ' ',
+    text = '\u{e5cb}',
     buttons = {
         awful.button({}, 1, function()
             awesome.emit_signal("control_panel::toggle_wifi_menu")
@@ -55,8 +55,11 @@ local title = wibox.widget {
     text = "Wifi Networks",
 }
 
+local is_updating = false
 
 local function update()
+    if is_updating then return end
+
     local builder = require("ui.control_panel.wifi_menu.wifi_card_builder")
     local i = 1
 
@@ -68,6 +71,8 @@ local function update()
             -- remove networks with empty ssids
             local colon_pos, _ = line:find(":")
             if colon_pos == 1 then return end
+
+            is_updating = true
 
             local ssid = line:match("^[^:]+")
             local password_needed = line:match("(:).+(:.:)") ~= nil
@@ -98,15 +103,16 @@ local function update()
             if not connection_found then
                 connected_network:reset()
             end
+            is_updating = false
         end,
     })
 end
 
 local reload_button = wibox.widget {
     widget = wibox.widget.textbox,
-    font = "JetBrainsNerdFontMono Regular 24",
-    valign = "center",
-    text = '󰑓 ',
+    font = beautiful.icon_font .. "26",
+    valign = "left",
+    text = '\u{e5d5}',
     buttons = { awful.button({}, 1, update), },
 }
 
@@ -146,6 +152,7 @@ local wifi_menu = wibox.widget {
             widget = wibox.container.margin,
             top = dpi(10),
             left = dpi(8),
+            right = dpi(8),
             {
                 layout = wibox.layout.align.horizontal,
                 expand = "inside",
