@@ -12,8 +12,7 @@ local modkey = "Mod4"
 
 preview.enable {
     show_client_content = true,  -- Whether or not to show the client content
-    screen = mouse.screen,
-    scale = 0.35,                 -- The scale of the previews compared to the screen
+    scale = 0.25,                 -- The scale of the previews compared to the screen
     honor_padding = false,        -- Honor padding when creating widget size
     honor_workarea = true,       -- Honor work area when creating widget size
     placement_fn = function(c)    -- Place the widget using awful.placement (this overrides x & y)
@@ -86,8 +85,10 @@ return function(s)
             bg = beautiful.bg_transparent,
             create_callback = function(self, c3, _, _)
                 self:connect_signal('mouse::enter', function()
-                    awesome.emit_signal("bling::tag_preview::update", c3)
-                    awesome.emit_signal("bling::tag_preview::visibility", s, true)
+                    if #c3:clients() > 0 then
+                        awesome.emit_signal("bling::tag_preview::update", c3)
+                        awesome.emit_signal("bling::tag_preview::visibility", s, true)
+                    end
                     local bg_widget = self:get_children_by_id("background_inner")[1]
                     if bg_widget.bg ~= beautiful.bg_focus then
                         bg_widget.backup     = bg_widget.bg
@@ -96,7 +97,10 @@ return function(s)
                     bg_widget.bg = beautiful.taglist_bg_focus
                 end)
                 self:connect_signal('mouse::leave', function()
-                    awesome.emit_signal("bling::tag_preview::visibility", s, false)
+                    if #c3:clients() > 0 then
+                        awesome.emit_signal("bling::tag_preview::update", c3)
+                        awesome.emit_signal("bling::tag_preview::visibility", s, false)
+                    end
 
                     local bg_widget = self:get_children_by_id("background_inner")[1]
                     if bg_widget.has_backup then bg_widget.bg = bg_widget.backup end
