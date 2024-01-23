@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="32" height="32" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <g transform="matrix(1.1196 0 0 1.1196 4.105 1.2246)" fill="#b4befe" stroke="#b4befe">
+   <circle cx="7.6415" cy="19.828" r="3" stroke-width="0"/>
+   <path d="m9.3165 19.707v-11.604l12.835 3.4392v11.785-11.725l-12.776-3.4233z" stroke="#b4befe" stroke-linejoin="round" stroke-width="2.6457"/>
+   <circle cx="20.471" cy="23.317" r="3" stroke-width="0"/>
+  </g>
+  <g transform="matrix(1.1196 0 0 1.1196 -3.307 -5.7515)" fill="#cba6f7" stroke="#cba6f7">
+   <circle cx="7.6415" cy="19.828" r="3" stroke-width="0"/>
+   <path d="m9.3165 19.707v-11.604l12.835 3.4392v11.785-11.725l-12.776-3.4233z" stroke="#cba6f7" stroke-linejoin="round" stroke-width="2.6457"/>
+   <circle cx="20.471" cy="23.317" r="3" stroke-width="0"/>
+  </g>
+ </g>
+</svg>

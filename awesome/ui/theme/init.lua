@@ -3,95 +3,66 @@ local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
 
 local gears = require("gears")
+local wibox = require("wibox")
 local naughty = require("naughty")
 local awful = require("awful")
 local gfs = gears.filesystem
 local themes_path = gfs.get_themes_dir()
+local conf_dir = gfs.get_configuration_dir()
+local icons_path = conf_dir .. "ui/icons/"
 
-local theme = require("ui.theme.selected_color_scheme")
-
-local icons_path = gfs.get_configuration_dir() .. "/ui/icons/"
+local theme = require("ui.theme.apply_theme")
 
 theme.icon_font = "Material Symbols Rounded "
-theme.font = "Inter"
+theme.mono_font = "Inter Mono "
+theme.font = "Inter "
 
-theme.base_shape = function(cr, w, h)
-    gears.shape.rounded_rect(cr, w, h, dpi(theme.roundness))
-end
+theme.bg_normal          = theme.base
+theme.bg_focus           = theme.surface
+theme.bg_urgent          = theme.highlight_med
+theme.bg_minimize        = theme.ignored
 
-theme.bar_shape = theme.base_shape
-
-theme.bg_normal      = theme.base
-theme.bg_focus       = theme.overlay
-theme.bg_urgent      = theme.highlight_med
-theme.bg_minimize    = theme.ignored
-
-theme.fg_normal      = theme.white
-theme.fg_focus       = theme.white
-theme.fg_unfocus     = theme.inactive
-theme.fg_urgent      = theme.red
-theme.fg_minimize    = theme.highlight_high
-
-if theme.transparency_enabled then
-    theme.opaque            = "ff"
-    theme.semi_transparent  = "bf"
-    theme.transparent       = "5f"
-    theme.fully_transparent = "00"
-    theme.bg_transparent    = "#00000000"
-
-    theme.opacity_active    = 0.8
-    theme.opacity_normal    = 0.7
-    theme.opacity_new       = 0.7
-    theme.opacity_fullscreen= 1.0
-else
-    theme.opaque            = "ff"
-    theme.semi_transparent  = "ff"
-    theme.transparent       = "ff"
-    theme.fully_transparent = "ff"
-    theme.bg_transparent    = theme.bg_focus
-
-    theme.opacity_active    = 1.0
-    theme.opacity_normal    = 1.0
-    theme.opacity_new       = 1.0
-    theme.opacity_fullscreen= 1.0
-end
+theme.fg_normal          = theme.text
+theme.fg_focus           = theme.text
+theme.fg_unfocus         = theme.inactive
+theme.fg_urgent          = theme.red
+theme.fg_minimize        = theme.highlight_high
 
 theme.wibar_fg           = theme.white
 theme.wibar_bg           = theme.base
 theme.wibar_border_color = theme.accent
 
-theme.useless_gap       = dpi(6)
-theme.border_width      = dpi(3)
-theme.gap_single_client = true
-theme.border_normal     = theme.surface .. "99"
-theme.border_focus      = theme.accent
-theme.border_marked     = theme.yellow
+theme.useless_gap        = dpi(8)
+theme.border_width       = dpi(0)
+theme.gap_single_client  = true
 
-theme.button_bg_off   = theme.transparency_enabled and theme.inactive .. theme.transparent
-                                                   or  theme.highlight_med
-theme.button_bg_on    = theme.second_accent
+theme.button_bg_off      = theme.highlight_med
+theme.button_bg_on       = theme.accent
 
--- There are other variable sets
--- overriding the default one when
--- defined, the sets are:
--- taglist_[bg|fg]_[focus|urgent|occupied|empty|volatile]
--- tasklist_[bg|fg]_[focus|urgent]
--- titlebar_[bg|fg]_[normal|focus]
--- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
--- mouse_finder_[color|timeout|animate_timeout|radius|factor]
--- prompt_[fg|bg|fg_cursor|bg_cursor|font]
--- hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
--- Example:
-theme.taglist_fg_focus = theme.text
-theme.taglist_fg_empty = theme.inactive
-theme.taglist_fg_occupied = theme.second_accent
-theme.taglist_fg_urgent = theme.red
-theme.taglist_bg_focus = theme.bg_normal .. theme.semi_transparent
+theme.button_fg_off      = theme.text
+theme.button_fg_on       = theme.bg_normal
 
-theme.hotkeys_bg = theme.bg_normal .. theme.transparent
+theme.taglist_fg_normal    = theme.bg_normal
+theme.taglist_fg_focus     = theme.bg_normal
+theme.taglist_fg_occupied  = theme.bg_normal
+theme.taglist_fg_empty     = theme.bg_normal
+theme.taglist_fg_urgent    = theme.bg_normal
+theme.taglist_bg_empty     = theme.inactive
+theme.taglist_bg_occupied  = theme.text
+theme.taglist_bg_urgent    = theme.error
+theme.taglist_bg_focus     = theme.accent
+theme.taglist_bg_normal    = gears.color.transparent
+theme.taglist_font         = theme.font .. "Bold 11"
+
+theme.popup_bg             = theme.base
+theme.popup_module_bg      = theme.overlay
+
+theme.hotkeys_bg           = theme.bg_normal
 theme.hotkeys_border_color = theme.border_focus
 theme.hotkeys_modifiers_fg = theme.fg_normal
-theme.hotkeys_shape = theme.base_shape
+theme.hotkeys_shape        = function(cr, w, h)
+    gears.shape.rounded_rect(cr, w, h, 20)
+end
 
 theme.tag_preview_widget_border_radius = dpi(7)
 theme.tag_preview_widget_border_width = dpi(2)
@@ -102,27 +73,7 @@ theme.tag_preview_client_border_radius = dpi(7)
 theme.tag_preview_client_border_width = dpi(1)
 theme.tag_preview_client_border_color = theme.border_normal
 
-theme.titlebar_close_button_normal       = icons_path .. "titlebar/titlebutton.svg"
-theme.titlebar_close_button_normal_hover = icons_path .. "titlebar/close.svg"
-theme.titlebar_close_button_focus        = icons_path .. "titlebar/close.svg"
-theme.titlebar_close_button_focus_hover  = icons_path .. "titlebar/close_hover.svg"
-
-theme.titlebar_maximized_button_normal_inactive      = icons_path .. "titlebar/titlebutton.svg"
-theme.titlebar_maximized_button_normal_hover         = icons_path .. "titlebar/maximize.svg"
-theme.titlebar_maximized_button_focus_inactive       = icons_path .. "titlebar/maximize.svg"
-theme.titlebar_maximized_button_focus_inactive_hover = icons_path .. "titlebar/maximize_hover.svg"
-
-theme.titlebar_minimize_button_normal       = icons_path .. "titlebar/titlebutton.svg"
-theme.titlebar_minimize_button_normal_hover = icons_path .. "titlebar/minimize.svg"
-theme.titlebar_minimize_button_focus        = icons_path .. "titlebar/minimize.svg"
-theme.titlebar_minimize_button_focus_hover  = icons_path .. "titlebar/minimize_hover.svg"
-
-theme.titlebar_floating_button_normal_inactive      = icons_path .. "titlebar/titlebutton.svg"
-theme.titlebar_floating_button_normal_hover         = icons_path .. "titlebar/float.svg"
-theme.titlebar_floating_button_focus_inactive       = icons_path .. "titlebar/float.svg"
-theme.titlebar_floating_button_focus_inactive_hover = icons_path .. "titlebar/float_hover.svg"
-
-theme.prompt_bg = theme.fully_transparent
+theme.prompt_bg = gears.color.transparent
 
 theme.tooltip_shape = gears.shape.rounded_rect
 theme.tooltip_border_width = dpi(2)
@@ -135,62 +86,80 @@ theme.tooltip_border_color = {
         { 1, theme.blue },
     }
 }
-theme.tooltip_bg = theme.bg_normal .. theme.transparent
+theme.tooltip_bg = theme.bg_normal
 theme.tooltip_margin = dpi(4)
 
--- Variables set for theming notifications:
--- notification_font
--- notification_[bg|fg]
--- notification_[width|height|margin]
--- notification_[border_color|border_width|shape|opacity]
-theme.notification_max_height = dpi(350)
-theme.notification_max_width = dpi(350)
+theme.notification_height = dpi(150)
+theme.notification_width = dpi(350)
+theme.notification_position = "top_middle"
 
--- Variables set for theming the menu:
--- menu_[bg|fg]_[normal|focus]
--- menu_[border_color|border_width]
 theme.menu_submenu_icon = themes_path.."default/submenu.png"
-theme.menu_height = dpi(15)
-theme.menu_width  = dpi(100)
+theme.menu_height       = dpi(15)
+theme.menu_width        = dpi(100)
 
--- You can use your own layout icons like this:
-theme.layout_fairh = themes_path.."default/layouts/fairh.png"
-theme.layout_fairv = themes_path.."default/layouts/fairv.png"
-theme.layout_floating  = themes_path.."default/layouts/floating.png"
-theme.layout_magnifier = themes_path.."default/layouts/magnifier.png"
-theme.layout_max = themes_path.."default/layouts/max.png"
-theme.layout_fullscreen = themes_path.."default/layouts/fullscreen.png"
-theme.layout_tilebottom = themes_path.."default/layouts/tilebottom.png"
-theme.layout_tileleft   = themes_path.."default/layouts/tileleft.png"
-theme.layout_tile = themes_path.."default/layouts/tile.png"
-theme.layout_tiletop = themes_path.."default/layouts/tiletop.png"
-theme.layout_spiral  = themes_path.."default/layouts/spiral.png"
-theme.layout_dwindle = themes_path.."default/layouts/dwindle.png"
-theme.layout_cornernw = themes_path.."default/layouts/cornernw.png"
-theme.layout_cornerne = themes_path.."default/layouts/cornerne.png"
-theme.layout_cornersw = themes_path.."default/layouts/cornersw.png"
-theme.layout_cornerse = themes_path.."default/layouts/cornerse.png"
+local recolor = gears.color.recolor_image
 
--- Generate Awesome icon:
+theme.layout_fairh      = recolor(themes_path.."default/layouts/fairhw.png",      theme.text)
+theme.layout_fairv      = recolor(themes_path.."default/layouts/fairvw.png",      theme.text)
+theme.layout_floating   = recolor(themes_path.."default/layouts/floatingw.png",   theme.text)
+theme.layout_magnifier  = recolor(themes_path.."default/layouts/magnifierw.png",  theme.text)
+theme.layout_max        = recolor(themes_path.."default/layouts/maxw.png",        theme.text)
+theme.layout_fullscreen = recolor(themes_path.."default/layouts/fullscreenw.png", theme.text)
+theme.layout_tilebottom = recolor(themes_path.."default/layouts/tilebottomw.png", theme.text)
+theme.layout_tileleft   = recolor(themes_path.."default/layouts/tileleftw.png",   theme.text)
+theme.layout_tile       = recolor(themes_path.."default/layouts/tilew.png",       theme.text)
+theme.layout_tiletop    = recolor(themes_path.."default/layouts/tiletopw.png",    theme.text)
+theme.layout_spiral     = recolor(themes_path.."default/layouts/spiralw.png",     theme.text)
+theme.layout_dwindle    = recolor(themes_path.."default/layouts/dwindlew.png",    theme.text)
+theme.layout_cornernw   = recolor(themes_path.."default/layouts/cornernww.png",   theme.text)
+theme.layout_cornerne   = recolor(themes_path.."default/layouts/cornernew.png",   theme.text)
+theme.layout_cornersw   = recolor(themes_path.."default/layouts/cornersww.png",   theme.text)
+theme.layout_cornerse   = recolor(themes_path.."default/layouts/cornersew.png",   theme.text)
+
 theme.awesome_icon = theme_assets.awesome_icon(
     theme.menu_height, theme.bg_focus, theme.fg_focus
 )
 
--- Define the icon theme for application icons. If not set then the icons
--- from /usr/share/icons and /usr/share/icons/hicolor will be used.
-theme.icon_theme = "~/.icons/Rose-Pine/index.theme"
+theme.icon_theme = "/usr/share/icons/Papirus-Dark/index.theme"
 
-theme.wallpaper = "/home/nathan/Pictures/wallpapers/shaded_landscape.png"
+theme.wallpaper = theme.path.."wallpaper.png"
+
+if not gfs.file_readable(theme.wallpaper) then
+    theme.wallpaper = theme.path.."wallpaper.jpg"
+end
+if not gfs.file_readable(theme.wallpaper) then
+    theme.wallpaper = theme.path.."wallpaper.jpeg"
+end
+if not gfs.file_readable(theme.wallpaper) then
+    theme.wallpaper = theme.path.."wallpaper.svg"
+end
 
 local function set_wallpaper(s)
-    -- Wallpaper
-    if theme.wallpaper then
-        -- If wallpaper is a function, call it with the screen
-        if type(theme.wallpaper) == "function" then
-            theme.wallpaper = theme.wallpaper(s)
-        end
-        gears.wallpaper.maximized(theme.wallpaper, s, true)
-    end
+    awful.wallpaper {
+        screen = s,
+        bg = theme.bg_normal,
+        widget = wibox.widget {
+            widget = wibox.container.margin,
+            top = dpi(36),
+            {
+                widget = wibox.container.background,
+                shape = function(cr, w, h)
+                    gears.shape.rounded_rect(cr, w, h, 20)
+                end,
+                {
+                    widget = wibox.container.margin,
+                    top = dpi(-36),
+                    {
+                        widget = wibox.widget.imagebox,
+                        image = theme.wallpaper,
+                        vertical_fit_policy = "fill",
+                        horizontal_fit_policy = "fill",
+                        resize = true,
+                    }
+                }
+            }
+        }
+    }
 end
 
 screen.connect_signal("property::geometry", set_wallpaper)

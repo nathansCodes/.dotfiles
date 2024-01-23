@@ -24,8 +24,8 @@ configuration {
 }
 
 /*****----- Global Properties -----*****/
-@import                          "shared/colors.rasi"
-@import                          "shared/fonts.rasi"
+@import                          "../resources/colors.rasi"
+@import                          "../resources/fonts.rasi"
 
 /*
 USE_BUTTONS=YES

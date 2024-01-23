@@ -1,0 +1,22 @@
+{
+    "locale": {
+        "langs": [
+            "us"
+        ]
+    },
+    "theme": {
+        "variant": "macchiato",
+        "firefox_profile": "rt5lr27b.default-release",
+        "firefox_install": "native",
+        "theme": "catppuccin",
+        "discord_install": "flatpak"
+    },
+    "program": {
+        "autostart": [
+            {
+                "type": "startup",
+                "program": "autorandr --change"
+            }
+        ]
+    }
+}

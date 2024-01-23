@@ -19,12 +19,12 @@
 [submodule "awesome/--init"]
 	path = awesome/--init
 	url = https://github.com/BlingCorp/bling.git
-[submodule "awesome/bling"]
-	path = awesome/bling
-	url = https://github.com/BlingCorp/bling.git
-[submodule "awesome/rubato"]
-	path = awesome/rubato
+[submodule "awesome/modules/rubato"]
+	path = awesome/modules/rubato
 	url = https://github.com/andOrlando/rubato.git
-[submodule "awesome/color"]
-	path = awesome/color
-	url = https://github.com/andOrlando/color.git
+[submodule "awesome/modules/bling"]
+	path = awesome/modules/bling
+	url = https://github.com/BlingCorp/bling.git
+[submodule "awesome/modules/ldbus"]
+	path = awesome/modules/ldbus
+	url = https://github.com/dodo/ldbus.git

@@ -13,7 +13,11 @@
 
 theme="$HOME/.config/rofi/launcher/config.rasi"
 
+if [ "$1" = "open" ]; then
+    theme="$HOME/.config/rofi/launcher/panel_open/config.rasi";
+fi
+
 ## Run
 rofi \
     -show drun \
-    -theme ${theme}
+    -theme "${theme}"

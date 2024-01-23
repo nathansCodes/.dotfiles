@@ -3,8 +3,8 @@ import:
 
 window:
   padding:
-    x: 4
-    y: 4
+    x: 12
+    y: 12
 
   dynamic_padding: true
 
@@ -21,14 +21,14 @@ window:
 
 font:
   normal:
-    family: JetBrainsMonoNerdFont
-    style: Regular
+    family: Aesthetic Iosevka Nerd Font
+    style: Extended
 
   builtin_box_drawing: true
 
 cursor:
   style:
-    shape: Block
+    shape: Underline
 
   vi_mode_style: Block
 

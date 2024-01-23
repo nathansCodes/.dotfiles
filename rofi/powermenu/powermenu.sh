@@ -23,8 +23,8 @@ reboot=''
 lock=''
 suspend=''
 logout=''
-yes=''
-no=''
+yes=''
+no=''
 
 # Rofi CMD
 rofi_cmd() {
@@ -36,15 +36,10 @@ rofi_cmd() {
 
 # Confirmation CMD
 confirm_cmd() {
-	rofi -theme-str 'window {location: center; anchor: center; fullscreen: false; width: 350px;}' \
-		-theme-str 'mainbox {children: [ "message", "listview" ];}' \
-		-theme-str 'listview {columns: 2; lines: 1;}' \
-		-theme-str 'element-text {horizontal-align: 0.5;}' \
-		-theme-str 'textbox {horizontal-align: 0.5;}' \
-		-dmenu \
+	rofi -dmenu \
 		-p 'Confirmation' \
 		-mesg 'Are you Sure?' \
-		-theme ${dir}/config.rasi
+        -theme ${dir}/confirm.rasi
 }
 
 # Ask for confirmation
@@ -60,7 +55,10 @@ run_rofi() {
 # Execute Command
 run_cmd() {
 	selected="$(confirm_exit)"
-	if [[ "$selected" == "$yes" ]]; then
+    echo "$selected"
+    echo "$yes"
+    echo "$no"
+	if [[ "$selected" = "$yes" ]]; then
 		if [[ $1 == '--shutdown' ]]; then
 			systemctl poweroff
 		elif [[ $1 == '--reboot' ]]; then

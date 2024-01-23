@@ -1,0 +1,46 @@
+bluetoothd[69540]: @ MGMT Command: Start Discovery (0x0023) plen 1                                                {0x0001} [hci0] 11.457315
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+< HCI Command: LE Set Random Address (0x08|0x0005) plen 6                                                               #1 [hci0] 11.457394
+        Address: 37:6C:0F:60:00:78 (Non-Resolvable)
+> HCI Event: Command Complete (0x0e) plen 4                                                                             #2 [hci0] 11.554192
+      LE Set Random Address (0x08|0x0005) ncmd 2
+        Status: Success (0x00)
+< HCI Command: LE Set Scan Parameters (0x08|0x000b) plen 7                                                              #3 [hci0] 11.554310
+        Type: Active (0x01)
+        Interval: 22.500 msec (0x0024)
+        Window: 11.250 msec (0x0012)
+        Own address type: Random (0x01)
+        Filter policy: Accept all advertisement (0x00)
+> HCI Event: Command Complete (0x0e) plen 4                                                                             #4 [hci0] 11.555197
+      LE Set Scan Parameters (0x08|0x000b) ncmd 2
+        Status: Success (0x00)
+< HCI Command: LE Set Scan Enable (0x08|0x000c) plen 2                                                                  #5 [hci0] 11.555305
+        Scanning: Enabled (0x01)
+        Filter duplicates: Enabled (0x01)
+> HCI Event: Command Complete (0x0e) plen 4                                                                             #6 [hci0] 11.556192
+      LE Set Scan Enable (0x08|0x000c) ncmd 2
+        Status: Success (0x00)
+< HCI Command: Inquiry (0x01|0x0001) plen 5                                                                             #7 [hci0] 11.556323
+        Access code: 0x9e8b33 (General Inquiry)
+        Length: 10.24s (0x08)
+        Num responses: 0
+> HCI Event: Command Status (0x0f) plen 4                                                                               #8 [hci0] 11.557197
+      Inquiry (0x01|0x0001) ncmd 2
+        Status: Success (0x00)
+@ MGMT Event: Command Complete (0x0001) plen 4                                                                    {0x0001} [hci0] 11.557294
+      Start Discovery (0x0023) plen 1
+        Status: Success (0x00)
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+@ MGMT Event: Discovering (0x0013) plen 2                                                                         {0x0001} [hci0] 11.557304
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+        Discovery: Enabled (0x01)
+

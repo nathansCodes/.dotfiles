@@ -1,0 +1,107 @@
+/*****----- Configuration -----*****/
+configuration {
+    show-icons:                 false;
+	kb-select-1:                "y";
+	kb-select-2:                "n";
+
+    kb-row-right:               "Control+l";
+    kb-row-left:                "Control+h";
+
+    hover-select:               true;
+}
+
+/*****----- Global Properties -----*****/
+@import                          "../resources/colors.rasi"
+@import                          "../resources/fonts.rasi"
+
+
+window {
+    transparency:                "real";
+    location:                    center;
+    anchor:                      center;
+    fullscreen:                  false;
+    width:                       450px;
+
+    /* properties for all widgets */
+    enabled:                     true;
+    margin:                      0px;
+    padding:                     0px;
+    border:                      0px solid;
+    border-radius:               0px;
+    border-color:                @selected;
+    cursor:                      "default";
+    background-color:            transparent;
+}
+
+mainbox {
+    enabled:                     true;
+    spacing:                     15px;
+    margin:                      0px;
+    padding:                     0px;
+    border:                      0px solid;
+    border-radius:               0px;
+    border-color:                @selected;
+    background-color:            transparent;
+    children:                    [ "message", "listview" ];
+}
+
+message {
+    border-radius:               20px;
+    padding:                     8px;
+    background-color:            @background;
+}
+
+textbox {
+    background-color:            transparent;
+    text-color:                  @foreground;
+    font:                        "Inter SemiBold 14";
+    horizontal-align:            0.5;
+}
+
+listview {
+    enabled:                     true;
+    columns:                     2;
+    lines:                       1;
+    cycle:                       true;
+    dynamic:                     false;
+    scrollbar:                   false;
+    reverse:                     false;
+    flow:                        horizontal;
+    
+    spacing:                     10px;
+    margin:                      0px;
+    padding:                     0px;
+    border-radius:               20px;
+    border-color:                transparent;
+    background-color:            transparent;
+    text-color:                  @foreground;
+    cursor:                      "default";
+}
+
+element-text {
+    font:                        "Material Symbols Rounded 48";
+    background-color:            transparent;
+    text-color:                  inherit;
+    cursor:                      inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}
+
+element {
+    enabled:                     true;
+    expand:                      true;
+    spacing:                     0px;
+    margin:                      0px;
+    padding:                     7.3% 0px;
+    border:                      0px solid;
+    border-radius:               8px;
+    border-color:                @selected;
+    background-color:            @background;
+    text-color:                  @selected;
+    cursor:                      pointer;
+}
+
+element selected.normal {
+    background-color:            var(selected);
+    text-color:                  var(background-alt);
+}

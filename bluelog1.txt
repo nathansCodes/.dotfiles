@@ -1,0 +1,87 @@
+bluetoothd[69540]: @ MGMT Command: Start Discovery (0x0023) plen 1                                                                                                               {0x0001} [hci0] 32.864109
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+< HCI Command: LE Set Random Address (0x08|0x0005) plen 6                                                                                                                              #1 [hci0] 32.864285
+        Address: 2F:3E:8D:AF:8E:E1 (Non-Resolvable)
+> HCI Event: Command Complete (0x0e) plen 4                                                                                                                                            #2 [hci0] 32.961444
+      LE Set Random Address (0x08|0x0005) ncmd 2
+        Status: Success (0x00)
+< HCI Command: LE Set Scan Parameters (0x08|0x000b) plen 7                                                                                                                             #3 [hci0] 32.961554
+        Type: Active (0x01)
+        Interval: 22.500 msec (0x0024)
+        Window: 11.250 msec (0x0012)
+        Own address type: Random (0x01)
+        Filter policy: Accept all advertisement (0x00)
+> HCI Event: Command Complete (0x0e) plen 4                                                                                                                                            #4 [hci0] 32.962394
+      LE Set Scan Parameters (0x08|0x000b) ncmd 2
+        Status: Success (0x00)
+< HCI Command: LE Set Scan Enable (0x08|0x000c) plen 2                                                                                                                                 #5 [hci0] 32.962431
+        Scanning: Enabled (0x01)
+        Filter duplicates: Enabled (0x01)
+> HCI Event: Command Complete (0x0e) plen 4                                                                                                                                            #6 [hci0] 32.963395
+      LE Set Scan Enable (0x08|0x000c) ncmd 2
+        Status: Success (0x00)
+< HCI Command: Inquiry (0x01|0x0001) plen 5                                                                                                                                            #7 [hci0] 32.963461
+        Access code: 0x9e8b33 (General Inquiry)
+        Length: 10.24s (0x08)
+        Num responses: 0
+> HCI Event: Command Status (0x0f) plen 4                                                                                                                                              #8 [hci0] 32.964388
+      Inquiry (0x01|0x0001) ncmd 2
+        Status: Success (0x00)
+@ MGMT Event: Command Complete (0x0001) plen 4                                                                                                                                   {0x0001} [hci0] 32.964435
+      Start Discovery (0x0023) plen 1
+        Status: Success (0x00)
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+@ MGMT Event: Discovering (0x0013) plen 2                                                                                                                                        {0x0001} [hci0] 32.964446
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+        Discovery: Enabled (0x01)
+bluetoothd[69540]: @ MGMT Command: Stop Discovery (0x0024) plen 1                                                                                                                {0x0001} [hci0] 32.964859
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+< HCI Command: Inquiry Cancel (0x01|0x0002) plen 0                                                                                                                                     #9 [hci0] 32.964907
+> HCI Event: Command Complete (0x0e) plen 4                                                                                                                                           #10 [hci0] 32.968400
+      Inquiry Cancel (0x01|0x0002) ncmd 2
+        Status: Success (0x00)
+< HCI Command: LE Set Scan Enable (0x08|0x000c) plen 2                                                                                                                                #11 [hci0] 32.968467
+        Scanning: Disabled (0x00)
+        Filter duplicates: Disabled (0x00)
+> HCI Event: LE Meta Event (0x3e) plen 41                                                                                                                                             #12 [hci0] 32.971393
+      LE Advertising Report (0x02)
+        Num reports: 1
+        Event type: Connectable undirected - ADV_IND (0x00)
+        Address type: Public (0x00)
+        Address: E0:70:EA:80:3E:19 (HP Inc.)
+        Data length: 29
+        Flags: 0x06
+          LE General Discoverable Mode
+          BR/EDR Not Supported
+        Service Data: HP Inc. (0xfdf7)
+          Data: 017ed7c19e59b55096b8361faa33b8213f0000000001
+        RSSI: -94 dBm (0xa2)
+> HCI Event: Command Complete (0x0e) plen 4                                                                                                                                           #13 [hci0] 32.972395
+      LE Set Scan Enable (0x08|0x000c) ncmd 2
+        Status: Success (0x00)
+@ MGMT Event: Command Complete (0x0001) plen 4                                                                                                                                   {0x0001} [hci0] 32.972452
+      Stop Discovery (0x0024) plen 1
+        Status: Success (0x00)
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+@ MGMT Event: Discovering (0x0013) plen 2                                                                                                                                        {0x0001} [hci0] 32.972466
+        Address type: 0x07
+          BR/EDR
+          LE Public
+          LE Random
+        Discovery: Disabled (0x00)
+

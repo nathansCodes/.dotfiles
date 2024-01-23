@@ -13,8 +13,8 @@ configuration {
 }
 
 /*****----- Global Properties -----*****/
-@import                          "resources/colors.rasi"
-@import                          "resources/fonts.rasi"
+@import                          "../resources/colors.rasi"
+@import                          "../resources/fonts.rasi"
 
 /*
 USE_ICON=NO
@@ -31,11 +31,9 @@ window {
     y-offset:                    0px;
     margin:                      0px;
     padding:                     0px;
-    border:                      2px solid;
     border-radius:               20px;
-    border-color:                @border;
     cursor:                      "default";
-    background-color:            transparent;
+    background-color:            @background;
 }
 
 /*****----- Main Box -----*****/
@@ -57,7 +55,7 @@ inputbar {
     border:                      0px;
     border-radius:               10px;
     border-color:                @selected;
-    background-color:            @background;
+    background-color:            @background-alt;
     text-color:                  @foreground;
     children:                    [ "textbox-prompt-colon", "entry"];
 }
@@ -94,7 +92,7 @@ message {
     padding:                     10px;
     border-radius:               10px 10px 0px 0px;
     border-color:                @selected;
-    background-color:            @background;
+    background-color:            @background-alt;
     text-color:                  @foreground;
 }
 textbox {
@@ -115,7 +113,7 @@ listview {
     
     spacing:                     5px;
     padding:                     10px;
-    background-color:            @background;
+    background-color:            @background-alt;
     border-radius:               0px 0px 10px 10px;
     border-color:                @selected;
     cursor:                      "default";

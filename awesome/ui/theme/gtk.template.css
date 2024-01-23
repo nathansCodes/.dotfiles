@@ -1,0 +1,204 @@
+@define-color bg #11111b;
+@define-color second_bg #181825;
+@define-color text #cdd6f4;
+@define-color accent #74c7ec;
+@define-color error #f38ba8;
+@define-color warn #f9e2af;
+@define-color success #a6e3a1;
+@define-color close #f38ba8;
+@define-color maximize #94e2d5;
+@define-color minimize #fab387;
+
+@define-color accent_bg_color @accent;
+@define-color accent_fg_color @bg;
+@define-color destructive_color @error;
+@define-color destructive_bg_color @error;
+@define-color destructive_fg_color @bg;
+@define-color success_color @success;
+@define-color success_bg_color @success;
+@define-color success_fg_color @bg;
+@define-color warning_color @warn;
+@define-color warning_bg_color @warn;
+@define-color warning_fg_color @bg;
+@define-color error_color @error;
+@define-color error_bg_color @error;
+@define-color error_fg_color @bg;
+@define-color window_bg_color @bg;
+@define-color window_fg_color @text;
+@define-color view_bg_color @second_bg;
+@define-color view_fg_color @text;
+@define-color headerbar_bg_color @bg;
+@define-color headerbar_fg_color @text;
+@define-color headerbar_border_color rgba(0, 0, 0, 0.0);
+@define-color headerbar_backdrop_color @window_bg_color;
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.0);
+@define-color card_bg_color @second_bg;
+@define-color card_fg_color @text;
+@define-color card_shade_color rgba(0, 0, 0, 0.0);
+@define-color dialog_bg_color @second_bg;
+@define-color dialog_fg_color @text;
+@define-color popover_bg_color @second_bg;
+@define-color popover_fg_color @text;
+@define-color shade_color rgba(0,0,0,0.0);
+@define-color scrollbar_outline_color rgba(0,0,0,0.0);
+
+decoration {
+    box-shadow: 0 3px 12px 1px rgba(0, 0, 0, 0.7), 0 0 0 1px shade(@headerbar_bg_color,1.3);
+}
+decoration:backdrop {
+    box-shadow: 0 3px 12px 1px transparent, 0 2px 6px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px shade(@headerbar_bg_color,1.1);
+}
+
+.tiled decoration, .tiled-top decoration, .tiled-bottom decoration, .tiled-right decoration, .tiled-left decoration {
+    box-shadow: 0 0 0 1px shade(@headerbar_bg_color,1.1), 0 0 0 20px transparent;
+}
+
+messagedialog.csd decoration, .csd.popup decoration, .maximized .csd.popup decoration {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 0 1px alpha(shade(@headerbar_bg_color,1.3),0.9);
+}
+
+.maximized .csd.popup decoration {
+    border-radius: 6px;
+}
+
+.maximized decoration, .fullscreen decoration {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ssd decoration {
+    box-shadow: 0 0 0 0px shade(@headerbar_bg_color,1.3);
+}
+
+.ssd decoration:backdrop {
+    box-shadow: 0 0 0 0px shade(@headerbar_bg_color,1.1);
+}
+
+.ssd.maximized decoration, .ssd.maximized decoration:backdrop {
+    box-shadow: none;
+}
+
+.solid-csd decoration {
+    box-shadow: inset 0 0 0 5px alpha(currentColor,0.5), inset 0 0 0 4px @headerbar_bg_color, inset 0 0 0 1px alpha(currentColor,0.5);
+    color: @bg;
+}
+
+.solid-csd decoration:backdrop {
+    box-shadow: inset 0 0 0 3px @window_bg_color;
+}
+
+.titlebar, headerbar {
+    border-bottom-color: alpha(currentColor,0.15);
+}
+
+.titlebar:backdrop, headerbar:backdrop {
+    border-bottom-color: alpha(currentColor,0.2);
+}
+
+button.titlebutton,
+windowcontrols > button {
+    color: transparent;
+    min-width: 18px;
+    min-height: 18px;
+}
+
+button.titlebutton:backdrop {
+    opacity: 0.5;
+}
+
+windowcontrols > button {
+    border-radius: 100%;
+    padding: 0;
+    margin: 0 5px;
+}
+
+windowcontrols > button > image {
+    padding: 0;
+}
+
+button.titlebutton.close, button.titlebutton.close:hover:backdrop,
+windowcontrols > button.close,
+windowcontrols > button.close:hover:backdrop {
+    background-color: @close;
+}
+
+button.titlebutton.close:hover,
+windowcontrols > button.close:hover {
+    background-color: shade(@close,1.3);
+}
+
+button.titlebutton.maximize, button.titlebutton.maximize:hover:backdrop,
+windowcontrols > button.maximize,
+windowcontrols > button.maximize:hover:backdrop {
+    background-color: @maximize;
+}
+
+button.titlebutton.maximize:hover,
+windowcontrols > button.maximize:hover {
+    background-color: shade(@maximize,1.3);
+}
+
+button.titlebutton.minimize, button.titlebutton.minimize:hover:backdrop,
+windowcontrols > button.minimize,
+windowcontrols > button.minimize:hover:backdrop {
+    background-color: @minimize;
+}
+
+button.titlebutton.minimize:hover,
+windowcontrols > button.minimize:hover {
+    background-color: shade(@minimize,1.3);
+}
+
+button.titlebutton.close:backdrop, button.titlebutton.maximize:backdrop, button.titlebutton.minimize:backdrop,
+windowcontrols > button.close:backdrop,
+windowcontrols > button.maximize:backdrop,
+windowcontrols > button.minimize:backdrop {
+    background-color: #8087a2;
+}
+
+button.titlebutton.close:active, button.titlebutton.maximize:active, button.titlebutton.minimize:active,
+windowcontrols > button.close:active,
+windowcontrols > button.maximize:active,
+windowcontrols > button.minimize:active {
+    box-shadow: inset 0 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+notebook > header tab:not(:backdrop):checked.reorderable-page,
+tabbar tab:not(:backdrop):checked {
+    background-color: @headerbar_bg_color;
+}
+
+.standard-view .view {
+    border-radius: 14px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+notebook {
+	background-color: @bg;
+    color: @text;
+}
+
+.sidebar {
+    background-color: @bg;
+    color: @text;
+    border-color: transparent;
+}
+
+.sidebar-pane {
+    background-color: @bg;
+    color: @text;
+}
+
+box {
+    color: @text;
+}
+
+separator {
+	color: @bg;
+}
+
+scrolledwindow {
+    border-width: 0px;
+}

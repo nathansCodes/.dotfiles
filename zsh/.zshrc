@@ -15,6 +15,7 @@ alias v="nvim"
 alias t="tmux"
 
 alias gs="git status"
+alias gst="git stash"
 alias ga="git add"
 alias gr="git restore"
 alias grm="git rm"
@@ -23,6 +24,8 @@ alias gc="git commit"
 alias gp="git push"
 alias gb="git branch"
 alias gm="git submodule"
+
+alias kb="setxkbmap"
 
 export FZF_DEFAULT_OPTS="
 	--color=fg:#908caa,hl:#ea9a97
@@ -38,7 +41,10 @@ export BAT_THEME="Catppuccin-mocha"
 export CM_LAUNCHER=rofi
 
 export EDITOR=nvim
+export TERM=alacritty
 
-export PATH="$HOME/.config/rofi/scripts:$PATH"
+export PATH="$HOME/.config/rofi/scripts:$HOME/.cargo/bin:$PATH"
 
-neofetch
+# completions
+autoload -U compinit; compinit
+

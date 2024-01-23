@@ -1,11 +1,8 @@
--- keymaps
-require("config.keys")
+-- key and mousebinds
+require("config.bindings")
 
 -- rules
 require("config.rules")
-
--- variables
-require("config.vars")
 
 -- autostart apps
 require("config.autostart")
