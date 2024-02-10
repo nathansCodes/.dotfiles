@@ -141,7 +141,7 @@ listview {
     margin:                      0px;
     padding:                     0px;
     border:                      280px 700px solid;
-    border-radius:               20px;
+    border-radius:               14px;
     border-color:                transparent;
     background-color:            transparent;
     text-color:                  @foreground;

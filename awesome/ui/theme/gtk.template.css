@@ -171,8 +171,17 @@ tabbar tab:not(:backdrop):checked {
 .standard-view .view {
     border-radius: 14px;
     margin-left: 4px;
-    margin-right: 4px;
+    margin-right: 40px;
     margin-bottom: 4px;
+    background-color: @second_bg;
+}
+
+.view {
+    background-color: @bg;
+}
+
+box > entry {
+    background-color: @second_bg;
 }
 
 notebook {

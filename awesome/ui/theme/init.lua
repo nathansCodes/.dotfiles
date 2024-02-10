@@ -54,6 +54,10 @@ theme.taglist_bg_focus     = theme.accent
 theme.taglist_bg_normal    = gears.color.transparent
 theme.taglist_font         = theme.font .. "Bold 11"
 
+theme.tasklist_bg_focus    = theme.surface
+theme.tasklist_bg_normal   = theme.base
+theme.tasklist_bg_minimize = theme.overlay
+
 theme.popup_bg             = theme.base
 theme.popup_module_bg      = theme.overlay
 
@@ -72,6 +76,11 @@ theme.tag_preview_widget_margin = dpi(4)
 theme.tag_preview_client_border_radius = dpi(7)
 theme.tag_preview_client_border_width = dpi(1)
 theme.tag_preview_client_border_color = theme.border_normal
+
+theme.task_preview_widget_border_radius = 14        -- Border radius of the widget (With AA)
+theme.task_preview_widget_bg = theme.base          -- The bg color of the widget
+theme.task_preview_widget_border_width = 0         -- The border width of the widget
+theme.task_preview_widget_margin = 8               -- The margin of the widget
 
 theme.prompt_bg = gears.color.transparent
 

@@ -7,11 +7,11 @@ gtk4="$config/gtk-4.0"
 alacritty_dir="$config/alacritty"
 
 alacritty() {
-    rm "$alacritty_dir/colors/theme.yml"
-    ln -s "$alacritty_dir/colors/$1.yml" "$alacritty_dir/colors/theme.yml"
-    # add a line to and remove it from alacritty.yml to trigger alacritty's auto reloading
-    echo "" >> "$alacritty_dir/alacritty.yml"
-    sed -i '$ d' "$alacritty_dir/alacritty.yml"
+    rm "$alacritty_dir/colors/theme.toml"
+    ln -s "$alacritty_dir/colors/$1.toml" "$alacritty_dir/colors/theme.toml"
+    # add a line to and remove it from alacritty.toml to trigger alacritty's auto reloading
+    echo "" >> "$alacritty_dir/alacritty.toml"
+    sed -i '$ d' "$alacritty_dir/alacritty.toml"
 }
 
 term() {
@@ -71,8 +71,12 @@ gtk() {
         -e "s/color maximize .*/color maximize $MAXIMIZE;/" \
         -e "s/color minimize .*/color minimize $MINIMIZE;/" $gtk3/gtk.css
 
-    sed -i -e "s/gtk-theme-name=.*/gtk-theme-name=adw-gtk3/" $gtk3/settings.ini
-    sed -i -e "s/Net\/ThemeName .*/Net\/ThemeName \"adw-gtk3\"/" $HOME/.config/xsettingsd/xsettingsd.conf
+    sed -i -e "s/gtk-theme-name=.*/gtk-theme-name=adw-gtk3/" \
+        -e "s/gtk-icon-theme-name=.*/gtk-icon-theme-name=$ICON_THEME" $gtk3/settings.ini
+    sed -i -e "s/gtk-theme-name=.*/gtk-theme-name=adw-gtk4/" \
+        -e "s/gtk-icon-theme-name=.*/gtk-icon-theme-name=$ICON_THEME" $gtk4/settings.ini
+    sed -i -e "s/Net\/ThemeName .*/Net\/ThemeName \"adw-gtk3\"/" \
+        -e "s/Net\/IconThemeName .*/Net\/IconThemeName \"$ICON_THEME\"" $HOME/.config/xsettingsd/xsettingsd.conf
 
     # Apply
     killall xsettingsd
@@ -110,11 +114,12 @@ usercontent() {
 }
 
 nvim() {
-    sed -i -e "s/color or '.*'/color or '$1'/" $nvim/after/plugin/colors.lua
-    sed -i -e "s/color or \".*\"/color or \"$1\"/" $nvim/after/plugin/colors.lua
+    sed -i -e "s/colorscheme('.*'/colorscheme('$1'/" $nvim/lua/plugins/colors.lua
+    sed -i -e "s/colorscheme(\".*\"/colorscheme(\"$1\"/" $nvim/lua/plugins/colors.lua
     sed -i -e "s/colorscheme '.*'/colorscheme '$1'/" $nvim/init.lua
     sed -i -e "s/colorscheme \".*\"/colorscheme \"$1\"/" $nvim/init.lua
-    python "$config/awesome/scripts/nvim_reload.py" "so $nvim/after/plugin/colors.lua"
+    sleep 1
+    python "$config/awesome/scripts/nvim_reload.py" "lua Colors()"
 }
 
 discord() {
@@ -125,7 +130,7 @@ discord() {
         discord_theme="$HOME/.var/app/com.discordapp.Discord/config/Vencord/themes/current_theme.css"
     fi
 
-    cat "$config/awesome/ui/theme/discord.template.css" > "$discord_theme"
+    cp -f "$config/awesome/ui/theme/discord.template.css" "$discord_theme"
 
     sed -i -e "s/--base: .*;/--base: $BASE;/" \
     	-e "s/--surface: .*;/--surface: $SURFACE;/" \

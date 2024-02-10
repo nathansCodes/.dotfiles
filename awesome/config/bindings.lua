@@ -43,14 +43,34 @@ awful.keyboard.append_global_keybindings {
             }
         end,
         { description = "test notification", group = "awesome" }),
-    awful.key({ super, }, "t", function() awful.spawn(apps.default.terminal) end,
+    awful.key({ super, }, "t", function() awful.spawn(apps.terminal) end,
         { description = "open a new alacritty window", group = "launcher" }),
-    awful.key({ super, }, "b", function() awful.spawn(apps.default.web_browser) end,
+    awful.key({ super, }, "b", function() awful.spawn(apps.web_browser) end,
         { description = "open firefox", group = "launcher" }),
-    awful.key({ super, }, "e", function() awful.spawn(apps.default.file_manager) end,
+    awful.key({ super, }, "e", function() awful.spawn(apps.file_manager) end,
+        { description = "open file manager (thunar)", group = "launcher" }),
+    awful.key {
+        modifiers = { super },
+        key = "r",
+        on_release = function()
+            awesome.emit_signal("launcher::open")
+            --awful.spawn.with_shell(apps.app_launcher)
+        end,
+        description = { description = "run prompt", group = "launcher" }
+    },
+    awful.key({ super, }, "y", function()
+        naughty.notification {
+            text = require("config.user_settings").theme.theme .. " " ..
+                require("config.user_settings").theme.variant
+        }
+        require("config.user_settings").theme.theme = "biscuit"
+        require("config.user_settings").theme.variant = "dark"
+        naughty.notification {
+            text = require("config.user_settings").theme.theme .. " " ..
+                require("config.user_settings").theme.variant
+        }
+    end,
         { description = "open file manager (pcmanfm)", group = "launcher" }),
-    awful.key({ super, }, "r", function() awful.spawn.with_shell(apps.default.app_launcher) end,
-        { description = "run prompt", group = "launcher" }),
 }
 
 awful.keyboard.append_global_keybindings {
@@ -68,7 +88,7 @@ awful.keyboard.append_global_keybindings {
 
 -- Rofi scripts
 awful.keyboard.append_global_keybindings {
-    awful.key({ super }, " ", function() awful.util.spawn(apps.default.app_launcher) end,
+    awful.key({ super }, " ", function() awful.util.spawn(apps.app_launcher) end,
         { description = "start rofi", group = "rofi" }),
     awful.key({ super }, "'", function() awful.util.spawn("rofi -modi emoji -show emoji -theme ~/.config/rofi/applets/emoji.rasi") end,
         { description = "run prompt", group = "rofi" }),

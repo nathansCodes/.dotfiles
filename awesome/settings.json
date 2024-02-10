@@ -1,22 +1,23 @@
 {
-    "locale": {
-        "langs": [
-            "us"
-        ]
-    },
-    "theme": {
-        "variant": "macchiato",
-        "firefox_profile": "rt5lr27b.default-release",
-        "firefox_install": "native",
-        "theme": "catppuccin",
-        "discord_install": "flatpak"
-    },
     "program": {
         "autostart": [
             {
-                "type": "startup",
-                "program": "autorandr --change"
+                "program": "autorandr --change",
+                "type": "startup"
             }
+        ]
+    },
+    "theme": {
+        "icon_theme": "Papirus-Dark",
+        "theme": "catppuccin",
+        "discord_install": "flatpak",
+        "variant": "mocha",
+        "firefox_profile": "rt5lr27b.default-release",
+        "firefox_install": "native"
+    },
+    "locale": {
+        "langs": [
+            "us"
         ]
     }
 }

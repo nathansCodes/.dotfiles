@@ -22,9 +22,9 @@
 [submodule "awesome/modules/rubato"]
 	path = awesome/modules/rubato
 	url = https://github.com/andOrlando/rubato.git
-[submodule "awesome/modules/bling"]
-	path = awesome/modules/bling
-	url = https://github.com/BlingCorp/bling.git
 [submodule "awesome/modules/ldbus"]
 	path = awesome/modules/ldbus
 	url = https://github.com/dodo/ldbus.git
+[submodule "awesome/modules/bling"]
+	path = awesome/modules/bling
+	url = https://github.com/Kasper24/bling.git

@@ -18,9 +18,9 @@ theme.green            = "#a6e3a1" -- green
 theme.blue             = "#98dceb" -- blue
 theme.magenta          = "#b4befe" -- lavender
 
-theme.accent           = "#cba6f7" -- mauve
+theme.accent           = "#89b4fa" -- blue
 theme.second_accent    = "#fab387" -- peach
-theme.third_accent     = "#98dceb" -- blue
+theme.third_accent     = "#cba6f7" -- mauve
 theme.forth_accent     = "#f2cdcd" -- flamingo
 
 theme.success          = "#74c7ec" -- sapphire

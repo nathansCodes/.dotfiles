@@ -13,8 +13,8 @@ local dotfiles_dir = awm_conf_dir .. "/../"
 local settings = require("config.user_settings")
 
 -- load theme based on user preference
-local theme_name = string.lower(tostring(settings.get("theme.theme")))
-local theme_variant = string.lower(tostring(settings.get("theme.variant")))
+local theme_name = string.lower(settings.theme.theme or "catppuccin")
+local theme_variant = string.lower(settings.theme.variant or "mocha")
 local theme_path = awm_conf_dir.."ui/theme/themes/"..theme_name
 
 -- set theme to catppuccin if it doesn't exist
@@ -48,12 +48,38 @@ local apply_rofi = 'echo \'@import \"~/.config/rofi/colors/'
     .. rofi_theme .. '.rasi\"\' > ~/.config/rofi/resources/colors.rasi'
 awful.spawn.with_shell(apply_rofi)
 
-local firefox_install = settings.get("theme.firefox_install")
-local firefox_profile = settings.get("theme.firefox_profile")
-local discord_install = settings.get("theme.discord_install")
+-- check for icon theme in `/usr/share/icons`, `~/.icons/`, and `~/.local/share/icons/`
+local function icon_theme_exists(icon_theme)
+    if gfs.is_dir("/usr/share/icons/"..icon_theme) then
+        return true, "/usr/share/icons/"..icon_theme
+    end
+    if gfs.is_dir("~/.icons/"..icon_theme) then
+        return true, "~/.icons/"..icon_theme
+    end
+    if gfs.is_dir("~/.local/share/icons/"..icon_theme) then
+        return true, "~/.local/share/icons/"..icon_theme
+    end
+    return false, nil
+end
+
+theme.icon_theme = settings.theme.icon_theme or theme.icon_theme or "Papirus"
+
+local icons_exist, icons_dir = icon_theme_exists(theme.icon_theme)
+
+if not icons_exist then
+    theme.icon_theme = "Papirus"
+    theme.icon_theme_path = "/usr/share/icons/Papirus"
+else
+    theme.icon_theme_path = icons_dir
+end
+
 
 local nvim_theme_name = theme_name == "biscuit" and "biscuit"
     or theme_name:gsub(" ", "-") .. (theme_variant ~= "" and "-"..theme_variant)
+
+local firefox_install = settings.theme.firefox_install
+local firefox_profile = settings.theme.firefox_profile
+local discord_install = settings.theme.discord_install
 
 local apply_script = [=[
     #!/usr/bin/env bash
@@ -67,8 +93,8 @@ local apply_script = [=[
     HL_LOW="]=] .. theme.highlight_low .. [=["
     HL_MED="]=] .. theme.highlight_med .. [=["
     HL_HIGH="]=] .. theme.highlight_high .. [=["
-    ACCENT="]=] .. theme.third_accent .. [=["
-    ACCENT2="]=] .. theme.accent .. [=["
+    ACCENT="]=] .. theme.accent .. [=["
+    ACCENT2="]=] .. theme.third_accent .. [=["
     ACCENT3="]=] .. theme.second_accent .. [=["
     ERROR="]=] .. theme.red .. [=["
     WARN="]=] .. theme.yellow .. [=["
@@ -85,7 +111,7 @@ local apply_script = [=[
     BLUE="]=] .. theme.blue .. [=["
     MAGENTA="]=] .. theme.magenta .. [=["
     CYAN="]=] .. theme.cyan .. [=["
-
+    ICON_THEME="]=] .. theme.icon_theme .. [=["
 
 
     source $HOME/.config/awesome/scripts/apply_theme.sh

@@ -71,7 +71,6 @@ function menu:hide_children_menus()
 	for _, button in ipairs(self.widget.children) do
 		if button.sub_menu ~= nil then
 			button.sub_menu:hide()
-            button:turn_off()
 		end
 	end
 end
@@ -114,7 +113,6 @@ function menu:show(args)
 		for _, button in ipairs(self.parent_menu.widget.children) do
 			if button.sub_menu ~= nil and button.sub_menu ~= self then
 				button.sub_menu:hide()
-				button:turn_off()
 			end
 		end
 	end
@@ -158,36 +156,36 @@ function menu.menu(widgets, width)
 		minimum_width = width or dpi(300),
 		maximum_width = width or dpi(300),
 		shape = helpers.ui.rrect(10),
-		bg = beautiful.popup_bg,
+		bg = beautiful.surface,
 		widget = wibox.layout.fixed.vertical,
 	}
 	gtable.crush(widget, menu, true)
 
-	awful.mouse.append_client_mousebinding(awful.button({ "Any" }, 1, function(c)
+	awful.mouse.append_client_mousebinding(awful.button({ "Any" }, 1, function()
 		if widget.can_hide == true then
 			widget:hide(true)
 		end
 	end))
 
-	awful.mouse.append_client_mousebinding(awful.button({ "Any" }, 3, function(c)
+	awful.mouse.append_client_mousebinding(awful.button({ "Any" }, 3, function()
 		if widget.can_hide == true then
 			widget:hide(true)
 		end
 	end))
 
-	awful.mouse.append_global_mousebinding(awful.button({ "Any" }, 1, function(c)
+	awful.mouse.append_global_mousebinding(awful.button({ "Any" }, 1, function()
 		if widget.can_hide == true then
 			widget:hide(true)
 		end
 	end))
 
-	awful.mouse.append_global_mousebinding(awful.button({ "Any" }, 3, function(c)
+	awful.mouse.append_global_mousebinding(awful.button({ "Any" }, 3, function()
 		if widget.can_hide == true then
 			widget:hide(true)
 		end
 	end))
 
-	capi.tag.connect_signal("property::selected", function(t)
+	capi.tag.connect_signal("property::selected", function()
 		widget:hide(true)
 	end)
 
@@ -228,7 +226,7 @@ function menu.sub_menu_button(args)
 			widget = wibox.widget.imagebox,
 			image = args.image,
             forced_width = dpi(20),
-            forced_height = dpi(args.icon_size),
+            forced_height = math.min(dpi(args.icon_size), dpi(20)),
             halign = "center",
             valign = "center",
 		}
@@ -250,48 +248,40 @@ function menu.sub_menu_button(args)
 
     local widget = button {
         bg = gears.color.transparent,
-        animate = false,
         margins = dpi(5),
+        height = dpi(45),
+        shape = helpers.ui.rrect(10),
         on_mouse_enter = function(self, widget)
             local coords = helpers.ui.get_widget_geometry(self.menu, self)
             coords.x = coords.x + self.menu.x + self.menu.width
             coords.y = coords.y + self.menu.y
             args.sub_menu:show({ coords = coords, offset = { x = 5 } })
-            self:toggle()
         end,
         widget = wibox.widget {
-            widget = wibox.container.background,
-            bg = beautiful.popup_bg,
-            animate = false,
-            shape = helpers.ui.rrect(10),
-            forced_height = dpi(35),
+            widget = wibox.container.margin,
+            margins = dpi(5),
             {
-                widget = wibox.container.margin,
-                margins = dpi(5),
+                layout = wibox.layout.fixed.horizontal,
+                fill_space = true,
+                spacing = dpi(15),
+                icon,
+                text_widget,
                 {
-                    layout = wibox.layout.fixed.horizontal,
-                    fill_space = true,
-                    spacing = dpi(15),
-                    forced_width = dpi(270),
-                    icon,
-                    text_widget,
+                    widget = wibox.container.place,
+                    halign = "right",
                     {
-                        widget = wibox.container.place,
-                        halign = "right",
+                        layout = wibox.layout.fixed.horizontal,
+                        spacing = dpi(10),
+                        second_text_widget,
                         {
-                            layout = wibox.layout.fixed.horizontal,
-                            spacing = dpi(10),
-                            second_text_widget,
-                            {
-                                widget = wibox.widget.textbox,
-                                font = beautiful.icon_font .. "22",
-                                halign = "right",
-                                text = "\u{eac9}",
-                            },
-                        }
+                            widget = wibox.widget.textbox,
+                            font = beautiful.icon_font .. "22",
+                            halign = "right",
+                            text = "\u{eac9}",
+                        },
                     }
                 }
-            },
+            }
         },
     }
 
@@ -339,36 +329,29 @@ function menu.button(args)
         font = beautiful.font .. "SemiBold " .. args.text_size-1,
 		markup = helpers.ui.colorize_text(args.secondary_text, beautiful.inactive),
         halign = "right",
-	}
+	} or nil
 
 
     return button {
         bg = gears.color.transparent,
-        animate = false,
         margins = dpi(5),
+        height = dpi(45),
+        shape = helpers.ui.rrect(10),
         on_release = function(self)
             self.menu:hide(true)
             args.on_press(self, text_widget)
         end,
         widget = wibox.widget {
-            widget = wibox.container.background,
-            forced_height = dpi(35),
-            halign = "left",
-            animate = false,
-            bg = beautiful.popup_bg,
-            shape = helpers.ui.rrect(10),
+            widget = wibox.container.margin,
+            margins = dpi(5),
             {
-                widget = wibox.container.margin,
-                margins = dpi(5),
-                {
-                    layout = wibox.layout.fixed.horizontal,
-                    spacing = dpi(15),
-                    fill_space = true,
-                    icon,
-                    text_widget,
-                    second_text_widget,
-                }
-            },
+                layout = wibox.layout.fixed.horizontal,
+                spacing = dpi(15),
+                fill_space = true,
+                icon,
+                text_widget,
+                second_text_widget,
+            }
         },
     }
 end

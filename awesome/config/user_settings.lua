@@ -15,7 +15,7 @@ settings.defaults = {
         firefox_install = "native",
     },
     locale = {
-        keyboard_layouts = { "us" },
+        langs = { "us" },
     },
 }
 
@@ -24,81 +24,53 @@ local settings_path = gfs.get_configuration_dir() .. "settings.json"
 -- TODO: handle this better. The longer the user_settings.json, the longer the startup time
 local json_str = io.popen("cat " .. settings_path, "r"):read("*all")
 
-local settings_data = gtable.crush(settings.defaults, json.decode(json_str), true)
+local data = gtable.crush(settings.defaults, json.decode(json_str), true)
 
----Returns the requested value from the settings
----@param key string The path to the requested value. Use '.' as a separator for nested values
----@return any value
-function settings.get(key)
-    if type(key) ~= "string" then
-        error("expected argument of type string|table, got " .. type(key))
-    end
+local data_proxy = {}
 
-    local path = {}
-
-    for k in key:gmatch("[^.]+") do
-        table.insert(path, k)
-    end
-
-    local v = settings_data
-
-    for _, field in pairs(path) do
-        if type(v[field]) ~= "table" then return v[field] end
-        if v[field] == nil then
-            v = settings.defaults
-            for _, field in pairs(path) do
-                if type(v[field]) ~= "table" then return v[field] end
-                v = v[field]
-            end
-            return v
-        end
-        v = v[field]
-    end
-
-    return v
-end
-
-local function concat_table(t)
-    local ret = "{"
-    for k, v in pairs(t) do
-        if type(v) == "table" then v = concat_table(v) end
-        if type(k) ~= "number" then
-            ret = ret .. k .. "=" .. v .. ","
-        else
-            ret = ret .. v .. ","
-        end
-    end
-    ret = ret .. "}"
-    return ret
-end
-
---- @param key string The path to the value to set. Use '.' as a separator for nested values
---- @param value any the value to set
-function settings.set(key, value)
-    -- creates a snippet of lua code that sets the value
-    -- and runs said snippet. I didn't find another way to deal with nested values
-    local eval = "settings_data"
-
-    for field in key:gmatch("[^.]+") do
-        eval = eval .. "['" .. field .. "']"
-    end
-
-    -- surround with quotes if value is a string
-    local value_str = type(value) == "string" and '"'..value..'"' or tostring(value)
-
-    -- handle case of value being a table
-    if type(value) == "table" then
-        value_str = concat_table(value)
-    end
-
-    -- returns a function with a paramater so that it can access settings_data
-    eval = "return function(settings_data)" .. eval .. "=" .. value_str .. " end"
-    -- load, call and run
-    load(eval)()(settings_data)
-
-    -- write to settings.json
-    json_str = json.encode(settings_data)
+local function update_json()
+    json_str = json.encode(data)
     awful.spawn.with_shell("echo -n '"..json_str.."' > "..settings_path)
 end
 
-return settings
+function settings.get_json()
+    return json.encode(data)
+end
+
+local startup = true
+local function setmetatables(t, proxy)
+    for k, v in pairs(t) do
+        if type(v) == "table" then
+            rawset(proxy, k, {})
+            setmetatable(proxy[k], {
+                __index = function(table, key)
+                    if rawget(table, key) ~= nil then
+                        return table[key]
+                    else
+                        return v[key]
+                    end
+                end,
+                __newindex = function(_, key, val)
+                    rawset(v, key, val)
+                    if startup == false then
+                        update_json()
+                    end
+                end
+            })
+            setmetatables(v, proxy[k])
+        end
+    end
+end
+
+setmetatables(data, data_proxy)
+startup = false
+
+local mt = {}
+
+mt.__index = data_proxy
+function mt.__newindex(_, k, v)
+    data_proxy[k] = v
+    update_json()
+end
+
+return setmetatable(settings, mt)

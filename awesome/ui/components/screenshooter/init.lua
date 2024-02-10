@@ -5,7 +5,7 @@ local naughty = require("naughty")
 local gfs = gears.filesystem
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
-local root = require("root")
+--local root = require("root")
 local cairo = require("lgi").cairo
 
 local helpers = require("helpers")

@@ -1,0 +1,163 @@
+#################################
+#             Shadows           #
+#################################
+
+
+# Enabled client-side shadows on windows. Note desktop windows
+# (windows with '_NET_WM_WINDOW_TYPE_DESKTOP') never get shadow,
+# unless explicitly requested using the wintypes option.
+#
+shadow = true;
+
+# The blur radius for shadows, in pixels. (defaults to 12)
+shadow-radius = 20
+
+# The left offset for shadows, in pixels. (defaults to -15)
+shadow-offset-x = -20
+
+# The top offset for shadows, in pixels. (defaults to -15)
+shadow-offset-y = -20
+
+shadow-exclude = [ ];
+
+#################################
+#           Fading              #
+#################################
+
+
+# Fade windows in/out when opening/closing and when opacity changes,
+#  unless no-fading-openclose is used.
+# fading = false
+fading = true;
+
+# Opacity change between steps while fading in. (0.01 - 1.0, defaults to 0.028)
+fade-in-step = 0.03
+
+# Opacity change between steps while fading out. (0.01 - 1.0, defaults to 0.03)
+fade-out-step = 0.03
+
+# The time between steps in fade step, in milliseconds. (> 0, defaults to 10)
+fade-delta = 5;
+
+# Specify a list of conditions of windows that should not be faded.
+fade-exclude = [];
+
+# Do not fade on window open/close.
+no-fading-openclose = false;
+
+# Do not fade destroyed ARGB windows with WM frame. Workaround of bugs in Openbox, Fluxbox, etc.
+no-fading-destroyed-argb = false;
+
+#################################
+#       Rounded Corners         #
+#################################
+
+corner-radius = 0;
+
+corners-rule = [
+    "0:class_g = 'awesome'",
+    "20:class_g = 'Rofi'",
+];
+
+#################################
+#          Animations           #
+#################################
+
+animations: true;
+animation-stiffness = 120;
+animation-window-mass = 2;
+animation-dampening = 24;
+animation-clamping = false;
+animation-for-open-window = "slide-up"; #open window
+animation-for-unmap-window = "slide-down"; #minimize window
+
+animation-open-exclude = [ "class_g = 'awesome'" ];
+animation-unmap-exclude = [ "class_g = 'awesome'" ];
+
+
+#################################
+#       General Settings        #
+#################################
+
+
+# Daemonize process. Fork to background after initialization. Causes issues with certain (badly-written) drivers.
+daemon = true;
+
+# Specify the backend to use: `xrender`, `glx`, `egl` or `xr_glx_hybrid`.
+# `xrender` is the default one.
+#
+backend = "glx";
+
+# Use higher precision during rendering, and apply dither when presenting the
+# rendered screen. Reduces banding artifacts, but might cause performance
+# degradation. Only works with OpenGL.
+dithered-present = false;
+
+# Enable/disable VSync.
+vsync = true;
+
+# Try to detect WM windows (a non-override-redirect window with no
+# child that has 'WM_STATE') and mark them as active.
+#
+# mark-wmwin-focused = false
+mark-wmwin-focused = true;
+
+# Mark override-redirect windows that doesn't have a child window with 'WM_STATE' focused.
+# mark-ovredir-focused = false
+mark-ovredir-focused = true;
+
+use-damage = true;
+
+log-level = "warn";
+
+wintypes: {
+  tooltip = {
+    fade = true;
+    shadow = false;
+    opacity = 1.0;
+    focus = true;
+    full-shadow = false;
+    blur-background = true;
+  };
+  dock = {
+    shadow = false;
+    opacity = 1.0;
+    fade = false;
+    clip-shadow-above = true;
+    blur-background = true;
+  };
+  dnd = {
+    shadow = false;
+  };
+  popup_menu = {
+    shadow = true;
+    opacity = 1.0;
+    fade = true;
+    clip-shadow-above = false;
+    focus = true;
+    animation = "none";
+    animation-unmap = "none";
+  };
+  dropdown_menu = {
+    opacity = 1.0;
+    blur-background = false;
+  };
+  menu = {
+    animation = "none";
+    animation-unmap = "none";
+    shadow-radius = 10;
+    shadow-offset-x = 10;
+    shadow-offset-y = 10;
+  };
+  notification = {
+    fade = true;
+    shadow = true;
+    animation = "zoom";
+    animation-unmap = "zoom";
+  };
+  utility = {
+    fade = false;
+    animation = "none";
+    animation-unmap = "none";
+  };
+};

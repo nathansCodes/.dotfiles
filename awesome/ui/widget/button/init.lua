@@ -11,44 +11,31 @@ local rubato = require("modules.rubato")
 local helpers = require("helpers")
 
 return function(args)
-    args.bg_off = args.bg_off or args.bg
-    args.bg_on = args.bg_on or args.bg
-    args.fg_off = args.fg_off or args.fg
-    args.fg_on = args.fg_on or args.fg
-
     args.margins = args.margins or 0
-    args.top_margin = args.top_margin or 0
-    args.bottom_margin = args.bottom_margin or 0
-    args.left_margin = args.left_margin or 0
-    args.right_margin = args.right_margin or 0
+    args.top_margin = args.top_margin or nil
+    args.bottom_margin = args.bottom_margin or nil
+    args.left_margin = args.left_margin or nil
+    args.right_margin = args.right_margin or nil
 
     args.hover_effect = not (args.hover_effect == false)
     args.shape = args.shape or helpers.ui.rrect(10)
-    args.on = args.on or false
 
     args.on_mouse_enter = args.on_mouse_enter or function(_,_) end
     args.on_mouse_leave = args.on_mouse_leave or function(_,_) end
     args.on_press = args.on_press or function(_,_,_,_,_,_,_,_,_) end
     args.on_release = args.on_release or function(_,_,_,_,_,_,_,_,_) end
 
-    local widget = args.widget or nil
+    local widget = args.widget or args[1] or nil
 
     if widget ~= nil and not widget.is_widget then
         widget = wibox.widget(widget)
     end
 
-    -- handle nil as true
-    if args.animate == false then
-        args.distance = 0
-    elseif args.distance == nil then
-        args.distance = 3
-    end
-
     local bg = wibox.widget {
         widget = wibox.container.background,
         shape = args.shape,
-        bg = args.on and args.bg_on or args.bg_off,
-        fg = args.on and args.fg_on or args.fg_off,
+        bg = args.bg,
+        fg = args.fg,
         widget,
     }
 
@@ -73,8 +60,6 @@ return function(args)
             bg,
             hover_effect,
         },
-
-        on = args.on or false,
 
         -- make manual layouts work
         point = args.point,
@@ -101,6 +86,10 @@ return function(args)
         args.on_mouse_enter(container, widget)
     end)
 
+    function container:hover()
+        hover_effect_anim.target = args.hover_effect and 0.2 or 0
+    end
+
     container:connect_signal("mouse::leave", function()
         hover_effect_anim.target = 0
 
@@ -112,6 +101,10 @@ return function(args)
         args.on_mouse_leave(container, widget)
     end)
 
+    function container:unhover()
+        hover_effect_anim.target = 0
+    end
+
     container:connect_signal("button::press", function(self, lx, ly, button, find_widgets_result)
         hover_effect_anim.target = args.hover_effect and 0.25 or 0
         self.pressed = true
@@ -122,8 +115,6 @@ return function(args)
     container:connect_signal("button::release", function(self, lx, ly, button, find_widgets_result)
         hover_effect_anim.target = args.hover_effect and 0.2 or 0
         self.pressed = false
-
-        self:toggle()
 
         args.on_release(self, widget, lx, ly, button, find_widgets_result)
     end)
@@ -152,8 +143,10 @@ return function(args)
         end
     end
 
+    container._get_children_by_id = container.get_children_by_id
+
     function container:get_children_by_id(id)
-        return widget ~= nil and widget:get_children_by_id(id) or nil
+        return widget ~= nil and widget:get_children_by_id(id) or {}
     end
 
     function container:get_widget()
@@ -166,26 +159,6 @@ return function(args)
 
     function container:set_fg(color)
         bg:set_fg(color)
-    end
-
-    function container:turn_on()
-        self.on = true
-        bg:set_bg(args.bg_on)
-        bg:set_fg(args.fg_on)
-    end
-
-    function container:turn_off()
-        self.on = false
-        bg:set_bg(args.bg_off)
-        bg:set_fg(args.fg_off)
-    end
-
-    function container:toggle()
-        if self.on == true then
-            self:turn_off()
-        else
-            self:turn_on()
-        end
     end
 
     local mt = getmetatable(container)
@@ -214,7 +187,5 @@ return function(args)
         return ___newindex(self, key, value)
     end
 
-    local cmt = setmetatable(container, mt)
-
-    return cmt
+    return setmetatable(container, mt)
 end

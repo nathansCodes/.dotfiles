@@ -87,7 +87,7 @@ local return_button = function(size, show_notifications, cursor_focus, force_new
         bg = gears.color.transparent,
         on_release = function(_, _, _, _, b)
             if b == 2 then
-                awful.spawn(apps.default.network_manager, false)
+                awful.spawn(apps.network_manager, false)
             end
         end,
 	}

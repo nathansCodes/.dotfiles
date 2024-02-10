@@ -18,7 +18,7 @@ local main_menu = menu {
         text = "Applications",
         secondary_text = "Super+R",
         on_press = function()
-            awful.spawn.with_shell(apps.default.app_launcher)
+            awesome.emit_signal("launcher::open")
         end
     },
     menu.button {
@@ -27,7 +27,7 @@ local main_menu = menu {
         text = "Web Browser",
         secondary_text = "Super+B",
         on_press = function()
-            awful.spawn(apps.default.web_browser)
+            awful.spawn(apps.web_browser)
         end
     },
     menu.button {
@@ -36,7 +36,7 @@ local main_menu = menu {
         text = "Terminal",
         secondary_text = "Super+T",
         on_press = function()
-            awful.spawn(apps.default.terminal)
+            awful.spawn(apps.terminal)
         end
     },
     menu.button {
@@ -45,7 +45,7 @@ local main_menu = menu {
         text = "File Manager",
         secondary_text = "Super+E",
         on_press = function()
-            awful.spawn(apps.default.file_manager)
+            awful.spawn(apps.file_manager)
         end
     },
     menu.button {
@@ -53,7 +53,7 @@ local main_menu = menu {
         icon_color = beautiful.accent,
         text = "Text Editor",
         on_press = function()
-            awful.spawn(apps.default.text_editor)
+            awful.spawn(apps.text_editor)
         end
     },
     menu.button {
@@ -61,7 +61,7 @@ local main_menu = menu {
         icon_color = beautiful.accent,
         text = "Code Editor",
         on_press = function()
-            awful.spawn(apps.default.code_editor)
+            awful.spawn(apps.code_editor)
         end
     },
     menu.button {
@@ -119,7 +119,7 @@ local main_menu = menu {
                 icon_color = beautiful.third_accent,
                 text = "Edit config",
                 on_press = function()
-                    awful.spawn(apps.default.code_editor .. " '" .. conf_dir .. "'")
+                    awful.spawn(apps.code_editor .. " '" .. conf_dir .. "'")
                 end
             },
             menu.button {

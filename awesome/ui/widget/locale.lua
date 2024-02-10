@@ -10,7 +10,7 @@ local user_settings = require("config.user_settings")
 local current_layout_index = 1
 
 return function()
-    local layouts = user_settings.get("locale.keyboard_layouts")
+    local layouts = user_settings.locale.layouts
     local layout = awful.widget.keyboardlayout()
 
     layout:connect_signal("button::press", function(_, _, _, button)

@@ -37,7 +37,7 @@ naughty.connect_signal("request::display", function(n)
         preferred_anchors   = "middle",
         offset              = { y = dpi(20) },
 
-        shape = beautiful.notification_shape or helpers.ui.rrect(20),
+        shape = helpers.ui.rrect(10),
         bg    = beautiful.base,
         fg    = n.urgency == "critical" and beautiful.error or beautiful.text,
 

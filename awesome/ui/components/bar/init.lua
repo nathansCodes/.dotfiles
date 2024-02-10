@@ -12,22 +12,17 @@ local network_widget = require("ui.widget.network")
 local bluetooth_widget = require("ui.widget.bluetooth")
 local volume_widget = require("ui.widget.volume")
 local keyboardlayout = require("ui.widget.locale")
-local taglist = require("ui.widget.taglist")
+local taglist = require("ui.components.bar.taglist")
 local button = require("ui.widget.button")
 
 -------------------- panels ---------------------
 local right_panel = require("ui.components.right_panel")
---local central_panel = require("ui.central_panel")
 
-screen.connect_signal("request::desktop_decoration", function(s)
+return function(s)
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
 
     local textclock = button {
-        on_release = function(_, _, _, _, b)
-            if b ~= 1 then return end
-            --central_panel:toggle()
-        end,
         shape = gears.shape.rounded_bar,
         width = dpi(100),
         widget = {
@@ -178,5 +173,5 @@ screen.connect_signal("request::desktop_decoration", function(s)
     }
 
     right_panel(s)
-end)
+end
 

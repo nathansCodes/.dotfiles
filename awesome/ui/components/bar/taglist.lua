@@ -98,6 +98,10 @@ return function(s)
                 }
             },
             create_callback = function(self, t, _, _)
+                -- set icon
+                local icon = self:get_children_by_id("icon")[1]
+                icon:set_text(t.icon)
+
                 self.animator = rubato.timed {
                     duration = 0.5,
                     easing = rubato.linear,
@@ -106,32 +110,22 @@ return function(s)
                         self:get_children_by_id("background_role")[1]:set_forced_width(pos)
                         local opacity = (pos-occupied_width)/(focused_width-occupied_width)
                         self:get_children_by_id("text_role")[1]:set_opacity(opacity)
+
+                        -- just some math I figured out in desmos
+                        -- so that I don't need a second animator :)
+                        local left_margin = math.min(0.46 * (pos-30) + 3.5, 0.424 * (80 - pos))
+                        self:get_children_by_id("margins")[1]:set_left(left_margin)
                     end,
                 }
-                -- I had to make a second rubato.timed, because if i try to
-                -- access the target in subscribed, the taglist disappears :/
-                self.left_margins_animator = rubato.timed {
-                    duration = 0.5,
-                    easing = rubato.linear,
-                    pos = dpi(4),
-                    subscribed = function(pos)
-                        self:get_children_by_id("margins")[1]:set_left(pos)
-                    end,
-                }
+
+                -- update animator target
                 self.update = function()
-                    local icon = self:get_children_by_id("icon")[1]
-                    icon:set_text(t.icon)
                     if t.selected then
                         self.animator.target = focused_width
-                        self.left_margins_animator.target = dpi(4)
                     elseif #t:clients() > 0 then
                         self.animator.target = occupied_width
-                        self.left_margins_animator.target = occupied_width/2 - dpi(10.5)
-                        --                                                     ^half of icon width
                     else
                         self.animator.target = empty_width
-                        self.left_margins_animator.target = empty_width/2 - dpi(10.5)
-                        --                                                  ^half of icon width
                     end
                 end
                 self.update()

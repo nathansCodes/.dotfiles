@@ -31,7 +31,7 @@ window {
     y-offset:                    0px;
     margin:                      0px;
     padding:                     0px;
-    border-radius:               20px;
+    border-radius:               14px;
     cursor:                      "default";
     background-color:            @background;
 }

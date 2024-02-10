@@ -46,7 +46,7 @@ return function(size, cursor_focus)
         bg = gears.color.transparent,
         on_release = function(_, _, _, _, b)
             if b == 2 then
-                awful.spawn(apps.default.bluetooth_manager, false)
+                awful.spawn(apps.bluetooth_manager, false)
             end
         end,
         widget = widget,

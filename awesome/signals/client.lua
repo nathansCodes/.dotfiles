@@ -3,11 +3,10 @@ local awful = require("awful")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
+local helpers = require("helpers")
 local capi = { client = client, mouse = mouse }
 
-local client_shape = function(cr, w, h)
-    gears.shape.rounded_rect(cr, w, h, dpi(20))
-end
+local client_shape = helpers.ui.rrect(14)
 
 capi.client.connect_signal("manage", function(c, startup)
     -- set rounded corners for all clients
