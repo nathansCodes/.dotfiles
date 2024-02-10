@@ -1,30 +1,21 @@
-[submodule "nvim"]
+[submodule ".config/nvim"]
 	url = https://github.com/NathansCodes/nvim.git
-	path = nvim
-[submodule "btop/themes"]
-	path = btop/themes
+	path = .config/nvim
+[submodule ".config/btop/themes"]
+	path = .config/btop/themes
 	url = https://github.com/rose-pine/btop.git
-[submodule "eww"]
-	path = eww
-	url = https://github.com/saimoomedits/eww-widgets.git
-[submodule "awesome/ui/widgets"]
-	path = awesome/ui/widgets
+[submodule ".config/awesome/ui/widgets"]
+	path = .config/awesome/ui/widgets
 	url = https://github.com/streetturtle/awesome-wm-widgets.git
-[submodule "awesome/net_widgets"]
-	path = awesome/net_widgets
+[submodule ".config/awesome/net_widgets"]
+	path = .config/awesome/net_widgets
 	url = https://github.com/pltanton/net_widgets.git
-[submodule "awesome/vicious"]
-	path = awesome/vicious
-	url = https://github.com/vicious-widgets/vicious.git
-[submodule "awesome/--init"]
-	path = awesome/--init
-	url = https://github.com/BlingCorp/bling.git
-[submodule "awesome/modules/rubato"]
-	path = awesome/modules/rubato
+[submodule ".config/awesome/modules/rubato"]
+	path = .config/awesome/modules/rubato
 	url = https://github.com/andOrlando/rubato.git
-[submodule "awesome/modules/ldbus"]
-	path = awesome/modules/ldbus
+[submodule ".config/awesome/modules/ldbus"]
+	path = .config/awesome/modules/ldbus
 	url = https://github.com/dodo/ldbus.git
-[submodule "awesome/modules/bling"]
-	path = awesome/modules/bling
+[submodule ".config/awesome/modules/bling"]
+	path = .config/awesome/modules/bling
 	url = https://github.com/Kasper24/bling.git
