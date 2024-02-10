@@ -54,23 +54,10 @@ awful.keyboard.append_global_keybindings {
         key = "r",
         on_release = function()
             awesome.emit_signal("launcher::open")
-            --awful.spawn.with_shell(apps.app_launcher)
         end,
-        description = { description = "run prompt", group = "launcher" }
+        description = "run prompt",
+        group = "launcher"
     },
-    awful.key({ super, }, "y", function()
-        naughty.notification {
-            text = require("config.user_settings").theme.theme .. " " ..
-                require("config.user_settings").theme.variant
-        }
-        require("config.user_settings").theme.theme = "biscuit"
-        require("config.user_settings").theme.variant = "dark"
-        naughty.notification {
-            text = require("config.user_settings").theme.theme .. " " ..
-                require("config.user_settings").theme.variant
-        }
-    end,
-        { description = "open file manager (pcmanfm)", group = "launcher" }),
 }
 
 awful.keyboard.append_global_keybindings {
