@@ -1,10 +1,10 @@
 # tmux plugins dir
-tmux/plugins/*
-tmux/plugins/
+.config/tmux/plugins/*
+.config/tmux/plugins/
 
 # compiled packer file directory
-nvim/plugin/packer_compiled.lua
+.config/nvim/plugin/packer_compiled.lua
 
 # undo files directory
-nvim/undodir/*
-nvim/undodir
+.config/nvim/undodir/*
+.config/nvim/undodir

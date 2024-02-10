@@ -1,0 +1,7 @@
+
+# compiled packer file directory
+plugin/packer_compiled.lua
+
+# undo files directory
+undodir/*
+undodir
