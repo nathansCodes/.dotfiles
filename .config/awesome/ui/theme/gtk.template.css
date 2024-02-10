@@ -176,10 +176,6 @@ tabbar tab:not(:backdrop):checked {
     background-color: @second_bg;
 }
 
-.view {
-    background-color: @bg;
-}
-
 box > entry {
     background-color: @second_bg;
 }

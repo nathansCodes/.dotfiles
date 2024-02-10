@@ -28,4 +28,6 @@ theme.warn             = "#E39C45" -- persian orange
 theme.warn2            = "#F07342" -- burnt sienna
 theme.error            = "#CF223E" -- crimson
 
+theme.nvim_theme_name  = "biscuit"
+
 return theme

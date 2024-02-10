@@ -9,14 +9,33 @@ local json = require("modules.json")
 local settings = {}
 
 settings.defaults = {
+    program = {
+        autostart = { }
+    },
     theme = {
-        theme = "Catppuccin",
+        theme = "catppuccin",
         variant = "mocha",
-        firefox_install = "native",
+        icon_theme = "Papirus-Dark",
+        xresources_enabled = false,
+        gtk = { enabled = false },
+        nvim = { enabled = false },
+        alacritty = { enabled = false },
+        discord = {
+            enabled = false,
+            install = "flatpak",
+            client_mod = "Vencord"
+        },
+        firefox = {
+            enabled = false,
+            profile = "",
+            install = "native"
+        }
     },
     locale = {
-        langs = { "us" },
-    },
+        langs = {
+            "us"
+        }
+    }
 }
 
 local settings_path = gfs.get_configuration_dir() .. "settings.json"

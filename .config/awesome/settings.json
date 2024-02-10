@@ -8,12 +8,29 @@
         ]
     },
     "theme": {
-        "icon_theme": "Papirus-Dark",
         "theme": "catppuccin",
-        "discord_install": "flatpak",
         "variant": "mocha",
-        "firefox_profile": "rt5lr27b.default-release",
-        "firefox_install": "native"
+        "icon_theme": "Papirus-Dark",
+        "xresources_enabled": true,
+        "gtk": {
+            "enabled": true
+        },
+        "nvim": {
+            "enabled": true
+        },
+        "alacritty": {
+            "enabled": true
+        },
+        "discord": {
+            "enabled": true,
+            "install": "flatpak",
+            "client_mod": "Vencord"
+        },
+        "firefox": {
+            "enabled": true,
+            "profile": "rt5lr27b.default-release",
+            "install": "native"
+        }
     },
     "locale": {
         "langs": [

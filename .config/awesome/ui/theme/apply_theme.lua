@@ -74,12 +74,27 @@ else
 end
 
 
-local nvim_theme_name = theme_name == "biscuit" and "biscuit"
+local nvim_theme_name = theme.nvim_theme_name
     or theme_name:gsub(" ", "-") .. (theme_variant ~= "" and "-"..theme_variant)
 
-local firefox_install = settings.theme.firefox_install
-local firefox_profile = settings.theme.firefox_profile
-local discord_install = settings.theme.discord_install
+local firefox_install = settings.theme.firefox.install
+local firefox_profile = settings.theme.firefox.profile
+local discord_install = settings.theme.discord.install
+local discord_mod = settings.theme.discord.client_mod
+
+-- create commands for applying the theme
+-- or leave empty if the user doesn't want it
+local apply_discord = settings.theme.discord.enabled
+    and ( "discord '" .. discord_install .. "' '" .. discord_mod .. "'" ) or ""
+local apply_xres_term = settings.theme.xresources_enabled and "term" or ""
+local apply_alacritty = settings.theme.alacritty.enabled and
+    ( "alacritty '" .. theme_name:gsub(" ", "_")
+    .. (theme_variant ~= "" and "_"..theme_variant) .. "'" ) or ""
+local apply_gtk = settings.theme.gtk.enabled and "gtk" or ""
+local apply_nvim = settings.theme.nvim.enabled and ("nvim " .. "'" .. nvim_theme_name .. "'") or ""
+local apply_firefox = settings.theme.firefox.enabled and (
+    "userchrome '" .. firefox_install .. "' '" .. firefox_profile .. "'\n" ..
+    "usercontent '" .. firefox_install .. "' '" .. firefox_profile .. "'" ) or ""
 
 local apply_script = [=[
     #!/usr/bin/env bash
@@ -117,30 +132,17 @@ local apply_script = [=[
     source $HOME/.config/awesome/scripts/apply_theme.sh
 
 
-    if [[ ! "$NO_DISCORD" = "true" ]]; then
-        discord "]=] .. discord_install .. [=["
-    fi
-    if [[ ! "$NO_TERM" ]]; then
-        term
-    fi
-    if [[ ! "$NO_ALACRITTY" ]]; then
-        alacritty "]=] .. theme_name:gsub(" ", "_") ..
-            (theme_variant ~= "" and "_"..theme_variant) .. [=["
-    fi
-    if [[ ! "$NO_GTK" = "true" ]]; then
-        gtk
-    fi
-    if [[ ! "$NO_NVIM" = "true" ]]; then
-        nvim "]=] .. nvim_theme_name .. [=["
-    fi
-    if [[ ! "$NO_FF" = "true" ]]; then
-        userchrome "]=] .. firefox_install .. '" "' .. firefox_profile .. [=["
-        usercontent "]=] .. firefox_install .. '" "' .. firefox_profile .. [=["
-    fi
+    ]=] .. apply_discord .. "\n" .. [=[
+    ]=] .. apply_xres_term .. "\n" .. [=[
+    ]=] .. apply_alacritty .. "\n" .. [=[
+    ]=] .. apply_gtk .. "\n" .. [=[
+    ]=] .. apply_firefox .. "\n" .. [=[
+    ]=] .. apply_nvim .. "\n" .. [=[
 ]=]
 
 -- apply theme
 awful.spawn.with_shell(apply_script)
+naughty.notification { text = apply_script, timeout = 1000 }
 
 theme.path = theme_path
 

@@ -125,9 +125,9 @@ nvim() {
 discord() {
     discord_theme=""
     if [[ $1 = "native" ]]; then
-        discord_theme="$config/Vencord/themes/current_theme.css"
+        discord_theme="$config/$2/themes/current_theme.css"
     elif [[ $1 = "flatpak" ]]; then
-        discord_theme="$HOME/.var/app/com.discordapp.Discord/config/Vencord/themes/current_theme.css"
+        discord_theme="$HOME/.var/app/com.discordapp.Discord/config/$2/themes/current_theme.css"
     fi
 
     cp -f "$config/awesome/ui/theme/discord.template.css" "$discord_theme"
