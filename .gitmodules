@@ -1,6 +1,7 @@
 [submodule ".config/nvim"]
 	url = https://github.com/naan187/nvim.git
 	path = .config/nvim
+	branch = main
 [submodule ".config/btop/themes"]
 	path = .config/btop/themes
 	url = https://github.com/rose-pine/btop.git

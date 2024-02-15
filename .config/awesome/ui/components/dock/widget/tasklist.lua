@@ -45,7 +45,7 @@ return function(s)
         layout = wibox.layout.fixed.horizontal,
         spacing = dpi(8),
         pinned_apps.firefox,
-        pinned_apps.thunar,
+        pinned_apps.file_manager,
         pinned_apps.term,
         pinned_apps.steam,
         pinned_apps.libreoffice,

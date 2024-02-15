@@ -15,9 +15,6 @@ local keyboardlayout = require("ui.widget.locale")
 local taglist = require("ui.components.bar.taglist")
 local button = require("ui.widget.button")
 
--------------------- panels ---------------------
-local right_panel = require("ui.components.right_panel")
-
 return function(s)
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
@@ -48,7 +45,7 @@ return function(s)
         shape = gears.shape.rounded_bar,
         on_release = function(_, _, _, _, b)
             if b == 1 then
-                s.right_panel:toggle()
+                --s.right_panel:toggle()
             end
         end,
         widget = {
@@ -172,6 +169,6 @@ return function(s)
         }
     }
 
-    right_panel(s)
+    --right_panel(s)
 end
 

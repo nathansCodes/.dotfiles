@@ -33,7 +33,7 @@ local launcherdisplay = wibox {
     visible = false,
     border_width = dpi(3),
     border_color = beautiful.base,
-    shape = helpers.ui.rrect(20)
+    shape = helpers.ui.rrect(14)
 }
 
 local prompt = wibox.widget {
@@ -88,35 +88,31 @@ launcherdisplay:setup {
         },
         widget = wibox.container.background,
         bg = beautiful.surface,
-        shape = helpers.ui.rrect(14),
+        shape = helpers.ui.rrect(10),
     },
 }
 -- Functions
 
 local function next()
-    if entryindex ~= #filtered then
+    if entryindex <= #filtered - num_apps then
         entries:get_widgets_at(entryindex, 1)[1]:unhover()
-        entries:get_widgets_at(entryindex + 1, 1)[1]:hover()
         entryindex = entryindex + 1
-        if entryindex > startindex + (num_apps - 1) then
-            entries:get_widgets_at(entryindex - num_apps, 1)[1].visible = false
-            entries:get_widgets_at(entryindex, 1)[1].visible = true
-            startindex = startindex + 1
-        end
+        entries:get_widgets_at(entryindex, 1)[1]:hover()
+        entries:get_widgets_at(startindex, 1)[1].visible = false
+        entries:get_widgets_at(startindex + num_apps, 1)[1].visible = true
+        startindex = startindex + 1
     end
     move = true
 end
 
 local function back()
-    if entryindex ~= 1 then
+    if startindex ~= 1 then
         entries:get_widgets_at(entryindex, 1)[1]:unhover()
-        entries:get_widgets_at(entryindex - 1, 1)[1]:hover()
         entryindex = entryindex - 1
-        if entryindex < startindex then
-            entries:get_widgets_at(entryindex + num_apps, 1)[1].visible = false
-            entries:get_widgets_at(entryindex, 1)[1].visible = true
-            startindex = startindex - 1
-        end
+        entries:get_widgets_at(entryindex, 1)[1]:hover()
+        entries:get_widgets_at(startindex + num_apps, 1)[1].visible = false
+        entries:get_widgets_at(startindex, 1)[1].visible = true
+        startindex = startindex - 1
     end
     move = true
 end
@@ -141,19 +137,15 @@ local function gen()
                 entries,
                 { name = name, appinfo = entry, description = description, icon = path or "" }
             )
-
-            -- table.insert(, description
-            --   entries,
-            --   { name = name, appinfo = entry }
-            -- )
         end
     end
     return entries
 end
 
 local function close()
-    awful.keygrabber.stop()
+    awful.screen.focused().launcher_visible = false
     launcherdisplay.visible = false
+    awful.keygrabber.stop()
     awesome.emit_signal("launcher::closed")
 end
 
@@ -194,6 +186,7 @@ local function filter(cmd)
 
     for i, entry in ipairs(filtered) do
         local widget = button {
+            hover_on_mouse_enter = false,
             on_release = function(_, _, _, _, b)
                 if b == 1 then
                     if entryindex == i then
@@ -213,9 +206,13 @@ local function filter(cmd)
                     next()
                 end
             end,
-            on_mouse_enter = function()
+            on_mouse_enter = function(self)
                 entries:get_widgets_at(entryindex, 1)[1]:unhover()
+                self:hover()
                 entryindex = i
+            end,
+            on_mouse_leave = function(self)
+                self:unhover()
             end,
             shape = helpers.ui.rrect(5),
             widget = wibox.widget {
@@ -268,7 +265,6 @@ local function filter(cmd)
         end
 
         entries:add(widget)
-
         if i == entryindex then
             widget:hover()
         end
@@ -278,6 +274,14 @@ local function filter(cmd)
 end
 
 local function open()
+    awful.placement.bottom(
+        launcherdisplay,
+        {
+            parent = awful.screen.focused(),
+            margins = { bottom = dpi(80) }
+        }
+    )
+
     -- Reset variables
 
     startindex, entryindex, move = 1, 1, false
@@ -320,6 +324,9 @@ local function open()
             end
         end
     }
+
+    launcherdisplay.visible = true
+    awful.screen.focused().launcher_visible = true
 end
 
 
@@ -334,33 +341,12 @@ awful.mouse.append_global_mousebinding(awful.button({ "Any" }, 3, close))
 tag.connect_signal("property::selected", close)
 
 
-awesome.connect_signal("launcher::open", function()
-    launcherdisplay.visible = not launcherdisplay.visible
-
-    awful.placement.bottom(
-        launcherdisplay,
-        {
-            parent = awful.screen.focused(),
-            margins = { bottom = dpi(80) }
-        }
-    )
-
-    open()
-end)
+awesome.connect_signal("launcher::open", open)
 
 awesome.connect_signal("launcher::toggle", function()
     if launcherdisplay.visible then
         close()
     else
-        awful.placement.bottom(
-            launcherdisplay,
-            {
-                parent = awful.screen.focused(),
-                margins = { bottom = dpi(80) }
-            }
-        )
-
         open()
     end
-    launcherdisplay.visible = not launcherdisplay.visible
 end)

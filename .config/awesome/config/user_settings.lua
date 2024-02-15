@@ -10,7 +10,10 @@ local settings = {}
 
 settings.defaults = {
     program = {
-        autostart = { }
+        autostart = { },
+        default_apps = {
+            file_manager = "nautilus",
+        }
     },
     theme = {
         theme = "catppuccin",

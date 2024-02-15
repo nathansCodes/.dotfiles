@@ -13,6 +13,9 @@ awful.spawn.once("CM_OWN_CLIPBOARD=1 clipmenud")
 -- compositor
 awful.spawn.with_shell("picom")
 
+
+awful.spawn.with_shell("export XDG_CURRENT_DESKTOP=awesome")
+
 -- Kill picom so that it doesn't behave weirdly after restart
 -- I know that this doesn't count as an "autostart" but idk where else to put this
 awesome.connect_signal("exit", function(reason_restart)

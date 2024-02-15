@@ -36,15 +36,15 @@ local function create_button(icon, launch_command)
 end
 
 local apps = {
-	firefox = create_button('firefox.svg', 'firefox'),
-	thunar = create_button('thunar.svg', 'thunar'),
-	term = create_button('Alacritty.svg', apps.terminal),
-	libreoffice = create_button('libreoffice.svg', 'libreoffice'),
-    steam = create_button('steam.svg', "steam"),
-	discord = create_button('discord.svg', "flatpak run com.discordapp.Discord"),
-	--gimp = create_button('gimp.svg', 'gimp'),
-	godot = create_button('godot.svg', 'godot'),
-	--keepassxc = create_button('keepassxc.svg', 'keepassxc'),
+	firefox = create_button("firefox.svg", "firefox"),
+    file_manager = create_button("nautilus.svg", "nautilus"),
+	term = create_button("Alacritty.svg", apps.terminal),
+	libreoffice = create_button("libreoffice.svg", "libreoffice"),
+    steam = create_button("steam.svg", "steam"),
+	discord = create_button("discord.svg", "flatpak run com.discordapp.Discord"),
+	--gimp = create_button("gimp.svg", "gimp"),
+	godot = create_button("godot.svg", "godot"),
+	--keepassxc = create_button("keepassxc.svg", "keepassxc"),
 }
 
 return apps

@@ -4,14 +4,13 @@ local dpi = xresources.apply_dpi
 
 local gears = require("gears")
 local wibox = require("wibox")
-local naughty = require("naughty")
 local awful = require("awful")
 local gfs = gears.filesystem
 local themes_path = gfs.get_themes_dir()
-local conf_dir = gfs.get_configuration_dir()
-local icons_path = conf_dir .. "ui/icons/"
 
-local theme = require("ui.theme.apply_theme")
+local themer = require("ui.theme.apply_theme")
+
+local theme = themer.apply()
 
 theme.icon_font = "Material Symbols Rounded "
 theme.mono_font = "Inter Mono "
@@ -70,12 +69,12 @@ end
 
 theme.tag_preview_widget_border_radius = dpi(7)
 theme.tag_preview_widget_border_width = dpi(2)
-theme.tag_preview_widget_border_color = theme.border_focus
-theme.tag_preview_widget_bg = theme.bg_normal
+theme.tag_preview_widget_border_color = theme.overlay
+theme.tag_preview_widget_bg = "#ffffff"
 theme.tag_preview_widget_margin = dpi(4)
 theme.tag_preview_client_border_radius = dpi(7)
 theme.tag_preview_client_border_width = dpi(1)
-theme.tag_preview_client_border_color = theme.border_normal
+theme.tag_preview_client_border_color = theme.overlay
 
 theme.task_preview_widget_border_radius = 14        -- Border radius of the widget (With AA)
 theme.task_preview_widget_bg = theme.base          -- The bg color of the widget

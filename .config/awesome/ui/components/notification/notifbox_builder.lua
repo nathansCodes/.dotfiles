@@ -14,8 +14,8 @@ local helpers = require("helpers")
 local builder = {}
 
 function builder.app_icon(icon)
-    local default_icon_path = gfs.get_configuration_dir() .. "ui/icons/notification.svg"
-    icon = icon or gears.color.recolor_image(default_icon_path, beautiful.text)
+    icon = icon or gears.color.recolor_image(gfs.get_configuration_dir()
+                    .. "ui/icons/notification.svg", beautiful.text)
 
     return wibox.widget {
         id = "icon",
@@ -83,7 +83,7 @@ function builder.message(message)
 end
 
 function builder.actions(n)
-    if not n.actions then return end
+    if #n.actions == 0 then return end
     local action_layout = wibox.widget {
         layout = wibox.layout.flex.horizontal,
         spacing = dpi(5),
@@ -292,12 +292,11 @@ function builder.build_notifbox(n)
             height = dpi(67.5),
         }
     else
-        message_widget.point = { x = 0, y = 0 }
+        message_widget.point = { x = dpi(10), y = 0, width = dpi(360) }
     end
 
     local expand_button = button {
         point = { x = dpi(365), y = 0, width = dpi(25), height = dpi(25), },
-        animate = false,
         width = dpi(25),
         height = dpi(25),
         widget = {
@@ -338,13 +337,18 @@ function builder.build_notifbox(n)
             }
         },
         {
-            id = "content_layout",
-            layout = wibox.layout.manual,
-            spacing = dpi(10),
-            forced_height = dpi(67.5),
-            image_widget,
-            message_widget,
-            expand_button,
+            id = "content_constraint",
+            widget = wibox.container.constraint,
+            strategy = "max",
+            height = dpi(67.5),
+            {
+                id = "content_layout",
+                layout = wibox.layout.manual,
+                spacing = dpi(10),
+                image_widget,
+                message_widget,
+                expand_button,
+            }
         },
         actions_widget,
     }
@@ -356,11 +360,14 @@ function builder.build_notifbox(n)
 
     function notifbox:expand()
         local content = notifbox:get_children_by_id("content_layout")[1]
-        content:set_forced_height(dpi(280))
+        local constraint = notifbox:get_children_by_id("content_constraint")[1]
+        constraint:set_height(dpi(280))
 
         if image_widget then
             content:move(1, { x = dpi(40), y = 0, width = dpi(320), height = dpi(180) })
             content:move(2, { x = dpi(15), y = dpi(185), width = dpi(375) })
+        else
+            content:move(1, { x = dpi(10), y = 0, width = dpi(375) })
         end
 
         expand_button:get_widget():set_text("\u{e5ce}")
@@ -370,27 +377,31 @@ function builder.build_notifbox(n)
 
     function notifbox:contract()
         local content = notifbox:get_children_by_id("content_layout")[1]
+        local constraint = notifbox:get_children_by_id("content_constraint")[1]
         if image_widget then
             content:move(1, { x = dpi(10), y = 0, width = dpi(120), height = dpi(67.5) })
-            content:move(2, { x = dpi(140), y = 0, width = dpi(225), height = dpi(67.5) })
+            content:move(2, { x = dpi(140), y = 0, width = dpi(225) })
+            constraint:set_height(dpi(67.5))
+        else
+            local message_widget_height = actions_widget and dpi(80) or dpi(120)
+            content:move(1, { x = dpi(10), y = 0, width = dpi(375), height = message_widget_height })
+            constraint:set_height(message_widget_height)
         end
-
-        content:set_forced_height(image_widget and dpi(67.5))
 
         expand_button:get_widget():set_text("\u{e5cf}")
 
         notifbox:emit_signal("contract")
     end
 
-    local expanded = false
+    notifbox.expanded = false
     expand_button:connect_signal("button::release", function(_, _, _, b)
         if b == 1 then
-            if expanded then
+            if notifbox.expanded then
                 notifbox:contract()
             else
                 notifbox:expand()
             end
-            expanded = not expanded
+            notifbox.expanded = not notifbox.expanded
         end
     end)
 
@@ -503,15 +514,15 @@ function builder.build_notifcenter_notifbox(n)
         notifbox:emit_signal("contract")
     end
 
-    local expanded = false
+    notifbox.expanded = false
     expand_button:connect_signal("button::release", function(_, _, _, b)
         if b == 1 then
-            if expanded then
+            if notifbox.expanded then
                 notifbox:contract()
             else
                 notifbox:expand()
             end
-            expanded = not expanded
+            notifbox.expanded = not notifbox.expanded
         end
     end)
 

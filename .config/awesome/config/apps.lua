@@ -6,7 +6,7 @@ local default = {
     --- Default terminal emulator
     terminal = "alacritty",
     --- Default music client
-    music_player = "alacritty -e --class music ncmpcpp",
+    music_player = "spotube",
     --- Default text editor
     text_editor = "alacritty -e nvim",
     --- Default code editor
@@ -15,7 +15,7 @@ local default = {
     web_browser = user.theme.firefox_install == "flatpak"
         and "flatpak run org.mozilla.firefox" or "firefox",
     --- Default file manager
-    file_manager = "thunar",
+    file_manager = "nautilus",
     --- Default network manager
     network_manager = "nm-connection-editor",
     --- Default bluetooth manager
