@@ -1,13 +1,12 @@
-local wibox = require("wibox")
 local awful = require("awful")
-local naughty = require("naughty")
 local gears = require("gears")
 local gfs = gears.filesystem
 local beautiful = require("beautiful")
-local dpi = beautiful.xresources.apply_dpi
 
 local apps = require("config.apps")
 local menu = require("ui.widget.menu")
+
+local capi = { awesome = awesome, mouse = mouse }
 
 local conf_dir = gfs.get_configuration_dir()
 
@@ -18,7 +17,7 @@ local main_menu = menu {
         text = "Applications",
         secondary_text = "Super+R",
         on_press = function()
-            awesome.emit_signal("launcher::open")
+            capi.awesome.emit_signal("launcher::open")
         end
     },
     menu.button {
@@ -78,7 +77,7 @@ local main_menu = menu {
         icon_color = beautiful.second_accent,
         text = "Dashboard",
         on_press = function()
-            awesome.emit_signal("right_panel::switch_tab", mouse.screen, 1)
+            capi.awesome.emit_signal("right_panel::switch_tab", capi.mouse.screen, 1)
         end
     },
     menu.button {
@@ -86,7 +85,7 @@ local main_menu = menu {
         icon_color = beautiful.second_accent,
         text = "Quick Settings",
         on_press = function()
-            awesome.emit_signal("right_panel::switch_tab", mouse.screen, 2)
+            capi.awesome.emit_signal("right_panel::switch_tab", capi.mouse.screen, 2)
         end
     },
     menu.separator(),
@@ -101,7 +100,7 @@ local main_menu = menu {
                 text = "Restart",
                 secondary_text = "Super+Ctrl+R",
                 on_press = function()
-                    awesome.restart()
+                    capi.awesome.restart()
                 end
             },
             menu.button {
@@ -110,7 +109,7 @@ local main_menu = menu {
                 text = "Quit",
                 secondary_text = "Super+Shift+Q",
                 on_press = function()
-                    awesome.quit()
+                    capi.awesome.quit()
                 end
             },
             menu.separator(),
@@ -180,14 +179,14 @@ local main_menu = menu {
                 text = "Logout",
                 secondary_text = "L",
                 on_press = function()
-                    awesome.quit()
+                    capi.awesome.quit()
                 end
             },
         },
     },
 }
 
-awesome.connect_signal("main_menu::show", function(args)
+capi.awesome.connect_signal("main_menu::show", function(args)
     main_menu:show {
         wibox = args.wibox,
         widget = args.widget,

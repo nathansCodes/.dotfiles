@@ -75,7 +75,9 @@ return function(args)
     local old_cursor, old_wibox
 
     container:connect_signal("mouse::enter", function()
-        hover_effect_anim.target = args.hover_effect and 0.2 or 0
+        if args.hover_on_mouse_enter == nil or args.hover_on_mouse_enter == true then
+            hover_effect_anim.target = args.hover_effect and 0.2 or 0
+        end
 
         local w = mouse.current_wibox
         if w and (args.change_cursor == nil or args.change_cursor == true) then
@@ -91,7 +93,9 @@ return function(args)
     end
 
     container:connect_signal("mouse::leave", function()
-        hover_effect_anim.target = 0
+        if args.hover_on_mouse_enter == nil or args.hover_on_mouse_enter == true then
+            hover_effect_anim.target = 0
+        end
 
         if old_wibox then
             old_wibox.cursor = old_cursor

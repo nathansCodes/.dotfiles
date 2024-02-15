@@ -11,6 +11,7 @@
 
 @define-color accent_bg_color @accent;
 @define-color accent_fg_color @bg;
+@define-color accent_color @accent;
 @define-color destructive_color @error;
 @define-color destructive_bg_color @error;
 @define-color destructive_fg_color @bg;
@@ -41,6 +42,8 @@
 @define-color popover_fg_color @text;
 @define-color shade_color rgba(0,0,0,0.0);
 @define-color scrollbar_outline_color rgba(0,0,0,0.0);
+@define-color sidebar_fg_color @text;
+@define-color sidebar_bg_color @bg;
 
 decoration {
     box-shadow: 0 3px 12px 1px rgba(0, 0, 0, 0.7), 0 0 0 1px shade(@headerbar_bg_color,1.3);
@@ -168,42 +171,35 @@ tabbar tab:not(:backdrop):checked {
     background-color: @headerbar_bg_color;
 }
 
-.standard-view .view {
-    border-radius: 14px;
-    margin-left: 4px;
-    margin-right: 40px;
+/* remove gtk4 double border */
+.background {
+    margin: 0;
+    padding: 0;
+    box-shadow: 0 0 0 0;
+}
+
+.nautilus-window row.sidebar-row {
+	border-radius: 14px 0px 0px 14px;
+	margin-right: 0;
+}
+
+.nautilus-window row:selected.sidebar-row {
+	background-color: @second_bg;
+    color: @accent;
+}
+
+.nautilus-window .content-pane {
+	border-radius: 14px;
+	background-color: @second_bg;
+}
+
+.nautilus-window overlay-split-view {
+    margin-right: 4px;
+    margin-top: 4px;
     margin-bottom: 4px;
-    background-color: @second_bg;
-}
-
-box > entry {
-    background-color: @second_bg;
-}
-
-notebook {
 	background-color: @bg;
-    color: @text;
 }
 
-.sidebar {
+.nautilus-window {
     background-color: @bg;
-    color: @text;
-    border-color: transparent;
-}
-
-.sidebar-pane {
-    background-color: @bg;
-    color: @text;
-}
-
-box {
-    color: @text;
-}
-
-separator {
-	color: @bg;
-}
-
-scrolledwindow {
-    border-width: 0px;
 }

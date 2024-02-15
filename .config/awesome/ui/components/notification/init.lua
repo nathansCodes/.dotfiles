@@ -56,7 +56,7 @@ naughty.connect_signal("request::display", function(n)
         notifbox.previous.next = notifbox
     end
 
-    function notifbox.update_index(new_index)
+    function notifbox.move_up(new_index)
         -- insert at new position
         table.insert(notifboxes, new_index, notifbox)
         -- remove at old position
@@ -67,9 +67,9 @@ naughty.connect_signal("request::display", function(n)
         -- update local index var
         i = new_index
 
-        -- update next nbox's index
+        -- move up next notifbox
         if notifbox.next ~= nil then
-            notifbox.next.update_index(i + 1)
+            notifbox.next.move_up(i + 1)
         end
     end
 
@@ -80,7 +80,7 @@ naughty.connect_signal("request::display", function(n)
         end
         if notifbox.next ~= nil then
             notifbox.next.previous = notifbox.previous
-            notifbox.next.update_index(i)
+            notifbox.next.move_up(i)
         end
 
         notifbox.visible = false
@@ -104,14 +104,6 @@ naughty.connect_signal("request::display", function(n)
         -- ridiculously big number since setting it to -1 doesn't work
         n.timeout = 758938
     end)
-
-    local should_destroy = true
-
-    --notifbox:connect_signal("button::release", function(self, _, _, button)
-    --    if button ~= 1 or not should_destroy then return end
-
-    --    n:destroy()
-    --end)
 
     if #notifboxes == 0 then
         notifbox:move_next_to(bar)

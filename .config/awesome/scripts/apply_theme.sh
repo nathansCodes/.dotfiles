@@ -42,7 +42,7 @@ gtk() {
     fi
 
     sed -i -e "s/color bg .*/color bg $BASE;/" \
-        -e "s/color second_bg .*/color second_bg $SURFACE;/" \
+        -e "s/color second_bg .*/color second_bg $OVERLAY;/" \
         -e "s/color text .*/color text $FG;/" \
         -e "s/color accent .*/color accent $ACCENT;/" \
         -e "s/color error .*/color error $ERROR;/" \
@@ -61,7 +61,7 @@ gtk() {
     fi
 
     sed -i -e "s/color bg .*/color bg $BASE;/" \
-        -e "s/color second_bg .*/color second_bg $SURFACE;/" \
+        -e "s/color second_bg .*/color second_bg $OVERLAY;/" \
         -e "s/color text .*/color text $FG;/" \
         -e "s/color accent .*/color accent $ACCENT;/" \
         -e "s/color error .*/color error $ERROR;/" \
@@ -79,6 +79,7 @@ gtk() {
         -e "s/Net\/IconThemeName .*/Net\/IconThemeName \"$ICON_THEME\"" $HOME/.config/xsettingsd/xsettingsd.conf
 
     # Apply
+    gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3
     killall xsettingsd
     xsettingsd &
 }

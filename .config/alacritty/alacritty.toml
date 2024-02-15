@@ -28,18 +28,6 @@ mode = "Vi|~Search"
 mods = "Control"
 
 [[keyboard.bindings]]
-action = "SearchForward"
-key = "Slash"
-mode = "~Search"
-mods = "Control"
-
-[[keyboard.bindings]]
-action = "SearchBackward"
-key = "Slash"
-mode = "~Search"
-mods = "Control|Shift"
-
-[[keyboard.bindings]]
 action = "ClearSelection"
 key = "C"
 mode = "Vi|~Search"

@@ -106,8 +106,10 @@ return function(s)
 
     -- animates dock's y position and opacity
     local animator = rubato.timed {
-        duration = 0.25,
+        duration = 0.3,
         easing = rubato.quadratic,
+        intro = 0.05,
+        outro = 0.2,
         pos = dpi(10),
         target = dpi(10),
         subscribed = function(pos)
@@ -126,6 +128,7 @@ return function(s)
 
     -- hide the dock
     function s.dock:hide()
+        if s.dock.force_show then s.dock:show(); return end
         s.dock_visible = false
         animator.target = dpi(10)
     end
@@ -141,12 +144,13 @@ return function(s)
         s.dock:show()
     end
 
-
     local function hide_if_client_overlaps(c)
-        if s.dock.force_show or c == nil then
+        if c == nil or (c.first_tag and not c.first_tag.selected)
+            or s.dock.force_show or s.launcher_visible then
             s.dock:show()
             return
         end
+
         if c.fullscreen then
             animator.target = 0
             s.dock_visible = false
@@ -163,18 +167,22 @@ return function(s)
     s.dock:connect_signal("mouse::enter", force_show)
 
     s.dock:connect_signal("mouse::leave", function()
-        s.dock.force_show = s.dock.force_force_show or false
+        s.dock.force_show = s.launcher_visible
         hide_if_client_overlaps(capi.client.focus)
     end)
 
-    capi.client.connect_signal("request::activate", function(c)
-        hide_if_client_overlaps(c)
+    capi.client.connect_signal("request::activate", hide_if_client_overlaps)
+    capi.client.connect_signal("request::autoactivate", hide_if_client_overlaps)
+    capi.client.connect_signal("request::unmanage", function()
+        hide_if_client_overlaps(capi.client.focus)
     end)
-    capi.client.connect_signal("request::unmanage", hide_if_client_overlaps)
+    -- TODO: fix these two
+    capi.client.connect_signal("request::tag", function()
+        hide_if_client_overlaps(capi.client.focus)
+    end)
     capi.client.connect_signal("property::floating", function(c)
-        if c.screen ~= s then return end
         -- I have to invert it because...   no idea why.
-        if not gears.geometry.rectangle.area_intersect_area(c:geometry(), dock_bounds) then
+        if gears.geometry.rectangle.area_intersect_area(c:geometry(), dock_bounds) then
             s.dock:hide()
         else
             s.dock:show()
@@ -183,13 +191,9 @@ return function(s)
     capi.client.connect_signal("request::geometry", hide_if_client_overlaps)
     capi.client.connect_signal("property::screen", hide_if_client_overlaps)
 
-    capi.awesome.connect_signal("launcher::open", function()
-        force_show()
-        s.dock.force_force_show = true
-    end)
+    capi.awesome.connect_signal("launcher::open", force_show)
     capi.awesome.connect_signal("launcher::closed", function()
         s.dock.force_show = capi.mouse.current_wibox == s.dock
-        s.dock.force_force_show = false
         hide_if_client_overlaps(capi.client.focus)
     end)
 

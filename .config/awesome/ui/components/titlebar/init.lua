@@ -57,8 +57,12 @@ local function create_click_events(c)
 end
 
 client.connect_signal("request::titlebars", function(c)
-    -- filter out firefox
-    if c.class == "firefox" then return end
+    if c.class ~= nil then
+        -- filter out firefox
+        if c.class == "firefox" then return end
+        -- filter out gtk4 apps, since the have csd
+        if c.class:match("org.gnome") then return end
+    end
 
     local close_button = button {
         on = true,
