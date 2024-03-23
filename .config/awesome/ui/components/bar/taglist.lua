@@ -90,7 +90,7 @@ return function(s)
                         {
                             id     = "text_role",
                             widget = wibox.widget.textbox,
-                            font   = beautiful.font .. "Bold 11",
+                            font   = beautiful.font .. "SemiBold 11",
                             halign = "center",
                             valign = "center",
                         },

@@ -10,6 +10,10 @@ local helpers = require("helpers")
 local sidebar = require("ui.components.launcher.sidebar")
 local button = require("ui.widget.button")
 
+local fzy = require("fzy")
+
+local capi = { awesome = awesome, tag = tag }
+
 --- Number of apps to be shown at once
 local num_apps = 7
 
@@ -25,7 +29,7 @@ local horizontal_separator = wibox.widget {
 }
 
 local launcherdisplay = wibox {
-    type = "notification",
+    type = "normal",
     width = dpi(530),
     height = dpi(650),
     bg = beautiful.base,
@@ -41,6 +45,8 @@ local prompt = wibox.widget {
     valign = "center",
     font = beautiful.font .. "13"
 }
+
+local entry_cache = {}
 
 local entries = wibox.widget {
     homogeneous = false,
@@ -93,26 +99,30 @@ launcherdisplay:setup {
 }
 -- Functions
 
-local function next()
+local function next(mouse_scroll)
     if entryindex <= #filtered - num_apps then
         entries:get_widgets_at(entryindex, 1)[1]:unhover()
         entryindex = entryindex + 1
         entries:get_widgets_at(entryindex, 1)[1]:hover()
-        entries:get_widgets_at(startindex, 1)[1].visible = false
-        entries:get_widgets_at(startindex + num_apps, 1)[1].visible = true
-        startindex = startindex + 1
+        if mouse_scroll or entryindex - num_apps == startindex then
+            entries:get_widgets_at(startindex, 1)[1].visible = false
+            entries:get_widgets_at(startindex + num_apps, 1)[1].visible = true
+            startindex = startindex + 1
+        end
     end
     move = true
 end
 
-local function back()
-    if startindex ~= 1 then
+local function back(mouse_scroll)
+    if entryindex ~= 1 then
+        if startindex > 1 and mouse_scroll or entryindex == startindex then
+            startindex = startindex - 1
+            entries:get_widgets_at(startindex + num_apps, 1)[1].visible = false
+            entries:get_widgets_at(startindex, 1)[1].visible = true
+        end
         entries:get_widgets_at(entryindex, 1)[1]:unhover()
         entryindex = entryindex - 1
         entries:get_widgets_at(entryindex, 1)[1]:hover()
-        entries:get_widgets_at(startindex + num_apps, 1)[1].visible = false
-        entries:get_widgets_at(startindex, 1)[1].visible = true
-        startindex = startindex - 1
     end
     move = true
 end
@@ -133,50 +143,32 @@ local function gen()
                 end
             end
             local description = entry:get_description()
-            table.insert(
-                entries,
-                { name = name, appinfo = entry, description = description, icon = path or "" }
-            )
+            entries[name] = {
+                name = name,
+                appinfo = entry,
+                description = description,
+                icon = path or ""
+            }
         end
     end
     return entries
 end
 
 local function close()
+    if not launcherdisplay.visible then return end
     awful.screen.focused().launcher_visible = false
     launcherdisplay.visible = false
     awful.keygrabber.stop()
-    awesome.emit_signal("launcher::closed")
+    capi.awesome.emit_signal("launcher::closed")
 end
 
 local function filter(cmd)
     filtered = {}
-    regfiltered = {}
 
     -- Filter entries
 
-    for _, entry in ipairs(unfiltered) do
-        if entry.name:lower():sub(1, cmd:len()) == cmd:lower() then
-            table.insert(filtered, entry)
-        elseif entry.name:lower():match(cmd:lower()) then
-            table.insert(regfiltered, entry)
-        end
-    end
-
-    -- Sort entries
-
-    table.sort(filtered, function(a, b) return a.name:lower() < b.name:lower() end)
-    table.sort(regfiltered, function(a, b) return a.name:lower() < b.name:lower() end)
-
-    -- Merge entries
-
-    for i = 1, #regfiltered do
-        filtered[#filtered + 1] = regfiltered[i]
-    end
-
-    -- Clear entries
-
-    entries:reset()
+    local haystacks = gears.table.keys(unfiltered)
+    local result = fzy.filter(cmd, haystacks)
 
     -- Fix position
 
@@ -184,9 +176,14 @@ local function filter(cmd)
 
     -- Add filtered entries
 
-    for i, entry in ipairs(filtered) do
-        local widget = button {
+    for i, score in ipairs(result) do
+        local entry = unfiltered[haystacks[score[1]]]
+        table.insert(filtered, entry)
+
+        local widget = entries.children[i] ~= nil and entries.children[i] or button {
             hover_on_mouse_enter = false,
+            bg = beautiful.surface,
+            hover_color = beautiful.highlight_low,
             on_release = function(_, _, _, _, b)
                 if b == 1 then
                     if entryindex == i then
@@ -201,9 +198,9 @@ local function filter(cmd)
                 elseif b == 3 then
                     close()
                 elseif b == 4 then
-                    back()
+                    back(true)
                 elseif b == 5 then
-                    next()
+                    next(true)
                 end
             end,
             on_mouse_enter = function(self)
@@ -223,6 +220,7 @@ local function filter(cmd)
                 {
                     layout = wibox.layout.fixed.horizontal,
                     {
+                        id = "icon",
                         widget = wibox.widget.imagebox,
                         image = entry.icon,
                         clip_shape = function(cr, width, height)
@@ -240,16 +238,19 @@ local function filter(cmd)
                         {
                             layout = wibox.layout.fixed.vertical,
                             {
+                                id = "name",
                                 widget = wibox.widget.textbox,
-                                markup = "<span color='" ..
-                                        beautiful.accent .. "' font='"..beautiful.mono_font.."15 bold'>" .. entry.name .. "</span>",
+                                font = beautiful.mono_font.."15 bold",
+                                markup = helpers.ui.colorize_text(entry.name,
+                                    beautiful.accent),
                                 forced_height = dpi(30),
                                 valign = "center",
                             },
                             {
+                                id = "description",
                                 widget = wibox.widget.textbox,
-                                markup = "<span color='" ..
-                                        beautiful.text .. "' font='"..beautiful.mono_font.."13'>" .. (entry.description or "") .. "</span>",
+                                font = beautiful.mono_font.."13",
+                                markup = entry.description or "",
                                 valign = "center",
                             },
                         },
@@ -258,16 +259,36 @@ local function filter(cmd)
             },
         }
 
+        -- show the widget if it's been matched and it's in view
         if startindex <= i and i <= startindex + (num_apps - 1) then
             widget.visible = true
         else
             widget.visible = false
         end
 
-        entries:add(widget)
-        if i == entryindex then
-            widget:hover()
+        -- add the widget if it wasn't already there, otherwise just modify it
+        if entries.children[i] == nil then
+            entries:add(widget)
+        else
+            local icon = widget:get_children_by_id("icon")[1]
+            local name = widget:get_children_by_id("name")[1]
+            local description = widget:get_children_by_id("description")[1]
+            icon:set_image(entry.icon)
+            name:set_markup(helpers.ui.colorize_text(entry.name, beautiful.accent))
+            description:set_text(entry.description or "")
         end
+
+        -- hover if hovered, otherwise not
+        if entryindex == i then
+            widget:hover()
+        else
+            widget:unhover()
+        end
+    end
+
+    -- hide the rest
+    for i = #result + 1, #entries.children do
+        entries.children[i].visible = false
     end
 
     collectgarbage("collect")
@@ -296,11 +317,8 @@ local function open()
     awful.prompt.run {
         prompt = "<span font='"..beautiful.icon_font.." Bold 14'>\u{e8b6}</span>",
         textbox = prompt,
-        fg_cursor = beautiful.text,
-        done_callback = function()
-            launcherdisplay.visible = false
-            awesome.emit_signal("launcher::closed")
-        end,
+        bg_cursor = beautiful.overlay,
+        done_callback = close,
         changed_callback = function(cmd)
             if move == false then
                 filter(cmd)
@@ -318,15 +336,17 @@ local function open()
         end,
         keypressed_callback = function(_, key)
             if key == "Down" then
-                next()
+                next(false)
             elseif key == "Up" then
-                back()
+                back(false)
+
             end
         end
     }
 
     launcherdisplay.visible = true
     awful.screen.focused().launcher_visible = true
+    capi.awesome.emit_signal("launcher::opened")
 end
 
 
@@ -338,15 +358,18 @@ awful.mouse.append_global_mousebinding(awful.button({ "Any" }, 1, close))
 
 awful.mouse.append_global_mousebinding(awful.button({ "Any" }, 3, close))
 
-tag.connect_signal("property::selected", close)
+capi.tag.connect_signal("property::selected", close)
 
 
-awesome.connect_signal("launcher::open", open)
+capi.awesome.connect_signal("launcher::open", open)
+capi.awesome.connect_signal("launcher::close", close)
 
-awesome.connect_signal("launcher::toggle", function()
-    if launcherdisplay.visible then
+function launcherdisplay:toggle()
+    if self.visible then
         close()
     else
         open()
     end
-end)
+end
+
+return launcherdisplay

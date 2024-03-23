@@ -188,18 +188,42 @@ tabbar tab:not(:backdrop):checked {
     color: @accent;
 }
 
-.nautilus-window .content-pane {
-	border-radius: 14px;
-	background-color: @second_bg;
+.nautilus-window .nautilus-list-view,
+.nautilus-window .nautilus-grid-view {
+    border-radius: 10px;
+    margin-right: 4px;
+    margin-left: 4px;
+    margin-bottom: 4px;
+    background-color: @second_bg;
+}
+.nautilus-window widget .sidebar-pane {
+    margin-right: -4px;
+}
+
+.nautilus-window columnview.view > listview.view {
+	padding-top: 0px;
+}
+.nautilus-window columnview.view > header.activatable {
+	padding-top: 8px;
 }
 
 .nautilus-window overlay-split-view {
-    margin-right: 4px;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    border-radius: 10px;
 	background-color: @bg;
 }
 
 .nautilus-window {
     background-color: @bg;
 }
+
+.nautilus-window box.floating-bar.horizontal.right {
+	border-radius: 6px 6px 10px 6px;
+	background-color: #313244;
+	margin-right: 6px;
+	margin-bottom: 6px;
+}
+
+menu {
+    box-shadow: 0px 0px 20px 10px #000000;
+}
+

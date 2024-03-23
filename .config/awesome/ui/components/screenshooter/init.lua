@@ -1,17 +1,22 @@
 local wibox = require("wibox")
-local gears = require("gears")
 local awful = require("awful")
 local naughty = require("naughty")
-local gfs = gears.filesystem
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
---local root = require("root")
-local cairo = require("lgi").cairo
 
 local helpers = require("helpers")
 local button = require("ui.widget.button")
+local inputbox = require("ui.widget.inputbox")
 
-local root_width, root_height = root.size()
+local capi = {
+    root = root,
+    mouse = mouse,
+    screen = screen,
+    awesome = awesome,
+    mousegrabber = mousegrabber,
+}
+
+local root_width, root_height = capi.root.size()
 
 local full_screenshot = wibox.widget {
     widget = wibox.widget.imagebox,
@@ -26,15 +31,14 @@ local selection = {
     y = -1,
     width = 0,
     height = 0,
+    delay = 0,
     client = nil,
 }
 
-local capi = {
-    mouse = mouse,
-    screen = screen,
-    awesome = awesome,
-    mousegrabber = mousegrabber,
-}
+-- active keygrabber
+local kg
+
+local pause_keygrabber = false
 
 -- what shows before selecting
 local preselection = wibox.widget {
@@ -114,7 +118,9 @@ local selection_dimensions = wibox.widget {
 
 local save_button = button {
     bg = beautiful.overlay,
+    hover_bg = beautiful.accent,
     fg = beautiful.accent,
+    hover_fg = beautiful.overlay,
     shape = helpers.ui.rrect(10),
     width = dpi(50),
     height = dpi(50),
@@ -130,7 +136,9 @@ local save_button = button {
 
 local copy_button = button {
     bg = beautiful.overlay,
+    hover_bg = beautiful.accent,
     fg = beautiful.accent,
+    hover_fg = beautiful.overlay,
     shape = helpers.ui.rrect(10),
     width = dpi(50),
     height = dpi(50),
@@ -142,6 +150,32 @@ local copy_button = button {
         valign = "center",
         halign = "center",
     },
+}
+
+local delay_input = inputbox {
+    bg = beautiful.highlight_low,
+    font = beautiful.font .. "Regular 11",
+    default_text = "0",
+    left = dpi(5),
+    placeholder = false,
+    live_update = true,
+    continuous_input = true,
+    forced_height = dpi(25),
+    start_callback = function()
+        pause_keygrabber = true
+        kg:stop()
+    end,
+    done_callback = function()
+        pause_keygrabber = false
+        kg:start()
+    end,
+    check_input = function(input)
+        return inputbox.checkers.number_positive(input) and (tonumber(input) or 0) < 100
+    end,
+    parse_input = inputbox.parsers.number,
+    success_callback = function(input)
+        selection.delay = tonumber(input)
+    end
 }
 
 local sidebar_width = dpi(80)
@@ -171,6 +205,18 @@ local sidebar = wibox.widget {
                 fill_space = true,
                 save_button,
                 copy_button,
+                {
+                    layout = wibox.layout.fixed.horizontal,
+                    fill_space = true,
+                    {
+                        widget = wibox.widget.textbox,
+                        markup = helpers.ui.colorize_text("\u{e425}",
+                            beautiful.accent),
+                        font = beautiful.icon_font .. "SemiBold 14",
+                        halign = "center",
+                    },
+                    delay_input,
+                },
                 {
                     widget = wibox.container.margin,
                     margins = dpi(10),
@@ -238,7 +284,7 @@ local screenshot_overlay = awful.popup {
 
 -- update overlay size when screen is added
 capi.screen.connect_signal("added", function()
-    root_width, root_height = root.size()
+    root_width, root_height = capi.root.size()
     selection_container:set_forced_width(root_width)
     selection_container:set_forced_height(root_height)
     full_screenshot:set_forced_width(root_width)
@@ -334,42 +380,42 @@ local function update_selection(cursor, initial)
     update_selrect_image()
 end
 
-local function set_selection(sel)
+local function set_selection(new)
     -- show the sidebar
     sidebar.visible = true
     -- hide the preselection screen
     preselection.visible = false
 
-    if sel.client ~= nil then
-        sel.x = sel.client.x
-        sel.y = sel.client.y
-        sel.width = sel.client.width
-        sel.height = sel.client.height
+    if new.client ~= nil then
+        new.x = new.client.x
+        new.y = new.client.y
+        new.width = new.client.width
+        new.height = new.client.height
     end
 
     selection_container:move(1, {
-        x = sel.x,
-        y = sel.y,
-        width = sel.width,
-        height = sel.height,
+        x = new.x,
+        y = new.y,
+        width = new.width,
+        height = new.height,
     })
 
     -- set the selrect's border radius based on the size
-    local border_radius = math.min(math.max(3, math.min(sel.width + sel.height) * 0.025), 20)
+    local border_radius = math.min(math.max(3, math.min(new.width + new.height) * 0.025), 20)
     selection_rect.border_radius = dpi(border_radius)
     selection_rect:set_shape(helpers.ui.rrect(border_radius))
 
-    local sidebar_x = sel.x - sidebar_width - sidebar_selection_spacing
-    local sidebar_y = sel.y + sidebar_height > root_height
+    local sidebar_x = new.x - sidebar_width - sidebar_selection_spacing
+    local sidebar_y = new.y + sidebar_height > root_height
         and root_height - sidebar_height
-        or sel.y
+        or new.y
 
     if sidebar_x < 0 or sidebar_x < capi.mouse.screen.geometry.x then
-        sidebar_x = sel.x + sel.width + sidebar_selection_spacing
+        sidebar_x = new.x + new.width + sidebar_selection_spacing
     end
 
     if mode == "screen" or sidebar_x + sidebar_selection_spacing + sidebar_width > root_width then
-        sidebar_x = sel.x + sel.width - sidebar_selection_spacing - sidebar_width
+        sidebar_x = new.x + new.width - sidebar_selection_spacing - sidebar_width
         sidebar_y = sidebar_y + sidebar_selection_spacing
     end
 
@@ -380,22 +426,20 @@ local function set_selection(sel)
         height = sidebar_height,
     })
 
-    selection_dimensions:set_text(sel.x.." "
-           ..sel.y.."\n"
-           ..sel.width.." "
-           ..sel.height)
+    selection_dimensions:set_text(new.x.." "..new.y
+        .."\n"..new.width.." "..new.height)
 
     -- update the selection
-    selection.x = sel.x
-    selection.y = sel.y
-    selection.width = sel.width
-    selection.height = sel.height
-    selection.client = sel.client
+    for _, prop in ipairs { "x", "y", "width", "height", "client", "delay" } do
+        if new[prop] ~= nil then
+            selection[prop] = new[prop]
+        end
+    end
 
     update_selrect_image()
 end
 
-local function reset_selection()
+local function reset_selection_container()
     selection_container:move(1, {
         x = -1,
         y = -1,
@@ -410,11 +454,17 @@ local function reset_selection()
         height = 0,
     })
 
+    delay_input:set_text("0")
+end
+
+local function reset_selection()
+    reset_selection_container()
     selection = {
         x = -1,
         y = -1,
         width = 0,
         height = 0,
+        delay = 0,
     }
 end
 
@@ -504,21 +554,25 @@ local function stop_screen_select()
     capi.mousegrabber.stop()
 end
 
--- active keygrabber
-local kg
-
 -- take a screenshot and save it to /tmp/screenshot.png
-local function create_tmp_screenshot(delay, on_save)
+local function create_tmp_screenshot(on_save)
     local x = selection.x
     local y = selection.y
     local width = selection.width
     local height = selection.height
+    local delay = selection.delay
+
+    if delay > 0 then
+        screenshot_overlay.visible = false
+        if kg ~= nil then kg:stop() end
+        selection_bg:set_visible(true)
+    end
 
     reset_selection()
     selection_bg:set_visible(false)
 
     local shot = awful.screenshot {
-        auto_save_delay = 0.1 + (delay or 0),
+        auto_save_delay = 0.1 + delay,
         file_path = "/tmp/screenshot.png",
         geometry = {
             x = x,
@@ -527,6 +581,10 @@ local function create_tmp_screenshot(delay, on_save)
             height = height,
         },
     }
+
+    shot:connect_signal("timer::tick", function(self, remaining)
+        capi.awesome.emit_signal("screenshot::countdown_tick", self, remaining)
+    end)
 
     shot:connect_signal("file::saved", function(self, file_path, method)
         screenshot_overlay.visible = false
@@ -540,9 +598,10 @@ end
 -- open file selection dialog and move screenshot
 -- from /tmp/screenshot.png to selected filepath
 local function save_screenshot(shot)
-    local date_time = os.date("%Y-%m-%d_%H-%M-%S")
-    local default_filename = os.getenv("HOME").."Pictures/Screenshots/" .. date_time .. ".png"
-    local zenity_cmd = "zenity --file-selection --save --filename='" .. default_filename
+    -- doesn't work with exact filename if the file doesn't exist :(
+    -- local date_time = os.date("%Y-%m-%d_%H-%M-%S")
+    local folder = os.getenv("HOME").."/Pictures/Screenshots/"
+    local zenity_cmd = "zenity --file-selection --save --filename='" .. folder
             .. "' --file-filter=\"PNG File | *.png \" --title='Select a file'"
 
     awful.spawn.easy_async(zenity_cmd, function(filepath, _, _, exitcode)
@@ -550,16 +609,16 @@ local function save_screenshot(shot)
             naughty.notification {
                 app_name = "System",
                 title = "Screenshot Aborted",
-                text = "The shooting of the screen was cancelled by the user"
+                text = "The screenshot was cancelled by the user"
             }
             return
         end
 
         awful.spawn("mv /tmp/screenshot.png " .. filepath)
 
-        local open_action = naughty.action { name = "Open", icon = "\u{e89e}" }
-        local copy_action = naughty.action { name = "Copy", icon = "\u{e173}" }
+        local open_action   = naughty.action { name =  "Open" , icon = "\u{e89e}" }
         local delete_action = naughty.action { name = "Delete", icon = "\u{e872}" }
+        local copy_action   = naughty.action { name =  "Copy" , icon = "\u{e173}" }
 
         open_action:connect_signal("invoked", function()
             awful.spawn.easy_async("xdg-open " .. filepath)
@@ -574,7 +633,7 @@ local function save_screenshot(shot)
                 if exitcode == 0 then
                     naughty.notification {
                         app_name = "System",
-                        title = "Deleted Screenshot",
+                        title = "Screenshot Deleted",
                         text = "Successfully deleted " .. filepath,
                     }
                 else
@@ -602,12 +661,12 @@ end
 
 -- Save screenshot to file
 save_button:connect_signal("button::press", function()
-    create_tmp_screenshot(0, save_screenshot)
+    create_tmp_screenshot(save_screenshot)
 end)
 
 -- Copy screenshot to system clipboard
 copy_button:connect_signal("button::press", function()
-    create_tmp_screenshot(0, function(shot)
+    create_tmp_screenshot(function(shot)
         screenshot_overlay.visible = false
         if kg ~= nil then kg:stop() end
         selection_bg:set_visible(true)
@@ -632,7 +691,22 @@ end)
 kg = awful.keygrabber {
     autostart = false,
     stop_key = "Escape",
-    stop_event = "release",
+    stop_event = "press",
+    stop_callback = function()
+        if pause_keygrabber then return end
+        mode = "rect"
+
+        reset_selection()
+
+        screenshot_overlay.visible = false
+        screenshot_overlay.input_passthrough = false
+
+        sidebar.visible = false
+
+        capi.mousegrabber.stop()
+        -- make sure the keygrabber is actually stopped
+        awful.keygrabber.stop()
+    end,
     keybindings = {
         awful.key {
             modifiers = { },
@@ -661,26 +735,12 @@ kg = awful.keygrabber {
     }
 }
 
--- abort screenshot when Escape is pressed
-kg:connect_signal("stopped", function()
-    mode = "rect"
-
-    reset_selection()
-
-    screenshot_overlay.visible = false
-    screenshot_overlay.input_passthrough = false
-
-    sidebar.visible = false
-
-    capi.mousegrabber.stop()
-end)
-
 -- start selecting on button press
-selection_container:connect_signal("button::press", function()
+selection_container:connect_signal("button::press", function(_, _, _, b)
     -- don't select when sidebar is hovered
     if sidebar_hovered then return end
     -- only select on left-click
-    if not capi.mouse.is_left_mouse_button_pressed then return end
+    if not b == 1 then return end
 
     -- grab cursor position
     local initial_cursor_pos = capi.mouse.coords()
@@ -734,9 +794,9 @@ capi.awesome.connect_signal("screenshot::start", function()
         preselection:set_top(focused_screen_geo.y)
         preselection:set_bottom(root_height - focused_screen_geo.height - focused_screen_geo.y)
 
+        pause_keygrabber = false
         kg:start()
     end)
     full:save()
-
 end)
 

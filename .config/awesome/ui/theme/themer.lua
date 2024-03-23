@@ -72,8 +72,9 @@ function themer.apply()
     end
 
 
-    local nvim_theme_name = theme.nvim_theme_name
-        or theme_name:gsub(" ", "-") .. (theme_variant ~= "" and "-"..theme_variant)
+    local nvim_packman = settings.theme.nvim.package_manager or ""
+    local nvim_theme_name = theme.nvim_theme_name or theme_name:gsub(" ", "-")
+            .. (theme_variant ~= "" and "-"..theme_variant)
 
     local firefox_install = settings.theme.firefox.install
     local firefox_profile = settings.theme.firefox.profile
@@ -89,7 +90,8 @@ function themer.apply()
         ( "alacritty '" .. theme_name:gsub(" ", "_")
         .. (theme_variant ~= "" and "_"..theme_variant) .. "'" ) or ""
     local apply_gtk = settings.theme.gtk.enabled and "gtk" or ""
-    local apply_nvim = settings.theme.nvim.enabled and ("nvim " .. "'" .. nvim_theme_name .. "'") or ""
+    local apply_nvim = settings.theme.nvim.enabled and (
+        "nvim " .. "'" .. nvim_theme_name .. "' '" .. nvim_packman .. "'" ) or ""
     local apply_firefox = settings.theme.firefox.enabled and (
         "userchrome '" .. firefox_install .. "' '" .. firefox_profile .. "'\n" ..
         "usercontent '" .. firefox_install .. "' '" .. firefox_profile .. "'" ) or ""
@@ -144,6 +146,33 @@ function themer.apply()
     theme.path = theme_path
 
     return theme
+end
+
+function themer.unapply()
+    local firefox_install = settings.theme.firefox.install
+    local firefox_profile = settings.theme.firefox.profile
+    local discord_install = settings.theme.discord.install
+    local discord_mod = settings.theme.discord.client_mod
+
+    -- create commands for applying the theme
+    -- or leave empty if the user doesn't want it
+    local discord = settings.theme.discord.enabled
+        and ( "discord '" .. discord_install .. "' '" .. discord_mod .. "'" ) or ""
+    local gtk = settings.theme.gtk.enabled and "gtk" or ""
+    local firefox = settings.theme.firefox.enabled and (
+        "userchrome '" .. firefox_install .. "' '" .. firefox_profile .. "'\n" )--..
+        --"usercontent '" .. firefox_install .. "' '" .. firefox_profile .. "'" ) or ""
+
+    local unapply_script = [=[
+        source $HOME/.config/awesome/scripts/unapply_theme.sh
+
+        ]=] .. gtk     .. "\n" .. [=[
+        ]=] .. firefox .. "\n" .. [=[
+        ]=] .. discord .. "\n" .. [=[
+    ]=]
+
+    -- unapply theme
+    awful.spawn.with_shell(unapply_script)
 end
 
 return themer

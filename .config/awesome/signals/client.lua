@@ -8,19 +8,24 @@ local capi = { client = client, mouse = mouse }
 
 local client_shape = helpers.ui.rrect(14)
 
-capi.client.connect_signal("manage", function(c, startup)
+capi.client.connect_signal("request::manage", function(c, context)
     -- set rounded corners for all clients
     c.shape = client_shape
 
     -- move clients to focused screen when being created
-    if not startup then awful.client.movetoscreen(c, capi.mouse.screen) end
+    if context == "new" then awful.client.movetoscreen(c, capi.mouse.screen) end
 
     -- raise and focus newly created client
     c:raise()
     c:activate()
 
-    --automatically focus a client when switching tags
+    -- automatically focus a client when switching tags
     c:grant("autoactivate", "history")
+
+    -- center modal dialogs
+    if c.modal then
+        awful.placement.centered(c, { parent = c.screen })
+    end
 end)
 
 capi.client.connect_signal("property::maximized", function(c)

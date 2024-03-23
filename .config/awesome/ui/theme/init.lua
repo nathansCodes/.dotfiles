@@ -8,9 +8,11 @@ local awful = require("awful")
 local gfs = gears.filesystem
 local themes_path = gfs.get_themes_dir()
 
-local themer = require("ui.theme.apply_theme")
+local themer = require("ui.theme.themer")
 
 local theme = themer.apply()
+
+awesome.connect_signal("exit", themer.unapply)
 
 theme.icon_font = "Material Symbols Rounded "
 theme.mono_font = "Inter Mono "
@@ -56,6 +58,8 @@ theme.taglist_font         = theme.font .. "Bold 11"
 theme.tasklist_bg_focus    = theme.surface
 theme.tasklist_bg_normal   = theme.base
 theme.tasklist_bg_minimize = theme.overlay
+
+theme.bg_systray           = gears.color.transparent
 
 theme.popup_bg             = theme.base
 theme.popup_module_bg      = theme.overlay
@@ -170,12 +174,9 @@ local function set_wallpaper(s)
     }
 end
 
+-- Wallpaper
+awful.screen.connect_for_each_screen(set_wallpaper)
 screen.connect_signal("property::geometry", set_wallpaper)
-
-awful.screen.connect_for_each_screen(function(s)
-    -- Wallpaper
-    set_wallpaper(s)
-end)
 
 return theme
 

@@ -261,7 +261,7 @@ local function worker(user_args)
     local mixer_cmd = args.mixer_cmd or 'pavucontrol'
     local refresh_rate = args.refresh_rate or 1
     local step = args.step or 5
-    local device = args.device or 'pulse'
+    local device = args.device or 'pipewire'
     local size = args.size or 18
 
     local icon_widget = wibox.widget {

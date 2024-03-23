@@ -24,11 +24,11 @@
 }
 
 .theme-dark {
-    --background-primary: var(--base);
-    --background-secondary: var(--surface);
-    --background-secondary-alt: var(--surface);
+    --background-primary: var(--overlay);
+    --background-secondary: var(--overlay);
+    --background-secondary-alt: var(--overlay);
     --channeltextarea-background: hsl(240, 21%, 15%);
-    --background-tertiary: var(--overlay);
+    --background-tertiary: var(--base);
     --background-accent: var(--overlay);
     --text-normal: var(--text);
     --text-spotify: var(--green);
@@ -77,58 +77,44 @@
 
 body {
     --font-display: Fira Code;
+    background-color: var(--base) !important;
 }
 
-.body-2wLx-E, .headerTop-3GPUSF, .bodyInnerWrapper-2bQs1k, .footer-3naVBw {
-    background-color: var(--background-tertiary);
+.chat__52833 {
+    border-radius: 10px;
+    margin: 4px;
 }
 
-.title-17SveM, .name-3Uvkvr{
-    font-size: 14px;
+.themedBackground__6b1b6 {
+    background-color: var(--base) !important;
+    border-radius: 10px;
 }
 
-.panels-3wFtMD {
-    background-color: var(--background-secondary);
+.themedBackground__6b1b6:hover {
+    box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.3) !important;
 }
 
-.username-h_Y3Us {
-    font-family: var(--font-display);
-    font-size: 14px;
+.sidebar_ded4b5, .tabBody_b3d268, .container__5c7e7 {
+    background-color: var(--base) !important;
 }
 
-.peopleColumn-1wMU14, .panels-j1Uci_, .peopleColumn-29fq28, .peopleList-2VBrVI, .content-2hZxGK, .header-1zd7se, .root-g14mjS .small-23Atuv .fullscreenOnMobile-ixj0e3{
-    background-color: var(--background-secondary);
+.scroller__00e7e {
+    border: none !important;
 }
 
-.textArea-12jD-V, .lookBlank-3eh9lL,  .threadSidebar-1o3BTy, .scrollableContainer-2NUZem, .perksModalContentWrapper-3RHugb, .theme-dark .footer-31IekZ, .theme-light .footer-31IekZ{
-    background-color: var(--background-tertiary);
+.container__590e2, .container_ca50b9, .panels__58331, .peopleColumn__51df3,
+.container__11d72, .privateChannels__93473 {
+    background-color: var(--overlay) !important;
+    border-radius: 10px;
+    margin: 4px;
 }
 
-.numberBadge-2s8kKX, .base-PmTxvP, .baseShapeRound-1Mm1YW, .bar-30k2ka, .unreadMentionsBar-1Bu1dC, .mention-1f5kbO, .active-1SSsBb, .disableButton-220a9y {
-    background-color: var(--ping) !important;
-}
+ .nowPlayingColumn_f5023f, .nowPlayingColumn_f5023f {
+    background-color: var(--base) !important;
+    border-radius: 10px;
+    margin: 4px;
+ }
 
-.lookOutlined-3sRXeN.colorRed-1TFJan, .lookOutlined-3sRXeN.colorRed-1TFJan {
-    color: var(--ping) !important;
-}
-
-.header-3OsQeK, .container-ZMc96U {
-    box-shadow: none!important;
-    border: none!important;
-}
-
-.content-1gYQeQ, .layout-1qmrhw, .inputDefault-3FGxgL, .input-2g-os5, .input-2z42oC, .role-2TIOKu, .searchBar-jGtisZ {
-    border-radius: 6px;
-}
-
-.layout-1qmrhw:hover, .content-1gYQeQ:hover {
-    background-color: var(--background-modifier-selected)!important;
-}
-
-.container-3wLKDe {
-    background-color: var(--background-secondary) !important;
-}
-
-.title-31SJ6t {
-    background-color: var(--background-primary) !important;
-}
+ .container_d667ff {
+    border-radius: 10px 10px 0px 0px;
+ }

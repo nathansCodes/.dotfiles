@@ -39,10 +39,8 @@ return function(size, cursor_focus)
         halign = "center",
     }
 
-	local widget_button = button {
+	local widget_button = button.simple {
         change_cursor = cursor_focus,
-        animate = false,
-        hover_effect = false,
         bg = gears.color.transparent,
         on_release = function(_, _, _, _, b)
             if b == 2 then

@@ -11,6 +11,7 @@
         "theme": "catppuccin",
         "variant": "mocha",
         "icon_theme": "Papirus-Dark",
+        "compositor_enabled": true,
         "xresources_enabled": true,
         "gtk": {
             "enabled": true
@@ -32,9 +33,15 @@
             "install": "native"
         }
     },
-    "locale": {
-        "langs": [
-            "us"
-        ]
-    }
+    "device": {
+        "audio": "pipewire",
+        "network": {
+            "wifi": "wlo1",
+            "lan": "eno1",
+        }
+    },
+    "layouts": [
+        "us",
+        "de"
+    ]
 }

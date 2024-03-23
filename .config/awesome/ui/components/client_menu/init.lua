@@ -8,15 +8,20 @@ return function(c)
 
     -- add button for each tag
     for _, tag in ipairs(awful.screen.focused().tags) do
-        tags_menu:add(menu.button {
+        local b = menu.button {
             icon = tag.icon,
+            menu = tags_menu,
             icon_color = beautiful.third_accent,
+            bg = beautiful.overlay,
             text = tag.name,
             secondary_text = "Super+Shift+"..tag.index,
             on_press = function()
                 c:move_to_tag(tag)
             end,
-        })
+        }
+        b.menu = tags_menu
+        b:set_bg(beautiful.surface)
+        tags_menu:add(b)
     end
 
     return menu {

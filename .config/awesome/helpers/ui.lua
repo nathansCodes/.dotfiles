@@ -94,7 +94,7 @@ function _ui.circle(r, color)
     }
 end
 
--- I uhh... I forgot where I stole this from 💀
+-- I uhh... I forgor where I stole this from 💀
 local function _get_widget_geometry(_hierarchy, widget)
 	local width, height = _hierarchy:get_size()
 	if _hierarchy:get_widget() == widget then
@@ -110,6 +110,10 @@ local function _get_widget_geometry(_hierarchy, widget)
 		end
 	end
 end
+
+--- @class wibox
+--- @field _drawable table
+--- @class wibox.widget
 
 --- Get the geometry of a widget
 --- @param wibox wibox the wibox containing the widget.

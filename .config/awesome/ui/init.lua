@@ -13,19 +13,19 @@ require("ui.components.titlebar")
 -- screenshot handler
 require("ui.components.screenshooter")
 
+-- per-screen ui components
+local bar = require("ui.components.bar")
+local dock = require("ui.components.dock")
+local lockscreen = require("ui.components.lockscreen")
+local powermenu = require("ui.components.powermenu")
 screen.connect_signal("request::desktop_decoration", function(s)
-
-    -- bar
-    require("ui.components.bar")(s)
-
-    -- dock
-    require("ui.components.dock")(s)
-
+    bar(s)
+    dock(s)
+    lockscreen(s)
+    powermenu(s)
 end)
 
 -- launcher
-require("gears").protected_call(function()
 require("ui.components.launcher")
-end, function(e) require("naughty").notification { text = e, urgency = "critical" } end)
 
 
