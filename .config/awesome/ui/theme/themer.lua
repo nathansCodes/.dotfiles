@@ -132,12 +132,12 @@ function themer.apply()
         source $HOME/.config/awesome/scripts/apply_theme.sh
 
 
-        ]=] .. apply_discord .. "\n" .. [=[
+        ]=] .. apply_discord   .. "\n" .. [=[
         ]=] .. apply_xres_term .. "\n" .. [=[
         ]=] .. apply_alacritty .. "\n" .. [=[
-        ]=] .. apply_gtk .. "\n" .. [=[
-        ]=] .. apply_firefox .. "\n" .. [=[
-        ]=] .. apply_nvim .. "\n" .. [=[
+        ]=] .. apply_gtk       .. "\n" .. [=[
+        ]=] .. apply_firefox   .. "\n" .. [=[
+        ]=] .. apply_nvim      .. "\n" .. [=[
     ]=]
 
     -- apply theme
@@ -160,8 +160,8 @@ function themer.unapply()
         and ( "discord '" .. discord_install .. "' '" .. discord_mod .. "'" ) or ""
     local gtk = settings.theme.gtk.enabled and "gtk" or ""
     local firefox = settings.theme.firefox.enabled and (
-        "userchrome '" .. firefox_install .. "' '" .. firefox_profile .. "'\n" )--..
-        --"usercontent '" .. firefox_install .. "' '" .. firefox_profile .. "'" ) or ""
+        "userchrome '" .. firefox_install .. "' '" .. firefox_profile .. "'\n" ..
+        "usercontent '" .. firefox_install .. "' '" .. firefox_profile .. "'" ) or ""
 
     local unapply_script = [=[
         source $HOME/.config/awesome/scripts/unapply_theme.sh
