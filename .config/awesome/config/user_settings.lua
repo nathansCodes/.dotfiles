@@ -1,5 +1,4 @@
 local awful = require("awful")
-local naughty = require("naughty")
 local gears = require("gears")
 local gtable = gears.table
 local gfs = gears.filesystem
@@ -19,6 +18,7 @@ settings.defaults = {
         theme = "catppuccin",
         variant = "mocha",
         icon_theme = "Papirus-Dark",
+        compositor_enabled = true,
         xresources_enabled = false,
         gtk = { enabled = false },
         nvim = { enabled = false },
@@ -32,6 +32,13 @@ settings.defaults = {
             enabled = false,
             profile = "",
             install = "native"
+        }
+    },
+    device = {
+        audio = "pipewire",
+        network = {
+            wifi = "wlo1",
+            lan = "eno1",
         }
     },
     locale = {
@@ -86,6 +93,15 @@ end
 
 setmetatables(data, data_proxy)
 startup = false
+
+function settings.reload()
+    json_str = io.popen("cat " .. settings_path, "r"):read("*all")
+    data = gtable.crush(settings.defaults, json.decode(json_str), true)
+    data_proxy = {}
+    startup = true
+    setmetatables(data, data_proxy)
+    startup = false
+end
 
 local mt = {}
 

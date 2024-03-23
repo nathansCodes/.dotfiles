@@ -4,7 +4,6 @@
 -------------------------------------------
 
 local awful = require("awful")
-local naughty = require("naughty")
 local gears = require("gears")
 local gtable = require("gears.table")
 local gtimer = require("gears.timer")
@@ -136,7 +135,7 @@ function menu:add(widget)
 		widget.sub_menu.parent_menu = self
 	end
 	widget.menu = self
-	self.widget:add(widget)
+    self.widget:add(widget)
 end
 
 function menu:remove(widget)
@@ -147,16 +146,21 @@ function menu:reset()
 	self.widget:reset()
 end
 
-function menu.menu(widgets, width)
+function menu.menu(args)
+    local bg = args.bg or beautiful.surface
 	local widget = awful.popup {
-		x = 32500,
-		type = "menu",
+		x = args.x or 32500,
+        -- notification because it has the desired animations with fdev31's picom
+		type = "notification",
 		visible = false,
 		ontop = true,
-		minimum_width = width or dpi(300),
-		maximum_width = width or dpi(300),
+		minimum_width = args.width or dpi(300),
+		maximum_width = args.width or dpi(300),
 		shape = helpers.ui.rrect(10),
-		bg = beautiful.surface,
+		bg = bg,
+        border_color = bg,
+        border_width = dpi(5),
+        placement = args.placement,
 		widget = wibox.layout.fixed.vertical,
 	}
 	gtable.crush(widget, menu, true)
@@ -195,8 +199,9 @@ function menu.menu(widgets, width)
 		end
 	end)
 
-	for _, menu_widget in ipairs(widgets) do
+	for _, menu_widget in ipairs(args) do
 		widget:add(menu_widget)
+        if menu_widget.set_bg ~= nil then menu_widget:set_bg(bg) end
 	end
 
 	return widget
@@ -209,9 +214,12 @@ function menu.sub_menu_button(args)
 	args.icon_size = args.icon_size or 16
     args.icon_color = args.icon_color or beautiful.accent
 	args.text = args.text or ""
-	args.image = args.image
 	args.text_size = args.text_size or 12
 	args.sub_menu = args.sub_menu or nil
+
+    if args.image and args.image_color then
+        args.image = gears.color.recolor_image(args.image, args.image_color)
+    end
 
     local icon
 	if args.icon ~= nil then
@@ -248,38 +256,35 @@ function menu.sub_menu_button(args)
 
     local widget = button {
         bg = gears.color.transparent,
+        hover_fg = args.image_color or args.icon_color,
         margins = dpi(5),
         height = dpi(45),
         shape = helpers.ui.rrect(10),
-        on_mouse_enter = function(self, widget)
+        on_mouse_enter = function(self, _)
             local coords = helpers.ui.get_widget_geometry(self.menu, self)
             coords.x = coords.x + self.menu.x + self.menu.width
             coords.y = coords.y + self.menu.y
-            args.sub_menu:show({ coords = coords, offset = { x = 5 } })
+            args.sub_menu:show({ coords = coords, offset = { x = 15 } })
         end,
         widget = wibox.widget {
-            widget = wibox.container.margin,
-            margins = dpi(5),
+            layout = wibox.layout.fixed.horizontal,
+            fill_space = true,
+            spacing = dpi(15),
+            icon,
+            text_widget,
             {
-                layout = wibox.layout.fixed.horizontal,
-                fill_space = true,
-                spacing = dpi(15),
-                icon,
-                text_widget,
+                widget = wibox.container.place,
+                halign = "right",
                 {
-                    widget = wibox.container.place,
-                    halign = "right",
+                    layout = wibox.layout.fixed.horizontal,
+                    spacing = dpi(10),
+                    second_text_widget,
                     {
-                        layout = wibox.layout.fixed.horizontal,
-                        spacing = dpi(10),
-                        second_text_widget,
-                        {
-                            widget = wibox.widget.textbox,
-                            font = beautiful.icon_font .. "22",
-                            halign = "right",
-                            text = "\u{eac9}",
-                        },
-                    }
+                        widget = wibox.widget.textbox,
+                        font = beautiful.icon_font .. "22",
+                        halign = "right",
+                        text = "\u{eac9}",
+                    },
                 }
             }
         },
@@ -334,24 +339,21 @@ function menu.button(args)
 
     return button {
         bg = gears.color.transparent,
+        hover_fg = args.icon_color,
         margins = dpi(5),
         height = dpi(45),
         shape = helpers.ui.rrect(10),
         on_release = function(self)
             self.menu:hide(true)
-            args.on_press(self, text_widget)
+            if args.on_press then args.on_press(self, text_widget) end
         end,
         widget = wibox.widget {
-            widget = wibox.container.margin,
-            margins = dpi(5),
-            {
-                layout = wibox.layout.fixed.horizontal,
-                spacing = dpi(15),
-                fill_space = true,
-                icon,
-                text_widget,
-                second_text_widget,
-            }
+            layout = wibox.layout.fixed.horizontal,
+            spacing = dpi(15),
+            fill_space = true,
+            icon,
+            text_widget,
+            second_text_widget,
         },
     }
 end

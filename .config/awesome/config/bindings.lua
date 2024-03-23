@@ -5,18 +5,29 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local apps = require("config.apps")
 local main_menu = require("ui.components.main_menu")
 
+local capi = { awesome = awesome, client = client }
+
 local super = "Mod4"
 local alt = "Mod1"
 local shift = "Shift"
 local ctrl = "Control"
 
+local lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+    .. "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+    .. "Ut enim ad minim veniam, "
+    .. "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+
 awful.keyboard.append_global_keybindings {
+    awful.key({ super, }, " ", function() capi.awesome.emit_signal("keyboard::cycle_layouts") end,
+        { description = "cycle keyboard layouts", group = "awesome" }),
     awful.key({ super, }, "s", hotkeys_popup.show_help,
         { description = "show help", group = "awesome" }),
-    awful.key({ super, ctrl }, "r", awesome.restart,
+    awful.key({ super, ctrl }, "r", capi.awesome.restart,
         { description = "reload awesome", group = "awesome" }),
-    awful.key({ super, shift }, "q", awesome.quit,
+    awful.key({ super, shift }, "q", capi.awesome.quit,
         { description = "quit awesome", group = "awesome" }),
+    awful.key({ super, shift }, "l", function() capi.awesome.emit_signal("lockscreen::lock") end,
+        { description = "open file manager (thunar)", group = "launcher" }),
     awful.key({ super }, "x",
         function()
             awful.prompt.run {
@@ -30,12 +41,21 @@ awful.keyboard.append_global_keybindings {
     awful.key({ super, }, "g", function()
             naughty.notification {
                 title = "Test",
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                    .. "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                    .. "Ut enim ad minim veniam, "
-                    .. "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                text = lorem,
                 app_name = "System",
                 image = beautiful.wallpaper,
+                actions = {
+                    naughty.action { name = "Hello", icon = "\u{e766}" },
+                    naughty.action { name = "World", icon = "\u{e64c}" }
+                },
+            }
+        end,
+        { description = "test notification", group = "awesome" }),
+    awful.key({ super, shift }, "g", function()
+            naughty.notification {
+                title = "Test",
+                text = lorem,
+                app_name = "System",
                 actions = {
                     naughty.action { name = "Hello", icon = "\u{e766}" },
                     naughty.action { name = "World", icon = "\u{e64c}" }
@@ -53,16 +73,27 @@ awful.keyboard.append_global_keybindings {
         modifiers = { super },
         key = "r",
         on_release = function()
-            awesome.emit_signal("launcher::open")
+            capi.awesome.emit_signal("launcher::open")
         end,
         description = "run prompt",
         group = "launcher"
+    },
+    awful.key {
+        modifiers = { super },
+        key = "y",
+        on_release = function()
+            require("ui.theme.themer").unapply()
+            require("config.user_settings").reload()
+            require("ui.theme.themer").apply()
+        end,
+        description = "reload theme",
+        group = "theme"
     },
 }
 
 awful.keyboard.append_global_keybindings {
     awful.key({}, "Print", function()
-            awesome.emit_signal("screenshot::start")
+            capi.awesome.emit_signal("screenshot::start")
         end,
         { description = "create screen selection for a screenshot", group = "screenshot" }),
     awful.key({ ctrl, }, "Print", function() awful.spawn("flameshot screen") end,
@@ -85,7 +116,7 @@ awful.keyboard.append_global_keybindings {
         { description = "show clipboard menu", group = "rofi" }),
     awful.key({ super }, "o", function() awful.spawn.with_shell("rofi-mpc") end,
         { description = "show clipboard menu", group = "rofi" }),
-    awful.key({ super }, "v", function() awful.spawn.with_shell("~/.config/rofi/scripts/powermenu") end,
+    awful.key({ super }, "v", function() capi.awesome.emit_signal("powermenu::show") end,
         { description = "show clipboard menu", group = "rofi" }),
 }
 
@@ -154,22 +185,22 @@ awful.keyboard.append_global_keybindings {
 
 -- Layout related keybindings
 awful.keyboard.append_global_keybindings {
-    awful.key({ alt, ctrl }, "j", function(c)
+    awful.key({ alt, ctrl }, "j", function()
             awful.client.swap.global_bydirection("down")
         end,
         { description = "swap with window below", group = "client" }
     ),
-    awful.key({ alt, ctrl }, "k", function(c)
+    awful.key({ alt, ctrl }, "k", function()
             awful.client.swap.global_bydirection("up")
         end,
         { description = "swap with window above", group = "client" }
     ),
-    awful.key({ alt, ctrl }, "h", function(c)
+    awful.key({ alt, ctrl }, "h", function()
             awful.client.swap.global_bydirection("left")
         end,
         { description = "swap with window to the left", group = "client" }
     ),
-    awful.key({ alt, ctrl }, "l", function(c)
+    awful.key({ alt, ctrl }, "l", function()
             awful.client.swap.global_bydirection("right")
         end,
         { description = "swap with window to the right", group = "client" }
@@ -228,10 +259,10 @@ awful.keyboard.append_global_keybindings {
         description = "move focused client to tag",
         group       = "tag",
         on_press    = function(index)
-            if client.focus then
-                local tag = client.focus.screen.tags[index]
+            if capi.client.focus then
+                local tag = capi.client.focus.screen.tags[index]
                 if tag then
-                    client.focus:move_to_tag(tag)
+                    capi.client.focus:move_to_tag(tag)
                 end
             end
         end,
@@ -242,10 +273,10 @@ awful.keyboard.append_global_keybindings {
         description = "toggle focused client on tag",
         group       = "tag",
         on_press    = function(index)
-            if client.focus then
-                local tag = client.focus.screen.tags[index]
+            if capi.client.focus then
+                local tag = capi.client.focus.screen.tags[index]
                 if tag then
-                    client.focus:toggle_tag(tag)
+                    capi.client.focus:toggle_tag(tag)
                 end
             end
         end,
@@ -261,10 +292,10 @@ awful.keyboard.append_global_keybindings {
                 t.layout = t.layouts[index] or t.layout
             end
         end,
-    }
+    },
 }
 
-client.connect_signal("request::default_mousebindings", function()
+capi.client.connect_signal("request::default_mousebindings", function()
     awful.mouse.append_client_mousebindings {
         --- Client move and resize
         awful.button({}, 1, function(c)
@@ -295,7 +326,7 @@ client.connect_signal("request::default_mousebindings", function()
     }
 end)
 
-client.connect_signal("request::default_keybindings", function()
+capi.client.connect_signal("request::default_keybindings", function()
     awful.keyboard.append_client_keybindings {
         awful.key({ super, shift }, "f",
             function(c)
@@ -342,32 +373,30 @@ client.connect_signal("request::default_keybindings", function()
 end)
 
 -- Function keys
-client.connect_signal("request::default_keybindings", function()
-    awful.keyboard.append_client_keybindings {
-        awful.key({}, "XF86AudioPlay", function()
-            awful.spawn("playerctl play-pause")
-        end, { description = "play/pause music", group = "Function keys" }),
-        awful.key({}, "XF86AudioPrev", function()
-            awful.spawn("playerctl previous")
-        end, { description = "previous music", group = "Function keys" }),
-        awful.key({}, "XF86AudioNext", function()
-            awful.spawn("playerctl next")
-        end, { description = "next music", group = "Function keys" }),
-        awful.key({}, "XF86AudioMute", function()
-            awful.spawn("amixer -D pipewire sset Master toggle")
-        end, { description = "mute audio", group = "Function keys" }),
-        awful.key({}, "XF86AudioLowerVolume", function()
-            awful.spawn("amixer -D pipewire sset Master 5%-")
-        end, { description = "decrease volume", group = "Function keys" }),
-        awful.key({}, "XF86AudioRaiseVolume", function()
-            awful.spawn("amixer -D pipewire sset Master 5%+")
-        end, { description = "increase volume", group = "Function keys" }),
-        -- TODO: make this work
-        awful.key({}, "XF86MonBrightnessUp", function()
-            awful.spawn("light -A 5%")
-        end, { description = "increase brightness", group = "Function keys" }),
-        awful.key({}, "XF86MonBrightnessDown", function()
-            awful.spawn("light -U 5%")
-        end, { description = "decrease brightness", group = "Function keys" }),
-    }
-end)
+awful.keyboard.append_global_keybindings {
+    awful.key({}, "XF86AudioPlay", function()
+        awful.spawn("playerctl play-pause")
+    end, { description = "play/pause music", group = "Function keys" }),
+    awful.key({}, "XF86AudioPrev", function()
+        awful.spawn("playerctl previous")
+    end, { description = "previous music", group = "Function keys" }),
+    awful.key({}, "XF86AudioNext", function()
+        awful.spawn("playerctl next")
+    end, { description = "next music", group = "Function keys" }),
+    awful.key({}, "XF86AudioMute", function()
+        awful.spawn("amixer -D pipewire sset Master toggle")
+    end, { description = "mute audio", group = "Function keys" }),
+    awful.key({}, "XF86AudioLowerVolume", function()
+        awful.spawn("amixer -D pipewire sset Master 5%-")
+    end, { description = "decrease volume", group = "Function keys" }),
+    awful.key({}, "XF86AudioRaiseVolume", function()
+        awful.spawn("amixer -D pipewire sset Master 5%+")
+    end, { description = "increase volume", group = "Function keys" }),
+    -- TODO: make this work
+    awful.key({}, "XF86MonBrightnessUp", function()
+        awful.spawn("light -A 5%")
+    end, { description = "increase brightness", group = "Function keys" }),
+    awful.key({}, "XF86MonBrightnessDown", function()
+        awful.spawn("light -U 5%")
+    end, { description = "decrease brightness", group = "Function keys" }),
+}

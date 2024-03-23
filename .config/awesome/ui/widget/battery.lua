@@ -7,7 +7,11 @@ local dpi = beautiful.xresources.apply_dpi
 
 local helpers = require("helpers")
 
+local instance
+
 return function()
+    if instance then return instance end
+
     local progressbar = wibox.widget {
         widget = wibox.widget.progressbar,
         color = beautiful.inactive,
@@ -26,7 +30,7 @@ return function()
         markup = helpers.ui.colorize_text("\u{ea0b}", beautiful.text),
     }
 
-    local widget = wibox.widget {
+    instance = wibox.widget {
         layout = wibox.layout.fixed.horizontal,
         spacing = dpi(0),
         {
@@ -68,7 +72,7 @@ return function()
 
 	local tooltip = awful.tooltip {
 		markup = 'Loading...',
-		objects = { widget },
+		objects = { instance },
 		mode = 'outside',
 		align = 'right',
 		preferred_positions = {'left', 'right', 'top', 'bottom'},
@@ -130,5 +134,5 @@ return function()
         tooltip:set_markup(tooltip_text)
     end)
 
-    return widget
+    return instance
 end

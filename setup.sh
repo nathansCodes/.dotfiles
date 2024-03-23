@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
+echo "Installing dependencies..."
+luarocks install fzy --local
+
+echo "Installing dotfiles"
 cd ~/.dotfiles/
-stow --ignore=".gitmodules|setup.sh" .
+stow --ignore=".git*|setup.sh" .
+cd -

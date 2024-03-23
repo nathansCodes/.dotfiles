@@ -4,6 +4,7 @@ local awful = require("awful")
 local naughty = require("naughty")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
+local intersects = gears.geometry.rectangle.area_intersect_area
 
 local rubato = require("modules.rubato")
 
@@ -11,8 +12,13 @@ local helpers = require("helpers")
 
 local tasklist = require("ui.components.dock.widget.tasklist")
 local button = require("ui.widget.button")
+local launcher = require("ui.components.launcher")
 
 local capi = { awesome = awesome, client = client, tag = tag, mouse = mouse, }
+
+local client_signal = capi.client.connect_signal
+local tag_signal = capi.tag.connect_signal
+local awesome_signal = capi.awesome.connect_signal
 
 
 local launcher_icon = button {
@@ -28,7 +34,7 @@ local launcher_icon = button {
     },
     on_release = function(_, _, _, _, b)
         if b ~= 1 then return end
-        capi.awesome.emit_signal("launcher::toggle")
+        launcher:toggle()
     end
 }
 
@@ -139,14 +145,11 @@ return function(s)
         animator.target = dpi(70)
     end
 
-    local function force_show()
-        s.dock.force_show = true
-        s.dock:show()
-    end
+    local is_hovered = false
 
     local function hide_if_client_overlaps(c)
         if c == nil or (c.first_tag and not c.first_tag.selected)
-            or s.dock.force_show or s.launcher_visible then
+            or is_hovered or s.launcher_visible then
             s.dock:show()
             return
         end
@@ -156,46 +159,71 @@ return function(s)
             s.dock_visible = false
             return
         end
-        if gears.geometry.rectangle.area_intersect_area(c:geometry(), dock_bounds) then
+        if intersects(c:geometry(), dock_bounds) then
             s.dock:hide()
         else
             s.dock:show()
         end
     end
 
+    local function check_focused()
+        hide_if_client_overlaps(capi.client.focus)
+    end
+
     -- signals to control whether or not the dock should be shown
-    s.dock:connect_signal("mouse::enter", force_show)
+
+    s.dock:connect_signal("mouse::enter", function()
+        is_hovered = true
+        s.dock:show()
+    end)
 
     s.dock:connect_signal("mouse::leave", function()
-        s.dock.force_show = s.launcher_visible
-        hide_if_client_overlaps(capi.client.focus)
-    end)
-
-    capi.client.connect_signal("request::activate", hide_if_client_overlaps)
-    capi.client.connect_signal("request::autoactivate", hide_if_client_overlaps)
-    capi.client.connect_signal("request::unmanage", function()
-        hide_if_client_overlaps(capi.client.focus)
-    end)
-    -- TODO: fix these two
-    capi.client.connect_signal("request::tag", function()
-        hide_if_client_overlaps(capi.client.focus)
-    end)
-    capi.client.connect_signal("property::floating", function(c)
-        -- I have to invert it because...   no idea why.
-        if gears.geometry.rectangle.area_intersect_area(c:geometry(), dock_bounds) then
-            s.dock:hide()
-        else
-            s.dock:show()
+        local mouse_coords = capi.mouse.coords()
+        local mouse_bounds = {
+            x = mouse_coords.x,
+            y = mouse_coords.y,
+            width = 1,
+            height = 1,
+        }
+        if not intersects(mouse_bounds, dock_bounds) then
+            is_hovered = false
+            hide_if_client_overlaps(capi.client.focus)
         end
     end)
-    capi.client.connect_signal("request::geometry", hide_if_client_overlaps)
-    capi.client.connect_signal("property::screen", hide_if_client_overlaps)
 
-    capi.awesome.connect_signal("launcher::open", force_show)
-    capi.awesome.connect_signal("launcher::closed", function()
-        s.dock.force_show = capi.mouse.current_wibox == s.dock
-        hide_if_client_overlaps(capi.client.focus)
+    client_signal("request::activate", function(c)
+        if animator.target == 0 then return end
+        hide_if_client_overlaps(c)
     end)
+    client_signal("property::fullscreen", function(c)
+        if c.fullscreen and c.screen == s then
+            animator.target = 0
+            s.dock_visible = false
+        end
+    end)
+    client_signal("unfocus", function(c)
+        -- if there's fullscreen clients on screen, don't show
+        if c.fullscreen and c.screen == s then
+            animator.target = 0
+            s.dock_visible = false
+        end
+    end)
+
+    client_signal("request::autoactivate", hide_if_client_overlaps)
+    -- request::manage doesn't work???
+    client_signal("manage", check_focused)
+    client_signal("request::unmanage", check_focused)
+    client_signal("tagged", check_focused)
+    -- TODO: fix this. currently it does the exact opposite of the expected outcome
+    client_signal("property::floating", check_focused)
+    client_signal("request::geometry", hide_if_client_overlaps)
+    client_signal("property::screen", hide_if_client_overlaps)
+
+    awesome_signal("launcher::opened", s.dock.show)
+    awesome_signal("launcher::closed", check_focused)
+
+    tag_signal("property::selected", check_focused)
+    tag_signal("property::layout", check_focused)
 
     return s.dock
 end

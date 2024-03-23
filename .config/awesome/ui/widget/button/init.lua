@@ -1,23 +1,23 @@
 local wibox = require("wibox")
-local naughty = require("naughty")
-local awful = require("awful")
-local gears = require("gears")
-local gfs = gears.filesystem
 local beautiful = require("beautiful")
-local dpi = beautiful.xresources.apply_dpi
 
+local color = require("modules.lua-color")
 local rubato = require("modules.rubato")
 
 local helpers = require("helpers")
 
-return function(args)
-    args.margins = args.margins or 0
-    args.top_margin = args.top_margin or nil
-    args.bottom_margin = args.bottom_margin or nil
-    args.left_margin = args.left_margin or nil
-    args.right_margin = args.right_margin or nil
+local button = { simple = require("ui.widget.button.simple") }
 
-    args.hover_effect = not (args.hover_effect == false)
+function button.new(args)
+    args.margins = args.margins or 0
+    args.top = args.top or nil
+    args.bottom = args.bottom or nil
+    args.left = args.left or nil
+    args.right = args.right or nil
+    args.bg = args.bg or beautiful.base
+    args.fg = args.fg or beautiful.text
+
+    args.hover_on_mouse_enter = not (args.hover_on_mouse_enter == false)
     args.shape = args.shape or helpers.ui.rrect(10)
 
     args.on_mouse_enter = args.on_mouse_enter or function(_,_) end
@@ -31,52 +31,84 @@ return function(args)
         widget = wibox.widget(widget)
     end
 
-    local bg = wibox.widget {
+    if not args.hover_bg then
+        args.hover_bg = color(args.bg)
+        args.hover_bg = color(beautiful.highlight_low)
+    elseif args.hover_bg == "lighten" then
+        args.hover_bg = color(args.bg)
+        args.hover_bg = args.hover_bg:mix(args.lighten_with or beautiful.text, 0.2)
+    elseif args.hover_bg == "darken" then
+        args.hover_bg = color(args.bg)
+        args.hover_bg:mix(args.darken_with or beautiful.base, 0.2)
+    elseif type(args.hover_bg) == "string" then
+        args.hover_bg = color(args.hover_bg)
+    elseif not color.isColor(args.hover_bg) then
+        args.hover_bg = nil
+    end
+    if args.hover_fg and type(args.hover_fg) == "string" then
+        args.hover_fg = color(args.hover_fg)
+    elseif not color.isColor(args.hover_fg) then
+        args.hover_fg = nil
+    end
+
+    local button = wibox.widget {
         widget = wibox.container.background,
         shape = args.shape,
         bg = args.bg,
         fg = args.fg,
-        widget,
-    }
-
-    local hover_effect = wibox.widget {
-        widget = wibox.container.background,
-        shape = args.shape,
-        bg = beautiful.fg_normal,
-        opacity = 0,
-    }
-
-    local container = wibox.widget {
-        widget = wibox.container.margin,
-        margins = args.margins,
-        top = args.top_margin,
-        bottom = args.bottom_margin,
-        left = args.left_margin,
-        right = args.right_margin,
+        border_color = args.border_color,
+        border_width = args.border_width,
         forced_width = args.width or nil,
         forced_height = args.height or nil,
         {
-            layout = wibox.layout.stack,
-            bg,
-            hover_effect,
+            widget = wibox.container.margin,
+            margins = args.margins,
+            top = args.top,
+            bottom = args.bottom,
+            left = args.left,
+            right = args.right,
+            widget,
         },
 
-        -- make manual layouts work
+        -- make ids and manual layouts work
+        id = args.id,
         point = args.point,
     }
 
-    local hover_effect_anim = rubato.timed {
+    button._set_bg = button.set_bg
+    function button:set_bg(color)
+        self:_set_bg(color)
+        args.bg = color
+    end
+
+    button._set_fg = button.set_fg
+    function button:set_fg(color)
+        self:_set_fg(color)
+        args.fg = color
+    end
+
+    -- make lua stop complaining
+    ---@type table|nil
+    local animator = rubato.timed {
         duration = 0.2,
+        easing = rubato.quadratic,
         subscribed = function(pos)
-            hover_effect:set_opacity(pos)
+            if args.hover_bg then
+                local col = color(args.bg):mix(args.hover_bg, pos)
+                button:_set_bg(col:tostring("#ffffffff"))
+            end
+            if args.hover_fg then
+                local col = color(args.fg):mix(args.hover_fg, pos)
+                button:_set_fg(col:tostring("#ffffffff"))
+            end
         end,
     }
 
     local old_cursor, old_wibox
 
-    container:connect_signal("mouse::enter", function()
-        if args.hover_on_mouse_enter == nil or args.hover_on_mouse_enter == true then
-            hover_effect_anim.target = args.hover_effect and 0.2 or 0
+    button:connect_signal("mouse::enter", function()
+        if args.hover_on_mouse_enter then
+            animator.target = 1
         end
 
         local w = mouse.current_wibox
@@ -85,16 +117,29 @@ return function(args)
             w.cursor = "hand1"
         end
 
-        args.on_mouse_enter(container, widget)
+        args.on_mouse_enter(button, widget)
     end)
 
-    function container:hover()
-        hover_effect_anim.target = args.hover_effect and 0.2 or 0
+    function button:hover()
+        if animator ~= nil then
+            animator.target = 1
+        end
     end
 
-    container:connect_signal("mouse::leave", function()
-        if args.hover_on_mouse_enter == nil or args.hover_on_mouse_enter == true then
-            hover_effect_anim.target = 0
+    function button:unhover()
+        if animator ~= nil then
+            animator.target = 0
+        end
+    end
+
+    function button:get_children_by_id(id)
+        if id == args.id then return { self } end
+        return widget and widget:get_children_by_id(id) or {}
+    end
+
+    button:connect_signal("mouse::leave", function()
+        if args.hover_on_mouse_enter then
+            animator.target = 0
         end
 
         if old_wibox then
@@ -102,84 +147,57 @@ return function(args)
             old_wibox = nil
         end
 
-        args.on_mouse_leave(container, widget)
+        args.on_mouse_leave(button, widget)
     end)
 
-    function container:unhover()
-        hover_effect_anim.target = 0
-    end
-
-    container:connect_signal("button::press", function(self, lx, ly, button, find_widgets_result)
-        hover_effect_anim.target = args.hover_effect and 0.25 or 0
+    button:connect_signal("button::press", function(self, lx, ly, b, find_widgets_result)
+        animator.target = 0.8
         self.pressed = true
 
-        args.on_press(self, widget, lx, ly, button, find_widgets_result)
+        args.on_press(self, widget, lx, ly, b, find_widgets_result)
     end)
 
-    container:connect_signal("button::release", function(self, lx, ly, button, find_widgets_result)
-        hover_effect_anim.target = args.hover_effect and 0.2 or 0
+    button:connect_signal("button::release", function(self, lx, ly, b, find_widgets_result)
+        animator.target = 1
         self.pressed = false
 
-        args.on_release(self, widget, lx, ly, button, find_widgets_result)
+        args.on_release(self, widget, lx, ly, b, find_widgets_result)
     end)
 
-    function container:set_on_press(func)
+    function button:set_on_press(func)
         if type(func) == "function" then
             args.on_press = func
         end
     end
 
-    function container:set_on_release(func)
+    function button:set_on_release(func)
         if type(func) == "function" then
             args.on_release = func
         end
     end
 
-    function container:set_on_mouse_enter(func)
+    function button:set_on_mouse_enter(func)
         if type(func) == "function" then
             args.on_mouse_enter = func
         end
     end
 
-    function container:set_on_mouse_leave(func)
+    function button:set_on_mouse_leave(func)
         if type(func) == "function" then
             args.on_mouse_leave = func
         end
     end
 
-    container._get_children_by_id = container.get_children_by_id
-
-    function container:get_children_by_id(id)
-        return widget ~= nil and widget:get_children_by_id(id) or {}
-    end
-
-    function container:get_widget()
+    function button:get_widget()
         return widget
     end
 
-    function container:set_bg(color)
-        bg:set_bg(color)
-    end
-
-    function container:set_fg(color)
-        bg:set_fg(color)
-    end
-
-    local mt = getmetatable(container)
+    local mt = getmetatable(button)
     --setmetatable(container, {})
     local ___index = mt.__index
     local ___newindex = mt.__newindex
     function mt:__index(key)
         --autogenerate getters and setters
-        if key:match("set_widget_") then return function(_, v)
-            if widget ~= nil then
-                widget[key:sub(5)] = v
-            end
-        end end
-        if key:match("get_widget_") then return function()
-            return widget ~= nil and widget[key:sub(5)] or nil
-        end end
-
         if key:match("set_") then return function(_, v) args[key:sub(5)] = v end end
         if key:match("get_") then return function() return args[key:sub(5)] end end
 
@@ -191,5 +209,7 @@ return function(args)
         return ___newindex(self, key, value)
     end
 
-    return setmetatable(container, mt)
+    return setmetatable(button, mt)
 end
+
+return setmetatable(button, { __call = function(_, ...) return button.new(...) end })

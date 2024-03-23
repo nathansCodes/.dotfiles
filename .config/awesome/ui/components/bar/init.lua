@@ -1,25 +1,38 @@
 local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
-local naughty = require("naughty")
-local gfs = gears.filesystem
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
+
+local settings = require("config.user_settings")
 
 -------------------- widgets --------------------
 local battery_widget = require("ui.widget.battery")
 local network_widget = require("ui.widget.network")
 local bluetooth_widget = require("ui.widget.bluetooth")
 local volume_widget = require("ui.widget.volume")
-local keyboardlayout = require("ui.widget.locale")
+local keyboardlayout = require("ui.widget.keyboard_layout")
 local taglist = require("ui.components.bar.taglist")
 local button = require("ui.widget.button")
 
--------------------- panels ---------------------
-local right_panel = require("ui.components.right_panel")
+local helpers = require("helpers")
+
+local capi = { awesome = awesome, client = client }
 
 return function(s)
-    -- Create a promptbox for each screen
+    local power_button = wibox.widget {
+        widget = wibox.widget.textbox,
+        markup = helpers.ui.colorize_text("\u{f8c7}", beautiful.error),
+        font = beautiful.icon_font .. "Bold 22",
+        buttons = {
+            awful.button({}, 1, function()
+                capi.awesome.emit_signal("powermenu::show")
+            end),
+        },
+    }
+
+    local taglist = taglist(s)
+
     s.mypromptbox = awful.widget.prompt()
 
     local textclock = button {
@@ -36,64 +49,7 @@ return function(s)
         }
     }
 
-    local volume = volume_widget { size = 22 }
-
-    volume:buttons( gears.table.join(
-        awful.button({}, 2, function() volume_widget:toggle() end),
-        awful.button({}, 4, function() volume_widget:inc() end),
-        awful.button({}, 5, function() volume_widget:dec() end)
-    ))
-
-    local right_panel_button = button {
-        shape = gears.shape.rounded_bar,
-        on_release = function(_, _, _, _, b)
-            if b == 1 then
-                s.right_panel:toggle()
-            end
-        end,
-        widget = {
-            widget = wibox.container.margin,
-            top = dpi(0),
-            bottom = dpi(0),
-            left = dpi(10),
-            right = dpi(10),
-            {
-                layout = wibox.layout.align.horizontal,
-                expand = "none",
-                network_widget(22),
-                bluetooth_widget(22),
-                volume,
-            },
-        },
-    }
-
-    local power_button = wibox.widget {
-        widget = wibox.container.margin,
-        left = dpi(4),
-        buttons = {
-            awful.button({}, 1, function()
-                awful.spawn(gfs.get_configuration_dir() .. "../rofi/scripts/powermenu")
-            end),
-        },
-        {
-            widget = wibox.container.background,
-            fg = beautiful.error,
-            {
-                widget = wibox.widget.textbox,
-                text = "\u{f8c7}",
-                font = beautiful.icon_font .. "Bold 22",
-            }
-        },
-    }
-
     local systray = button {
-        right = false,
-        left = true,
-        top = false,
-        bottom = false,
-        bg_off = gears.color.transparent,
-        fg_off = beautiful.text,
-        fg_on = beautiful.accent,
         on_release = function(_, widget)
             local tray = widget.children[1]
             tray.visible = not tray.visible
@@ -104,7 +60,10 @@ return function(s)
             {
                 widget = wibox.container.background,
                 visible = false,
-                wibox.widget.systray(),
+                {
+                    widget = wibox.widget.systray(),
+                    screen = s,
+                }
             },
             {
                 widget = wibox.widget.textbox,
@@ -114,7 +73,50 @@ return function(s)
         },
     }
 
-    client.connect_signal("property::fullscreen", function(c)
+    local volume = volume_widget { size = 22, device = settings.device.audio }
+
+    volume:buttons( gears.table.join(
+        awful.button({}, 2, function() volume_widget:toggle() end),
+        awful.button({}, 4, function() volume_widget:inc() end),
+        awful.button({}, 5, function() volume_widget:dec() end)
+    ))
+
+    local system_stats = button {
+        shape = gears.shape.rounded_bar,
+        -- on_release = function(_, _, _, _, b)
+        --     if b == 1 then
+        --         s.right_panel:toggle()
+        --     end
+        -- end,
+        left = dpi(4),
+        widget = {
+            layout = wibox.layout.align.horizontal,
+            expand = "none",
+            network_widget(22),
+            bluetooth_widget(22),
+            volume,
+        },
+    }
+
+    local screenshot_ticker = wibox.widget {
+        widget = wibox.widget.textbox,
+        font = beautiful.font .. "SemiBold 12",
+    }
+
+    capi.awesome.connect_signal("screenshot::countdown_tick", function(_, remaining)
+        if remaining ~= 0 then
+            screenshot_ticker:set_text(tostring(remaining))
+        else
+            screenshot_ticker:set_text("")
+        end
+    end)
+
+    local layoutbox = {
+        widget = wibox.container.place,
+        awful.widget.layoutbox(),
+    }
+
+    capi.client.connect_signal("property::fullscreen", function(c)
         s.bar.ontop = not c.fullscreen
     end)
 
@@ -122,31 +124,41 @@ return function(s)
     s.bar = awful.wibar {
         screen = s,
         type = "dock",
-        height = dpi(36),
+        height = dpi(56, s),
+        shape = function(cr, w, h)
+            cr:move_to(0, 0)
+            cr:line_to(w, 0)
+
+            local radius = dpi(20)
+            cr:arc_negative( w-radius, h, radius,    math.pi*2 , 3*(math.pi/2) )
+            cr:arc_negative(   radius, h, radius, 3*(math.pi/2),    math.pi    )
+
+            cr:close_path()
+        end,
+        bg = gears.color.transparent,
         ontop = true,
         visible = true,
     }
 
-    s.bar:struts { top = s.bar.y + s.bar.height, bottom = 0, left = 0, right = 0 }
+    s.bar:struts { top = dpi(36, s), bottom = 0, left = 0, right = 0 }
 
     s.bar:setup {
         widget = wibox.container.background,
         bg = beautiful.bg_normal,
         {
             widget = wibox.container.margin,
-            margins = dpi(4),
+            left = dpi(10),
+            right = dpi(10),
+            top = dpi(4),
+            bottom = dpi(24),
             {
                 layout = wibox.layout.align.horizontal,
                 expand = "none",
                 {
                     layout = wibox.layout.fixed.horizontal,
-                    spacing = dpi(7),
+                    spacing = dpi(8),
                     power_button,
-                    {
-                        widget = wibox.container.margin,
-                        left = dpi(1),
-                        taglist(s),
-                    },
+                    taglist,
                     s.mypromptbox,
                 },
                 {
@@ -155,23 +167,36 @@ return function(s)
                 },
                 {
                     layout = wibox.layout.fixed.horizontal,
-                    spacing = dpi(5),
+                    spacing = dpi(10),
+                    screenshot_ticker,
                     systray,
-                    right_panel_button,
+                    system_stats,
                     battery_widget(),
                     keyboardlayout(),
-                    {
-                        widget = wibox.container.margin,
-                        top = dpi(1),
-                        bottom = dpi(1),
-                        right = dpi(8),
-                        awful.widget.layoutbox(),
-                    }
+                    layoutbox,
                 },
             }
         }
     }
 
-    right_panel(s)
+    capi.awesome.connect_signal("lockscreen::locked", function()
+        -- I think this is the only way to get the bar to appear above the lockscreen
+        s.bar.visible = false
+        s.bar.visible = true
+        -- reset struts so they don't get reset
+        -- automatically to something we don't want
+        s.bar:struts { top = dpi(36, s), bottom = 0, left = 0, right = 0 }
+        power_button.visible = false
+        taglist.visible = false
+        systray.visible = false
+        layoutbox.visible = false
+    end)
+
+    capi.awesome.connect_signal("lockscreen::unlock", function()
+        power_button.visible = true
+        taglist.visible = true
+        systray.visible = true
+        layoutbox.visible = true
+    end)
 end
 

@@ -1,6 +1,5 @@
 local gears = require("gears")
 local awful = require("awful")
-local naughty = require("naughty")
 
 local capi = { awesome = awesome }
 

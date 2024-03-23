@@ -15,6 +15,11 @@ naughty.connect_signal("request::display_error", function(message, startup)
     }
 end)
 
+local gfs = require("gears").filesystem
+
+-- make liblua_pan and libfzy accessible
+package.cpath = package.cpath .. ";" .. gfs.get_configuration_dir() .. "modules/?.so"
+
 -- load user settings on startup
 require("config.user_settings")
 require("ui")

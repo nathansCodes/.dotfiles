@@ -11,7 +11,6 @@ local helpers = require("helpers")
 
 naughty.connect_signal("request::display", function(n)
     local current_screen = awful.screen.preferred()
-    if _G.dont_disturb or current_screen.right_panel_visible then return end
 
     local bar = current_screen.bar
 
@@ -35,13 +34,13 @@ naughty.connect_signal("request::display", function(n)
 
         preferred_positions = { "bottom", "left", "top" },
         preferred_anchors   = "middle",
-        offset              = { y = dpi(20) },
+        offset = { y = i == 1 and 0 or dpi(20) },
 
         shape = helpers.ui.rrect(10),
         bg    = beautiful.base,
         fg    = n.urgency == "critical" and beautiful.error or beautiful.text,
 
-        widget = notifbox_builder.build_notifbox(n)
+        widget = notifbox_builder.build(n)
     }
 
     function notifbox:move_all_remaining(w)
@@ -66,6 +65,10 @@ naughty.connect_signal("request::display", function(n)
 
         -- update local index var
         i = new_index
+
+        if i == 1 then
+            notifbox.y = notifbox.y - dpi(20)
+        end
 
         -- move up next notifbox
         if notifbox.next ~= nil then

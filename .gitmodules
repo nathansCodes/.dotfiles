@@ -8,15 +8,13 @@
 [submodule ".config/awesome/ui/widgets"]
 	path = .config/awesome/ui/widgets
 	url = https://github.com/streetturtle/awesome-wm-widgets.git
-[submodule ".config/awesome/net_widgets"]
-	path = .config/awesome/net_widgets
-	url = https://github.com/pltanton/net_widgets.git
 [submodule ".config/awesome/modules/rubato"]
 	path = .config/awesome/modules/rubato
 	url = https://github.com/andOrlando/rubato.git
-[submodule ".config/awesome/modules/ldbus"]
-	path = .config/awesome/modules/ldbus
-	url = https://github.com/dodo/ldbus.git
 [submodule ".config/awesome/modules/bling"]
 	path = .config/awesome/modules/bling
 	url = https://github.com/Kasper24/bling.git
+[submodule ".config/awesome/modules/lua-color"]
+	path = .config/awesome/modules/lua-color
+	url = https://github.com/naan187/lua-color.git
+	branch = master

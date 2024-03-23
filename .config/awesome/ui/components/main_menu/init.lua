@@ -72,26 +72,9 @@ local main_menu = menu {
         end
     },
     menu.separator(),
-    menu.button {
-        icon = "\u{e871}",
-        icon_color = beautiful.second_accent,
-        text = "Dashboard",
-        on_press = function()
-            capi.awesome.emit_signal("right_panel::switch_tab", capi.mouse.screen, 1)
-        end
-    },
-    menu.button {
-        icon = "\u{e429}",
-        icon_color = beautiful.second_accent,
-        text = "Quick Settings",
-        on_press = function()
-            capi.awesome.emit_signal("right_panel::switch_tab", capi.mouse.screen, 2)
-        end
-    },
-    menu.separator(),
     menu.sub_menu_button {
-        image = gears.color.recolor_image(conf_dir .. "ui/icons/awm_a.svg",
-            beautiful.third_accent),
+        image = conf_dir .. "ui/icons/awm_a.svg",
+        image_color = beautiful.third_accent,
         text = "AwesomeWM",
         sub_menu = menu {
             menu.button {
@@ -169,8 +152,7 @@ local main_menu = menu {
                 text = "Lock",
                 secondary_text = "K",
                 on_press = function()
-                    -- TODO: replace with own lockscreen
-                    awful.spawn("betterlockscreen -l")
+                    capi.awesome.emit_signal("lockscreen::lock")
                 end
             },
             menu.button {

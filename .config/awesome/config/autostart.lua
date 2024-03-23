@@ -4,23 +4,20 @@ local user_settings = require("config.user_settings")
 -- policy kit
 awful.spawn.once("/usr/libexec/polkit-gnome-authentication-agent-1")
 
--- KWallet
-awful.spawn.once("kwalletd5")
-
--- clipboard
-awful.spawn.once("CM_OWN_CLIPBOARD=1 clipmenud")
+-- unlock keyring
+awful.spawn.once("gnome-keyring-daemon -s")
 
 -- compositor
-awful.spawn.with_shell("picom")
+if user_settings.theme.compositor_enabled then
+    awful.spawn.with_shell("picom")
+end
 
 
 awful.spawn.with_shell("export XDG_CURRENT_DESKTOP=awesome")
 
 -- Kill picom so that it doesn't behave weirdly after restart
 -- I know that this doesn't count as an "autostart" but idk where else to put this
-awesome.connect_signal("exit", function(reason_restart)
-    if reason_restart then awful.spawn("killall picom") end
-end)
+awesome.connect_signal("exit", function() awful.spawn("killall picom") end)
 
 -- start user-specified autostart programs
 local user_autostart_programs = user_settings.program.autostart or {}

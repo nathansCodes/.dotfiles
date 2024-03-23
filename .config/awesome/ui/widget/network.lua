@@ -21,10 +21,14 @@ local widget_icon_dir = config_dir .. 'ui/icons/network/'
 local apps = require("config.apps")
 local button = require("ui.widget.button")
 local helpers = require("helpers")
+local settings = require("config.user_settings")
 
 local instance = nil
 
-local network_interfaces = { wlan = "wlo1", lan = "eno1" }
+local network_interfaces = {
+    wlan = settings.device.network.wifi or "wlo1",
+    lan = settings.device.network.lan or "eno1"
+}
 
 local network_mode = nil
 
@@ -78,11 +82,9 @@ local return_button = function(size, show_notifications, cursor_focus, force_new
 		},
 	}
 
-	local widget_button = button {
+	local widget_button = button.simple {
 		widget = widget,
         change_cursor = cursor_focus,
-        animate = false,
-        hover_effect = false,
         shape = gears.shape.rectangle,
         bg = gears.color.transparent,
         on_release = function(_, _, _, _, b)

@@ -1,3 +1,13 @@
 {
-    "workspace.library": ["/usr/share/awesome/lib"]
+    "workspace.library": ["/usr/share/awesome/lib"],
+    "diagnostics.globals": ["awesome",
+        "client",
+        "screen",
+        "tag",
+        "root",
+        "dbus",
+        "keygrabber",
+        "mousegrabber",
+        "mouse",
+    ]
 }
