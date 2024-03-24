@@ -35,6 +35,8 @@ local inputbox = {}
 
 -- slightly stolen from yoru
 function inputbox:start()
+    if self.is_running then return end
+
     local function retry() self:retry() end
     local text = self._private.default_text
     if self._private.continuous_input then
@@ -69,6 +71,7 @@ function inputbox:start()
             end
         end,
         done_callback = function()
+            self.is_running = false
             if self._private.continuous_input and self.textbox.text == "" then
                 self:reset_input()
             end
@@ -104,7 +107,7 @@ function inputbox:start()
             end
         end,
     }
-    self._private.is_running = true
+    self.is_running = true
 end
 
 
@@ -126,20 +129,20 @@ end
 function inputbox:stop()
     awful.keygrabber.stop()
     self:reset_input()
-    self._private.is_running = false
+    self.is_running = false
 end
 
 --- Will try to confirm the input. Essentially the same as pressing Enter.
 --- Won't do anything if the inputbox is not active
 function inputbox:confirm()
-    if not self._private.is_running then return end
+    if not self.is_running then return end
     -- ctrl+j because enter doesn't work
     awful.keyboard.emulate_key_combination({"Control"}, "j")
 end
 
 --- Restart the inputbox. Stops and starts again. Does nothing if not running
 function inputbox:retry()
-    if self._private.is_running then
+    if self.is_running then
         self:stop()
         self:start()
     end
@@ -150,6 +153,7 @@ function inputbox:fail(input)
     self._private.fail_flash.target = 1
     self._private.fail_callback(input)
 
+    self.is_running = false
     if self._private.retry_on_fail then
         self:reset_input()
         self:start()
@@ -159,7 +163,7 @@ end
 --- Override the text that has/has not been typed
 function inputbox:set_text(text)
     if type(text) ~= "string" then return end
-    if self._private.is_running then
+    if self.is_running then
         self:stop()
         self.textbox:_set_markup(text)
 

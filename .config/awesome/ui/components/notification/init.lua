@@ -97,7 +97,7 @@ naughty.connect_signal("request::display", function(n)
             notifbox.next:move_all_remaining(notifbox)
         end
     end)
-    notifbox.widget:connect_signal("contract", function()
+    notifbox.widget:connect_signal("collapse", function()
         if notifbox ~= nil and notifbox.next ~= nil then
             notifbox.next:move_all_remaining(notifbox)
         end

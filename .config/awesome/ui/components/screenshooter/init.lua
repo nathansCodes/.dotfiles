@@ -556,6 +556,7 @@ end
 
 -- take a screenshot and save it to /tmp/screenshot.png
 local function create_tmp_screenshot(on_save)
+    if delay_input.is_running then return end
     local x = selection.x
     local y = selection.y
     local width = selection.width
@@ -564,7 +565,7 @@ local function create_tmp_screenshot(on_save)
 
     if delay > 0 then
         screenshot_overlay.visible = false
-        if kg ~= nil then kg:stop() end
+        if kg ~= nil then awful.keygrabber.stop() end
         selection_bg:set_visible(true)
     end
 

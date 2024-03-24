@@ -17,7 +17,7 @@ end)
 
 local gfs = require("gears").filesystem
 
--- make liblua_pan and libfzy accessible
+-- make liblua_pam accessible
 package.cpath = package.cpath .. ";" .. gfs.get_configuration_dir() .. "modules/?.so"
 
 -- load user settings on startup

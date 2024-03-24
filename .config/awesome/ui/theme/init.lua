@@ -12,7 +12,7 @@ local themer = require("ui.theme.themer")
 
 local theme = themer.apply()
 
-awesome.connect_signal("exit", themer.unapply)
+awesome.connect_signal("exit", themer.revert)
 
 theme.icon_font = "Material Symbols Rounded "
 theme.mono_font = "Inter Mono "

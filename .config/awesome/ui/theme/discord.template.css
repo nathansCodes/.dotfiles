@@ -116,7 +116,7 @@ body {
 }
 
 .container__590e2, .container_ca50b9, .panels__58331, .peopleColumn__51df3,
-.privateChannels__93473, .scrollerBase__2b744 {
+.privateChannels__93473 {
     background-color: var(--overlay) !important;
     border-radius: 10px;
     margin: 4px;

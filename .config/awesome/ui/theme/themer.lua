@@ -148,13 +148,13 @@ function themer.apply()
     return theme
 end
 
-function themer.unapply()
+function themer.revert()
     local firefox_install = settings.theme.firefox.install
     local firefox_profile = settings.theme.firefox.profile
     local discord_install = settings.theme.discord.install
     local discord_mod = settings.theme.discord.client_mod
 
-    -- create commands for applying the theme
+    -- create commands for reverting the theme
     -- or leave empty if the user doesn't want it
     local discord = settings.theme.discord.enabled
         and ( "discord '" .. discord_install .. "' '" .. discord_mod .. "'" ) or ""
@@ -162,13 +162,15 @@ function themer.unapply()
     local firefox = settings.theme.firefox.enabled and (
         "userchrome '" .. firefox_install .. "' '" .. firefox_profile .. "'\n" ..
         "usercontent '" .. firefox_install .. "' '" .. firefox_profile .. "'" ) or ""
+    local alacritty = settings.theme.alacritty.enabled and "alacritty" or ""
 
     local unapply_script = [=[
-        source $HOME/.config/awesome/scripts/unapply_theme.sh
+        source $HOME/.config/awesome/scripts/revert_theme.sh
 
-        ]=] .. gtk     .. "\n" .. [=[
-        ]=] .. firefox .. "\n" .. [=[
-        ]=] .. discord .. "\n" .. [=[
+        ]=] .. gtk       .. "\n" .. [=[
+        ]=] .. firefox   .. "\n" .. [=[
+        ]=] .. discord   .. "\n" .. [=[
+        ]=] .. alacritty .. "\n" .. [=[
     ]=]
 
     -- unapply theme

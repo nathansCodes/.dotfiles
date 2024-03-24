@@ -82,9 +82,11 @@ awful.keyboard.append_global_keybindings {
         modifiers = { super },
         key = "y",
         on_release = function()
-            require("ui.theme.themer").unapply()
-            require("config.user_settings").reload()
-            require("ui.theme.themer").apply()
+            local themer = require("ui.theme.themer")
+            local set = require("config.user_settings")
+            themer.revert()
+            set.reload()
+            themer.apply()
         end,
         description = "reload theme",
         group = "theme"
