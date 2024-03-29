@@ -14,7 +14,7 @@ alacritty() {
 }
 
 gtk() {
-    rm -rf "$gtk3" "$gtk4"
+    rm -rf "$gtk3" -rf "$gtk4"
     mv "/tmp/backup/gtk-3.0" "$config"
     mv "/tmp/backup/gtk-4.0" "$config"
 }

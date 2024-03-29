@@ -27,7 +27,7 @@ awful.keyboard.append_global_keybindings {
     awful.key({ super, shift }, "q", capi.awesome.quit,
         { description = "quit awesome", group = "awesome" }),
     awful.key({ super, shift }, "l", function() capi.awesome.emit_signal("lockscreen::lock") end,
-        { description = "open file manager (thunar)", group = "launcher" }),
+        { description = "open file manager", group = "launcher" }),
     awful.key({ super }, "x",
         function()
             awful.prompt.run {
@@ -84,9 +84,10 @@ awful.keyboard.append_global_keybindings {
         on_release = function()
             local themer = require("ui.theme.themer")
             local set = require("config.user_settings")
-            themer.revert()
-            set.reload()
-            themer.apply()
+            themer.revert(function()
+                set.reload()
+                themer.apply()
+            end)
         end,
         description = "reload theme",
         group = "theme"

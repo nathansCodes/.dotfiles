@@ -1,5 +1,3 @@
-local xresources = require("beautiful.xresources")
-
 local gears = require("gears")
 local awful = require("awful")
 local gfs = gears.filesystem
@@ -148,7 +146,7 @@ function themer.apply()
     return theme
 end
 
-function themer.revert()
+function themer.revert(on_complete)
     local firefox_install = settings.theme.firefox.install
     local firefox_profile = settings.theme.firefox.profile
     local discord_install = settings.theme.discord.install
@@ -174,7 +172,11 @@ function themer.revert()
     ]=]
 
     -- unapply theme
-    awful.spawn.with_shell(unapply_script)
+    awful.spawn.easy_async_with_shell(unapply_script, function()
+        if type(on_complete) == "function" then
+            on_complete()
+        end
+    end)
 end
 
 return themer
