@@ -3,63 +3,63 @@
 
 ## Featuring
 <details>
-	<summary>
-	<b>
-		A launcher, based on <a href="https://github.com/Stardust-kyun/dotfiles/blob/main/home/.config/awesome/theme/launcher.lua">Stardust-kyun's launcher</a>, but made _blazingly fast_ using <a href="https://github.com/swarn/fzy-lua">fzy-lua</a>
-	</b>
-	</summary>
-	<i>this also serves as a showcase of my skill issues in typing</i>
-	<video width=200 src="https://github.com/naan187/.dotfiles/assets/99505972/731106ba-ff85-4d47-ae41-d04c1bce9afa" type="video/mp4" />
+  <summary>
+  <b>
+    A launcher, based on <a href="https://github.com/Stardust-kyun/dotfiles/blob/main/home/.config/awesome/theme/launcher.lua">Stardust-kyun's launcher</a>, but made _blazingly fast_ using <a href="https://github.com/swarn/fzy-lua">fzy-lua</a>
+  </b>
+  </summary>
+  <i>this also serves as a showcase of my skill issues in typing</i>
+  <video width=200 src="https://github.com/naan187/.dotfiles/assets/99505972/731106ba-ff85-4d47-ae41-d04c1bce9afa" type="video/mp4" />
 </details>
 
 <details>
-	<summary> <b>An autohiding dock</b> </summary>
-	<i>I couldn't get it to properly hide when tiling/untiling the window, it currently does nothing</i>
-	<video width=200 src="https://github.com/naan187/.dotfiles/assets/99505972/9b87a72c-61c1-45db-9b18-6dc7630391ff" type="video/mp4" />
+  <summary> <b>An autohiding dock</b> </summary>
+  <i>I couldn't get it to properly hide when tiling/untiling the window, it currently does nothing</i>
+  <video width=200 src="https://github.com/naan187/.dotfiles/assets/99505972/9b87a72c-61c1-45db-9b18-6dc7630391ff" type="video/mp4" />
 </details>
 
 <details>
-	<summary> <b>Smooth animations, thanks to <a href="https://github.com/andOrlando/rubato">rubato</a></b> </summary>
-    <i>Animations are smoother and less weird when not recording with OBS</i>
-	<video width=200 src="https://github.com/naan187/.dotfiles/assets/99505972/96f684e7-c803-4c93-9813-323c38d6f2fa" type="video/mp4" />
+  <summary> <b>Smooth animations, thanks to <a href="https://github.com/andOrlando/rubato">rubato</a></b> </summary>
+  <i>Animations are smoother and less weird when not recording with OBS</i>
+  <video width=200 src="https://github.com/naan187/.dotfiles/assets/99505972/96f684e7-c803-4c93-9813-323c38d6f2fa" type="video/mp4" />
 </details>
 
 <details>
-	<summary> <b>A Lock screen with <a href="https://github.com/RMTT/lua-pam">lua-pam</a> integration</b> </summary>
-    <i>Ignore the 1 in the bar, that's from the screenshot tool's countdown. Somehow it slips into the screenshot when locking the screen</i>
-	<img src="https://github.com/naan187/.dotfiles/assets/99505972/a70d1bfa-1b64-40ce-835b-33565e80c138" \>
+  <summary> <b>A Lock screen with <a href="https://github.com/RMTT/lua-pam">lua-pam</a> integration</b> </summary>
+  <i>Ignore the 1 in the bar, that's from the screenshot tool's countdown. Somehow it slips into the screenshot when locking the screen</i>
+  <img src="https://github.com/naan187/.dotfiles/assets/99505972/a70d1bfa-1b64-40ce-835b-33565e80c138" \>
 </details>
 
 <details>
-	<summary> <b>Various right-click menus (menu code mostly stolen from <a href="https://github.com/rxyhn/yoru">yoru</a>)</b> </summary>
-	<img src="https://github.com/naan187/.dotfiles/assets/99505972/e11ed940-f90e-48a4-8f0e-94deb0e794c9" \>
-	<img src="https://github.com/naan187/.dotfiles/assets/99505972/83c46787-f95d-4104-9685-12f98702f846" \>
+  <summary> <b>Various right-click menus (menu code mostly stolen from <a href="https://github.com/rxyhn/yoru">yoru</a>)</b> </summary>
+  <img src="https://github.com/naan187/.dotfiles/assets/99505972/e11ed940-f90e-48a4-8f0e-94deb0e794c9" \>
+  <img src="https://github.com/naan187/.dotfiles/assets/99505972/83c46787-f95d-4104-9685-12f98702f846" \>
 </details>
 
 <details>
-	<summary> <b>A screenshot tool (I made this before I found out about `awful.screenshot`'s interactive snipping mode)</b> </summary>
-    <i>Yes, the inward curve is part of the bar</i>
-	<video width=200 src="https://github.com/naan187/.dotfiles/assets/99505972/c68b4817-4e9f-4ff1-8030-473eeec595b6" type="video/mp4" />
+  <summary> <b>A screenshot tool (I made this before I found out about `awful.screenshot`'s interactive snipping mode)</b> </summary>
+  <i>Yes, the inward curve is part of the bar</i>
+  <video width=200 src="https://github.com/naan187/.dotfiles/assets/99505972/c68b4817-4e9f-4ff1-8030-473eeec595b6" type="video/mp4" />
 </details>
 
 <details>
-	<summary> <b>Highly customized application themes</b> </summary>
-	This includes:
+  <summary> <b>Highly customized application themes</b> </summary>
+  This includes:
   <ul>
-		<li>Firefox</li>
-		<li>Gtk</li>
-		<li>Discord (with a client mod that supports custom css, like Vencord or BetterDiscord)</li>
-		<li>Alacritty</li>
-		<li>Neovim</li>
-		<li>Any Xresources-based terminal (Hopefully, haven't tested)</li>
-	</ul>
-	You can see most of them in the screenshots and videos
+    <li>Firefox</li>
+    <li>Gtk</li>
+    <li>Discord (with a client mod that supports custom css, like Vencord or BetterDiscord)</li>
+    <li>Alacritty</li>
+    <li>Neovim</li>
+    <li>Any Xresources-based terminal (Hopefully, haven't tested)</li>
+  </ul>
+  You can see most of them in the screenshots and videos
 </details>
 
 <details>
-	<summary> <b>Json configuration (and yes, theme switcher)</b> </summary>
-	The json config was intended to make it easier for me to implement a gui theme switcher, and I did have a prototype for it, but I ended up scrapping that because the code was messy, and so that I could focus on other stuff
-	There currently are only a couple themes (including all their variants):
+  <summary> <b>Json configuration (and yes, theme switcher)</b> </summary>
+  The json config was intended to make it easier for me to implement a gui theme switcher, and I did have a prototype for it, but I ended up scrapping that because the code was messy, and so that I could focus on other stuff
+  There currently are only a couple themes (including all their variants):
   
   - Catppuccin
   - Rose Pine
@@ -69,8 +69,8 @@
 </details>
 
 <details>
-	<summary> <b>Simple and beautiful <a href="https://github.com/naan187/nvim">Neovim</a> & tmux configs</b> </summary>
-	<img src="https://github.com/naan187/.dotfiles/assets/99505972/17a657bd-af7d-4143-ba5f-9c7ae61034e3" \>
+  <summary> <b>Simple and beautiful <a href="https://github.com/naan187/nvim">Neovim</a> & tmux configs</b> </summary>
+  <img src="https://github.com/naan187/.dotfiles/assets/99505972/17a657bd-af7d-4143-ba5f-9c7ae61034e3" \>
 </details>
 
 ## My Setup
@@ -148,3 +148,6 @@ Just use [my config](https://github.com/naan187/nvim)
 - [Firanel](https://github.com/Firanel), [Streetturtle](https://github.com/streetturtle), [The Bling people](https://github.com/BlingCorp) and [andOrlando](https://github.com/andOrlando) for creating great libraries that made my life so much easier
 and more...
 
+<!--
+vim:shiftwidth=2
+-->
