@@ -109,7 +109,8 @@
 
 ### Post-install
 
-There's some extra things you have to do to use the theme switcher with some apps
+There's some extra things you have to do to use the theme switcher with some apps.
+
 Common step for all: set `theme.<app>.enabled` to `true` in `~/.config/awesome/settings.json`
 
 #### Firefox
