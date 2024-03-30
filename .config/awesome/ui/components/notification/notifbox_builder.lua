@@ -282,26 +282,42 @@ function builder.build(n)
     local actions_widget = builder.actions(n)
     local close_button   = builder.close_button(n)
 
+    local default_message_height = actions_widget and dpi(67.5) or dpi(112.5)
     if image_widget then
         message_widget.point = {
             x = dpi(140),
             y = 0,
             width = dpi(235),
-            height = dpi(67.5),
+            height = default_message_height,
         }
     else
         message_widget.point = {
             x = dpi(10),
             y = 0,
             width = dpi(350),
-            height = dpi(67.5)
+            height = default_message_height
         }
     end
 
-    local expand_button = button {
+    local show_expand_button = image_widget ~= nil
+        or message_widget:get_height_for_width_at_dpi(message_widget.point.width,
+            beautiful.xresources.get_dpi()) > default_message_height
+
+    local notifbox
+    local expand_button = show_expand_button and button {
         point = { x = dpi(365), y = 0, width = dpi(25), height = dpi(25), },
         width = dpi(25),
         height = dpi(25),
+        on_release = function(_, _, _, _, b)
+            if b == 1 then
+                if notifbox.expanded then
+                    notifbox:collapse()
+                else
+                    notifbox:expand()
+                end
+                notifbox.expanded = not notifbox.expanded
+            end
+        end,
         widget = {
             widget = wibox.widget.textbox,
             font = beautiful.icon_font .. "18",
@@ -309,9 +325,9 @@ function builder.build(n)
             valign = "center",
             text = "\u{e5cf}",
         }
-    }
+    } or nil
 
-    local notifbox = wibox.widget {
+    notifbox = wibox.widget {
         layout = wibox.layout.fixed.vertical,
         forced_width = dpi(400),
         fill_space = true,
@@ -362,20 +378,22 @@ function builder.build(n)
     end)
 
     function notifbox:expand()
+        if not expand_button then return end
+
         local content = self:get_children_by_id("content_layout")[1]
         local constraint = self:get_children_by_id("content_constraint")[1]
 
         -- get the appropriate(spelling?) height for the message
-        local message_height = message_widget:get_height_for_width_at_dpi(dpi(350),
+        local new_message_height = message_widget:get_height_for_width_at_dpi(dpi(350),
             beautiful.xresources.get_dpi())
 
         if image_widget then
-            constraint:set_height(message_height + dpi(180))
+            constraint:set_height(new_message_height + dpi(180))
             content:move(1, { x = dpi(40), y = 0, width = dpi(320), height = dpi(180) })
-            content:move(2, { x = dpi(15), y = dpi(180), width = dpi(350), height = message_height })
+            content:move(2, { x = dpi(15), y = dpi(180), width = dpi(350), height = new_message_height })
         else
-            constraint:set_height(math.max(dpi(67.5), message_height))
-            content:move(1, { x = dpi(10), y = 0, width = dpi(350), height = message_height })
+            constraint:set_height(math.max(dpi(67.5), new_message_height))
+            content:move(1, { x = dpi(10), y = 0, width = dpi(350), height = new_message_height })
         end
 
         expand_button:get_widget():set_text("\u{e5ce}")
@@ -383,7 +401,9 @@ function builder.build(n)
         self:emit_signal("expand")
     end
 
-    function notifbox:contract()
+    function notifbox:collapse()
+        if not expand_button then return end
+
         local content = self:get_children_by_id("content_layout")[1]
         local constraint = self:get_children_by_id("content_constraint")[1]
         if image_widget then
@@ -391,26 +411,16 @@ function builder.build(n)
             content:move(2, { x = dpi(140), y = 0, width = dpi(225) })
             constraint:set_height(dpi(67.5))
         else
-            content:move(1, { x = dpi(10), y = 0, width = dpi(350), height = dpi(67.5) })
+            content:move(1, { x = dpi(10), y = 0, width = dpi(350), height = default_message_height })
             constraint:set_height(dpi(67.5))
         end
 
         expand_button:get_widget():set_text("\u{e5cf}")
 
-        self:emit_signal("contract")
+        self:emit_signal("collapse")
     end
 
     notifbox.expanded = false
-    expand_button:connect_signal("button::release", function(_, _, _, b)
-        if b == 1 then
-            if notifbox.expanded then
-                notifbox:contract()
-            else
-                notifbox:expand()
-            end
-            notifbox.expanded = not notifbox.expanded
-        end
-    end)
 
     return notifbox
 end

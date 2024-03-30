@@ -108,7 +108,6 @@ gtk() {
     sed -i -e "s/Net\/ThemeName .*/Net\/ThemeName \"adw-gtk3\"/" $HOME/.config/xsettingsd/xsettingsd.conf
 
     # Apply
-    # gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3
     killall xsettingsd
     xsettingsd &
     gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3
@@ -173,6 +172,11 @@ nvim() {
     python "$config/awesome/scripts/nvim_reload.py" "lua Colors()"
 }
 
+# needed for DiscordRecolor to work properly
+hex_to_rgb() {
+    printf "%d, %d, %d\n" 0x${1:1:2} 0x${1:3:2} 0x${1:5:2}
+}
+
 discord() {
     discord_theme=""
     if [[ $1 = "native" ]]; then
@@ -183,22 +187,23 @@ discord() {
 
     cp -f "$config/awesome/ui/theme/discord.template.css" "$discord_theme"
 
-    sed -i -e "s/--base: .*;/--base: $BASE;/" \
-    	-e "s/--surface: .*;/--surface: $SURFACE;/" \
-    	-e "s/--overlay: .*;/--overlay: $OVERLAY;/" \
-    	-e "s/--inactive: .*;/--inactive: $INACTIVE;/" \
-    	-e "s/--highlight_low: .*;/--highlight_low: $HL_LOW;/" \
-    	-e "s/--highlight_med: .*;/--highlight_med: $HL_MED;/" \
-        -e "s/--highlight_high: .*;/--highlight_high: $HL_HIGH;/" \
-    	-e "s/--white: .*;/--white: $WHITE;/" \
-    	-e "s/--text: .*;/--text: $FG;/" \
-    	-e "s/--red: .*;/--red: $RED;/" \
-    	-e "s/--yellow: .*;/--yellow: $YELLOW;/" \
-    	-e "s/--cyan: .*;/--cyan: $CYAN;/" \
-    	-e "s/--green: .*;/--green: $GREEN;/" \
-    	-e "s/--blue: .*;/--blue: $BLUE;/" \
-    	-e "s/--magenta: .*;/--magenta: $MAGENTA;/" \
-    	-e "s/--accent: .*;/--accent: $ACCENT;/" \
-    	-e "s/--second_accent: .*;/--second_accent: $ACCENT2;/" \
-    	-e "s/--third_accent: .*;/--third_accent: $ACCENT3;/" "$discord_theme"
+    sed -i -e "s/--base: .*;/--base: $(hex_to_rgb $BASE);/" \
+    	-e "s/--surface: .*;/--surface: $(hex_to_rgb $SURFACE);/" \
+    	-e "s/--overlay: .*;/--overlay: $(hex_to_rgb $OVERLAY);/" \
+    	-e "s/--ignored: .*;/--ignored: $(hex_to_rgb $IGNORED);/" \
+    	-e "s/--inactive: .*;/--inactive: $(hex_to_rgb $INACTIVE);/" \
+    	-e "s/--highlight_low: .*;/--highlight_low: $(hex_to_rgb $HL_LOW);/" \
+    	-e "s/--highlight_med: .*;/--highlight_med: $(hex_to_rgb $HL_MED);/" \
+        -e "s/--highlight_high: .*;/--highlight_high: $(hex_to_rgb $HL_HIGH);/" \
+    	-e "s/--white: .*;/--white: $(hex_to_rgb $WHITE);/" \
+    	-e "s/--text: .*;/--text: $(hex_to_rgb $FG);/" \
+    	-e "s/--red: .*;/--red: $(hex_to_rgb $RED);/" \
+    	-e "s/--yellow: .*;/--yellow: $(hex_to_rgb $YELLOW);/" \
+    	-e "s/--cyan: .*;/--cyan: $(hex_to_rgb $CYAN);/" \
+    	-e "s/--green: .*;/--green: $(hex_to_rgb $GREEN);/" \
+    	-e "s/--blue: .*;/--blue: $(hex_to_rgb $BLUE);/" \
+    	-e "s/--magenta: .*;/--magenta: $(hex_to_rgb $MAGENTA);/" \
+    	-e "s/--accent: .*;/--accent: $(hex_to_rgb $ACCENT);/" \
+    	-e "s/--second_accent: .*;/--second_accent: $(hex_to_rgb $ACCENT2);/" \
+    	-e "s/--third_accent: .*;/--third_accent: $(hex_to_rgb $ACCENT3);/" "$discord_theme"
 }

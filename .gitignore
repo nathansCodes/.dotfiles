@@ -8,3 +8,6 @@
 # undo files directory
 .config/nvim/undodir/*
 .config/nvim/undodir
+
+# ignore changes in settings.json so I can't accidentally expose how I use my computer
+.config/awesome/settings.json

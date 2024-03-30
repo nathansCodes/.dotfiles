@@ -1,3 +1,4 @@
+-- this is unused and unfinished. `bluetoothctl scan on` does nothing on my system for some reason
 local gears = require("gears")
 local awful = require("awful")
 

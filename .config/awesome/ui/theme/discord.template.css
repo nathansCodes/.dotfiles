@@ -1,148 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+@import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/DiscordRecolor/DiscordRecolor.css);
 
 :root {
-	--base: #11111b;
-	--surface: #181825;
-	--overlay: #1e1e2e;
-	--inactive: #585b70;
-	--ignored: #bac2de;
-	--highlight_low: #313244;
-	--highlight_med: #585b70;
-	--highlight_high: #7f849c;
-	--white: #cdd6f4;
-	--text: #cdd6f4;
-	--red: #f38ba8;
-	--yellow: #f9e2af;
-	--cyan: #94e2d5;
-	--green: #a6e3a1;
-	--blue: #98dceb;
-	--magenta: #b4befe;
-	--accent: #fab387;
-	--second_accent: #cba6f7;
-	--third_accent: #98dceb;
-	--forth_accent: #f2cdcd;
+    --base: 17, 17, 27;
+    --surface: 24, 24, 37;
+    --overlay: 30, 30, 46;
+    --inactive: 127, 132, 156;
+    --highlight_low: 49, 50, 68;
+    --highlight_med: 88, 91, 112;
+    --highlight_high: 127, 132, 156;
+    --white: 205, 214, 244;
+    --text: 205, 214, 244;
+    --red: 243, 139, 168;
+    --yellow: 249, 226, 175;
+    --cyan: 148, 226, 213;
+    --green: 166, 227, 161;
+    --blue: 152, 220, 235;
+    --magenta: 180, 190, 254;
+    --accent: 137, 180, 250;
+    --second_accent: 203, 166, 247;
+    --third_accent: 250, 179, 135;
 }
 
-.theme-dark {
-    --background-primary: var(--overlay);
-    --background-secondary: var(--overlay);
-    --background-secondary-alt: var(--overlay);
-    --channeltextarea-background: hsl(240, 21%, 15%);
-    --background-tertiary: var(--base);
-    --background-accent: var(--overlay);
-    --text-normal: var(--text);
-    --text-spotify: var(--green);
-    --text-muted: var(--inactive);
-    --text-link: var(--blue);
-    --background-floating: var(--overlay);
-    --header-primary: var(--text);
-    --header-secondary: var(--third_accent);
-    --header-spotify: var(--second_accent);
-    --interactive-normal: var(--text);
-    --interactive-hover: var(--third_accent);
-    --interactive-active: var(--text);
-    --ping: var(--red);
-    --background-modifier-selected: rgba(var(--text), 0.4);
-    --scrollbar-thin-thumb: var(--inactive);
-    --scrollbar-thin-track: transparent; 
-    --scrollbar-auto-thumb: var(--inactive);
-    --scrollbar-auto-track: transparent; 
+:root {
+  --accentcolor: var(--accent);
+  --accentcolor2: var(--second_accent);
+  --linkcolor: var(--blue);
+  --mentioncolor: var(--accent);
+  --textbrightest: var(--text);
+  --textbrighter: var(--text);
+  --textbright: var(--inactive);
+  --textdark: var(--highlight_high);
+  --textdarker: var(--highlight_med);
+  --textdarkest: var(--highlight_low);
+  --font: gg sans;
+  --backgroundaccent: var(--highlight_low);
+  --backgroundprimary: var(--overlay);
+  --backgroundsecondary: var(--surface);
+  --backgroundsecondaryalt: var(--surface);
+  --backgroundtertiary: var(--base);
+  --backgroundfloating: var(--overlay);
+  --settingsicons: 1;
 }
-
-.theme-light {
-    --background-primary: var(--overlay);
-    --background-secondary: var(--overlay);
-    --background-secondary-alt: var(--surface);
-    --channeltextarea-background: hsl(240, 21%, 15%);
-    --background-tertiary: var(--overlay);
-    --background-accent: var(--overlay);
-    --text-normal: var(--text);
-    --text-spotify: var(--green);
-    --text-muted: var(--inactive);
-    --text-link: var(--blue);
-    --background-floating: var(--overlay);
-    --header-primary: var(--text);
-    --header-secondary: var(--third_accent);
-    --header-spotify: var(--second_accent);
-    --interactive-normal: var(--text);
-    --interactive-hover: var(--third_accent);
-    --interactive-active: var(--text);
-    --ping: var(--red);
-    --background-modifier-selected: rgba(var(--text), 0.4);
-    --scrollbar-thin-thumb: var(--inactive);
-    --scrollbar-thin-track: transparent; 
-    --scrollbar-auto-thumb: var(--inactive);
-    --scrollbar-auto-track: transparent; 
-}
-
-body {
-    --font-display: Fira Code;
-    background-color: var(--base) !important;
-}
-
-.chat__52833 {
-    background-color: var(--base) !important;
-}
-
-.content__1a4fe {
-    border-radius: 10px !important;
-    margin: 4px;
-}
-
-.chatContent__5dca8 {
-    border-radius: 10px !important;
-}
-
-.themedBackground__6b1b6 {
-    background-color: var(--base) !important;
-    border-radius: 10px;
-}
-
-.themedBackground__6b1b6:hover {
-    box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.3) !important;
-}
-
-.sidebar_ded4b5, .tabBody_b3d268, .container__5c7e7, .userPanelOuter__880e5,
-.userPanelInner_eddf4c, .profilePanel__12596 {
-    background-color: var(--base) !important;
-}
-
-.scroller__00e7e {
-    border: none !important;
-}
-
-.container__0a6a9 {
-    border-radius: 10px;
-}
-
-.container__590e2, .container_ca50b9, .panels__58331, .peopleColumn__51df3,
-.privateChannels__93473, .scrollerBase__2b744 {
-    background-color: var(--overlay) !important;
-    border-radius: 10px;
-    margin: 4px;
-}
-
-.animatedContainer__341f6 {
-    border-radius: 10px;
-}
-
-.container__11d72 {
-    background-color: var(--base) !important;
-    padding: 0px;
-}
-
-.upperContainer__993ba {
-    background-color: var(--overlay) !important;
-    border-radius: 10px;
-    margin: 4px;
-}
-
-.nowPlayingColumn_f5023f, .nowPlayingColumn_f5023f {
-    background-color: var(--base) !important;
-    border-radius: 10px;
-    margin: 4px;
- }
-
- .container_d667ff {
-    border-radius: 10px 10px 0px 0px;
- }

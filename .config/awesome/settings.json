@@ -1,47 +1,41 @@
 {
     "program": {
         "autostart": [
-            {
-                "program": "autorandr --change",
-                "type": "startup"
-            }
         ]
     },
     "theme": {
         "theme": "catppuccin",
         "variant": "mocha",
-        "icon_theme": "Papirus-Dark",
         "compositor_enabled": true,
-        "xresources_enabled": true,
+        "xresources_enabled": false,
         "gtk": {
-            "enabled": true
+            "enabled": false
         },
         "nvim": {
-            "enabled": true
+            "enabled": false
         },
         "alacritty": {
-            "enabled": true
+            "enabled": false
         },
         "discord": {
-            "enabled": true,
+            "enabled": false,
             "install": "flatpak",
-            "client_mod": "Vencord"
+            "client_mod": ""
         },
         "firefox": {
-            "enabled": true,
-            "profile": "rt5lr27b.default-release",
+            "enabled": false,
+            "profile": "",
             "install": "native"
         }
     },
     "device": {
         "audio": "pipewire",
         "network": {
-            "wifi": "wlo1",
-            "lan": "eno1",
+            "wifi": "",
+            "lan": "",
         }
     },
     "layouts": [
         "us",
-        "de"
     ]
 }

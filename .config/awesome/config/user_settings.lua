@@ -81,7 +81,7 @@ local function setmetatables(t, proxy)
                 end,
                 __newindex = function(_, key, val)
                     rawset(v, key, val)
-                    if startup == false then
+                    if not startup then
                         update_json()
                     end
                 end
@@ -94,6 +94,11 @@ end
 setmetatables(data, data_proxy)
 startup = false
 
+local function __newindex(_, k, v)
+    data_proxy[k] = v
+    update_json()
+end
+
 function settings.reload()
     json_str = io.popen("cat " .. settings_path, "r"):read("*all")
     data = gtable.crush(settings.defaults, json.decode(json_str), true)
@@ -101,14 +106,12 @@ function settings.reload()
     startup = true
     setmetatables(data, data_proxy)
     startup = false
+    setmetatable(settings, { __index = data_proxy, __newindex = __newindex })
 end
 
 local mt = {}
 
 mt.__index = data_proxy
-function mt.__newindex(_, k, v)
-    data_proxy[k] = v
-    update_json()
-end
+mt.__newindex = __newindex
 
 return setmetatable(settings, mt)
