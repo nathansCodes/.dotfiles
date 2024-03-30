@@ -65,7 +65,8 @@ local confirm_menu = menu.menu {
     bg = beautiful.base,
     {
         widget = wibox.container.margin,
-        top = dpi(10),
+        top = dpi(5),
+        bottom = dpi(5),
         {
             widget = wibox.widget.textbox,
             font = beautiful.font .. "SemiBold 12",
@@ -107,7 +108,7 @@ local function make_button(icon, col, menu_btn, height_offset)
             if confirm_menu.visible then
                 confirm_menu.widget:set(2, menu_btn)
                 local launcher_geo = require("ui.components.launcher"):geometry()
-                confirm_menu.x = launcher_geo.x - dpi(210)
+                confirm_menu.x = launcher_geo.x - dpi(220)
                 confirm_menu.y = launcher_geo.y + launcher_geo.height - height_offset
             end
         end,
@@ -118,7 +119,7 @@ local function make_button(icon, col, menu_btn, height_offset)
                 confirm_menu:show()
             end
             local launcher_geo = require("ui.components.launcher"):geometry()
-            confirm_menu.x = launcher_geo.x - dpi(210)
+            confirm_menu.x = launcher_geo.x - dpi(220)
             confirm_menu.y = launcher_geo.y + launcher_geo.height - height_offset
         end,
         {
@@ -156,10 +157,10 @@ local sidebar = wibox.widget {
                     {
                         layout = wibox.layout.fixed.vertical,
                         spacing = dpi(10),
-                        make_button("\u{e9ba}", beautiful.magenta, logout_confirm, dpi(237)),
-                        make_button("\u{e897}", beautiful.blue, lock_confirm, dpi(177)),
-                        make_button("\u{f053}", beautiful.orange, reboot_confirm, dpi(114)),
-                        make_button("\u{e8ac}", beautiful.red, shutdown_confirm, dpi(114)),
+                        make_button("\u{e9ba}", beautiful.magenta, logout_confirm, dpi(274)),
+                        make_button("\u{e897}", beautiful.blue, lock_confirm, dpi(219)),
+                        make_button("\u{f053}", beautiful.orange, reboot_confirm, dpi(159)),
+                        make_button("\u{e8ac}", beautiful.red, shutdown_confirm, dpi(124)),
                     }
                 },
             },
