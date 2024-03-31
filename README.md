@@ -109,6 +109,10 @@
 
 ### Post-install
 
+#### Setup wifi
+In `settings.json`, set `device.network.wifi` and `device.network.lan` to the corresponding network interfaces.
+The easiest way to find out what they're called is to run `nmcli` a terminal
+
 There's some extra things you have to do to use the theme switcher with some apps.
 
 Common step for all: set `theme.<app>.enabled` to `true` in `~/.config/awesome/settings.json`
