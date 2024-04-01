@@ -150,6 +150,7 @@ Just use [my config](https://github.com/naan187/nvim)
   and [fdev31](https://github.com/fdev31) for [fixing it up a bit](https://github.com/fdev31/picom)
 - [Amitabha](https://github.com/Amitabha37377), [rxyhn](https://github.com/rxyhn), [Stardust-kyun](https://github.com/Stardust-kyun), [Tsukki](https://github.com/tsukki9696) for their amazing dotfiles as a great resource to learn awm
 - [Firanel](https://github.com/Firanel), [Streetturtle](https://github.com/streetturtle), [The Bling people](https://github.com/BlingCorp) and [andOrlando](https://github.com/andOrlando) for creating great libraries that made my life so much easier
+
 and more...
 
 <!--
