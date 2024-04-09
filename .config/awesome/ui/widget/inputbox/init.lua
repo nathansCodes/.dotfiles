@@ -33,7 +33,8 @@ local module = {
 ---@field children table
 local inputbox = {}
 
--- slightly stolen from yoru
+--- slightly stolen from yoru
+--- Starts capturing the input
 function inputbox:start()
     if self.is_running then return end
 
@@ -51,9 +52,9 @@ function inputbox:start()
         textbox = self.textbox,
         hooks = {
             -- rxyhn, why triple dash???
-            --- Fix for Control+Delete crashing the keygrabber
+            --- Fix for Control+Delete and Super+Ctrl+R crashing the keygrabber
             { { "Control" }, "Delete", retry, },
-            { { "Mod4", "Control" }, "r", retry, },
+            { { "Mod4", "Control" }, "r", function() self:stop(); self:start() end, },
             --- Custom escape behaviour: Do not cancel input with Escape
             --- Instead, this will just clear any input received so far.
             self._private.retry_on_escape and { {}, "Escape", retry } or nil,
@@ -82,6 +83,7 @@ function inputbox:start()
         exe_callback = function(input)
             -- make it not crash when pressing enter without any input
             if input == "" then
+                self:stop()
                 self:reset_input()
                 self:start()
                 return
