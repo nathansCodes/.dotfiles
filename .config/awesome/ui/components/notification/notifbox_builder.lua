@@ -45,6 +45,9 @@ function builder.image(image)
 end
 
 function builder.app_name(app_name)
+    if app_name:match("org%.gnome%.") then
+        app_name = app_name:sub(11, -1)
+    end
     return wibox.widget {
         widget = wibox.container.constraint,
         width = dpi(130),
@@ -55,6 +58,7 @@ function builder.app_name(app_name)
             markup = helpers.ui.colorize_text(app_name, beautiful.inactive),
             halign = "right",
             valign = "center",
+            ellipsize = "middle",
             font = beautiful.font .. "SemiBold 11",
         }
     }
@@ -62,10 +66,15 @@ end
 
 function builder.title(title)
     return wibox.widget {
-        widget = wibox.widget.textbox,
-        markup = title,
-        ellipsize = "end",
-        font = beautiful.font .. "Bold 12",
+        widget = wibox.container.constraint,
+        strategy = "max",
+        width = dpi(200),
+        {
+            widget = wibox.widget.textbox,
+            markup = title,
+            ellipsize = "end",
+            font = beautiful.font .. "Bold 12",
+        }
     }
 end
 
@@ -171,7 +180,8 @@ function builder.close_button(n)
 
     local close_button = button {
         shape = gears.shape.circle,
-        animate = false,
+        width = dpi(30),
+        height = dpi(30),
         on_release = function() n:destroy() end,
         widget = {
             widget = wibox.layout.stack,
@@ -334,6 +344,7 @@ function builder.build(n)
         spacing = dpi(4),
         {
             widget = wibox.container.margin,
+            forced_height = dpi(30),
             top = dpi(4),
             left = dpi(4),
             right = dpi(8),
