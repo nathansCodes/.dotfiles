@@ -109,7 +109,11 @@
 
 ### Post-install
 
-#### Setup wifi
+#### Start customizing
+In `~/.config/awesome/`, simply rename `settings.default.json` to `settings.json` and you're good to go!
+[!NOTE] `settings.json` is git ignore'd by default, so if you want to create your own config based on this and upload it to github/gitlab/anywhere you want, make sure to remove it from the `.gitignore`
+
+#### Make the Wifi indicator work
 In `settings.json`, set `device.network.wifi` and `device.network.lan` to the corresponding network interfaces.
 The easiest way to find out what they're called is to run `nmcli` a terminal
 
