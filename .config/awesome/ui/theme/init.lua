@@ -59,7 +59,7 @@ theme.tasklist_bg_focus    = theme.surface
 theme.tasklist_bg_normal   = theme.base
 theme.tasklist_bg_minimize = theme.overlay
 
-theme.bg_systray           = gears.color.transparent
+theme.bg_systray           = theme.base .. "00"
 
 theme.popup_bg             = theme.base
 theme.popup_module_bg      = theme.overlay

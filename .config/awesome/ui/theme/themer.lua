@@ -7,62 +7,77 @@ local settings = require("config.user_settings")
 
 local themer = {}
 
+local function try(n, v)
+    local theme = require("ui.theme.themes."..n)
+    if type(theme) == "table" then
+        theme.name = n
+        theme.variant = ""
+        theme.path = awm_conf_dir.."ui/theme/themes/"..n.."/"
+        return theme
+    end
+
+    theme = require("ui.theme.themes."..n.."."..v)
+    if type(theme) == "table" then
+        theme.name = n
+        theme.variant = v
+        theme.path = awm_conf_dir.."ui/theme/themes/"..n.."/"..tostring(v).."/"
+    elseif type(theme) == "string" then
+        v = theme
+        theme = require("ui.theme.themes."..n.."."..v)
+        theme.name = n
+        theme.variant = v
+        theme.path = awm_conf_dir.."ui/theme/themes/"..n.."/"..tostring(v).."/"
+    end
+
+    return theme
+end
+
+local function get_colorscheme()
+    local name = string.lower(settings.theme.theme or "catppuccin")
+    local variant = string.lower(tostring(settings.theme.variant))
+
+    local theme
+    xpcall(function()
+        theme = try(name, variant)
+    end, function()
+        theme = require("ui.theme.themes.catppuccin.mocha")
+        theme.name = "catppuccin"
+        theme.variant = "mocha"
+        theme.path = awm_conf_dir.."ui/theme/themes/catppuccin/mocha/"
+    end)
+    return theme
+end
+
+--- Apply theme based on colorscheme
 function themer.apply()
     -- load theme based on user preference
-    local theme_name = string.lower(settings.theme.theme or "catppuccin")
-    local theme_variant = string.lower(settings.theme.variant or "mocha")
-    local theme_path = awm_conf_dir.."ui/theme/themes/"..theme_name
-
-    -- set theme to catppuccin if it doesn't exist
-    if not gfs.is_dir(theme_path) then
-        theme_name = "catppuccin"
-        theme_path = awm_conf_dir.."ui/theme/themes/"..theme_name
-    end
-
-    theme_path = theme_path.."/"..theme_variant.."/"
-
-    -- set variant to default if it doesn't exist
-    if not gfs.is_dir(theme_path) or not theme_variant then
-        theme_variant = require("ui.theme.themes."..theme_name)
-        theme_path = awm_conf_dir.."ui/theme/themes/"..theme_name.."/"..theme_variant.."/"
-    end
-
-    -- handle case of only one variant
-    if type(theme_variant) == "table" then
-        theme_variant = "init"
-        theme_path = awm_conf_dir.."ui/theme/themes/"..theme_name.."/"
-    end
-
-    local theme = require("ui.theme.themes." .. theme_name .. "." .. theme_variant)
-
-    theme.theme_name = theme_name
-    theme.theme_variant = theme_variant == "init" and nil or theme_variant
+    local theme = get_colorscheme()
 
     -- apply rofi theme
-    local rofi_theme = theme_name:gsub(" ", "_") .. "_" .. theme_variant:gsub(" ", "_")
+    local rofi_theme = theme.name:gsub(" ", "_") .. (theme.variant and "_" .. theme.variant:gsub(" ", "_") or "")
     local apply_rofi = 'echo \'@import \"~/.config/rofi/colors/'
         .. rofi_theme .. '.rasi\"\' > ~/.config/rofi/resources/colors.rasi'
     awful.spawn.with_shell(apply_rofi)
 
     -- check for icon theme in `/usr/share/icons`, `~/.icons/`, and `~/.local/share/icons/`
-    local function icon_theme_exists(icon_theme)
+    local function get_icons_path(icon_theme)
         if gfs.is_dir("/usr/share/icons/"..icon_theme) then
-            return true, "/usr/share/icons/"..icon_theme
+            return "/usr/share/icons/"..icon_theme
         end
         if gfs.is_dir("~/.icons/"..icon_theme) then
-            return true, "~/.icons/"..icon_theme
+            return "~/.icons/"..icon_theme
         end
         if gfs.is_dir("~/.local/share/icons/"..icon_theme) then
-            return true, "~/.local/share/icons/"..icon_theme
+            return "~/.local/share/icons/"..icon_theme
         end
-        return false, nil
+        return nil
     end
 
     theme.icon_theme = settings.theme.icon_theme or theme.icon_theme or "Papirus"
 
-    local icons_exist, icons_dir = icon_theme_exists(theme.icon_theme)
+    local icons_dir = get_icons_path(theme.icon_theme)
 
-    if not icons_exist then
+    if not icons_dir then
         theme.icon_theme = "Papirus"
         theme.icon_theme_path = "/usr/share/icons/Papirus"
     else
@@ -71,8 +86,8 @@ function themer.apply()
 
 
     local nvim_packman = settings.theme.nvim.package_manager or ""
-    local nvim_theme_name = theme.nvim_theme_name or theme_name:gsub(" ", "-")
-            .. (theme_variant ~= "" and "-"..theme_variant)
+    local nvim_theme_name = theme.nvim_theme_name or theme.name:gsub(" ", "-")
+            .. (theme.variant and "-"..theme.variant)
 
     local firefox_install = settings.theme.firefox.install
     local firefox_profile = settings.theme.firefox.profile
@@ -85,8 +100,8 @@ function themer.apply()
         and ( "discord '" .. discord_install .. "' '" .. discord_mod .. "'" ) or ""
     local apply_xres_term = settings.theme.xresources_enabled and "term" or ""
     local apply_alacritty = settings.theme.alacritty.enabled and
-        ( "alacritty '" .. theme_name:gsub(" ", "_")
-        .. (theme_variant ~= "" and "_"..theme_variant) .. "'" ) or ""
+        ( "alacritty '" .. theme.name:gsub(" ", "_")
+        .. (theme.variant and "_"..theme.variant) .. "'" ) or ""
     local apply_gtk = settings.theme.gtk.enabled and "gtk" or ""
     local apply_nvim = settings.theme.nvim.enabled and (
         "nvim " .. "'" .. nvim_theme_name .. "' '" .. nvim_packman .. "'" ) or ""
@@ -141,11 +156,11 @@ function themer.apply()
     -- apply theme
     awful.spawn.with_shell(apply_script)
 
-    theme.path = theme_path
-
     return theme
 end
 
+--- Revert theming to what it was before. Neovim and Xresources don't get reverted
+---@param on_complete function what to do after it's all been reverted
 function themer.revert(on_complete)
     local firefox_install = settings.theme.firefox.install
     local firefox_profile = settings.theme.firefox.profile
