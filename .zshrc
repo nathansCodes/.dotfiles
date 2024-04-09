@@ -27,6 +27,7 @@ alias lt="eza --icons --git --tree"
 
 alias v="nvim"
 alias t="tmux"
+alias lg="lazygit"
 
 alias gs="git status"
 alias gst="git stash"
@@ -42,11 +43,10 @@ alias gm="git submodule"
 alias kb="setxkbmap"
 
 export FZF_DEFAULT_OPTS="
-	--color=fg:#908caa,hl:#ea9a97
-	--color=fg+:#e0def4,hl+:#ea9a97
-	--color=border:#44415a,header:#3e8fb0,gutter:#232136
-	--color=spinner:#f6c177,info:#9ccfd8,separator:#44415a
-	--color=pointer:#c4a7e7,marker:#eb6f92,prompt:#908caa"
+    --preview 'cat {}'
+    --color=bg+:#313244,bg:#181825,spinner:#f5e0dc,hl:#f38ba8
+    --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
+    --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
 # set bat's theme (no shit)
 export BAT_THEME="Catppuccin-mocha"
