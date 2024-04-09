@@ -1,5 +1,5 @@
 [submodule ".config/nvim"]
-	url = https://github.com/naan187/nvim.git
+	url = https://github.com/nathansCodes/nvim.git
 	path = .config/nvim
 	branch = main
 [submodule ".config/btop/themes"]
