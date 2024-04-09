@@ -1,7 +1,5 @@
 local wibox = require("wibox")
 local awful = require("awful")
-local gears = require("gears")
-local gfs = gears.filesystem
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
@@ -89,7 +87,7 @@ function lockscreen.activate()
     grab_password()
 
     -- stop any music currently playing
-    -- awful.spawn("playerctl pause")
+    awful.spawn("playerctl pause")
 end
 
 capi.awesome.connect_signal("lockscreen::lock", lockscreen.activate)
