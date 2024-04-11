@@ -18,7 +18,7 @@ local gears = require("gears")
 local gfs = gears.filesystem
 local dpi = require("beautiful").xresources.apply_dpi
 
-local apps = require("config.apps")
+local settings = require("config.user_settings")
 local button = require("ui.widget.button")
 
 local checker_on = false
@@ -44,7 +44,7 @@ return function(size, cursor_focus)
         bg = gears.color.transparent,
         on_release = function(_, _, _, _, b)
             if b == 2 then
-                awful.spawn(apps.bluetooth_manager, false)
+                awful.spawn(settings.program.default_apps.bluetooth_manager.command, false)
             end
         end,
         widget = widget,

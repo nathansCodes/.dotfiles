@@ -18,7 +18,6 @@ local dpi = require('beautiful').xresources.apply_dpi
 
 local config_dir = gears.filesystem.get_configuration_dir()
 local widget_icon_dir = config_dir .. 'ui/icons/network/'
-local apps = require("config.apps")
 local button = require("ui.widget.button")
 local helpers = require("helpers")
 local settings = require("config.user_settings")
@@ -89,7 +88,7 @@ local return_button = function(size, show_notifications, cursor_focus, force_new
         bg = gears.color.transparent,
         on_release = function(_, _, _, _, b)
             if b == 2 then
-                awful.spawn(apps.network_manager, false)
+                awful.spawn(settings.program.default_apps.network_manager.command, false)
             end
         end,
 	}

@@ -1,7 +1,25 @@
 {
     "program": {
         "autostart": [
-        ]
+        ],
+        "default_apps":  {
+            "terminal":           { "name":     "Alacritty",
+                                    "command":  "alacritty" },
+            "music_player":       { "name":     "Spotube",
+                                    "command":  "spotube" },
+            "text_editor":        { "name":     "Neovim",
+                                    "command":  "alacritty -e nvim" },
+            "code_editor":        { "name":     "Neovim",
+                                    "command":  "alacritty -e nvim" },
+            "browser":            { "name":     "firefox",
+                                    "command":  "flatpak run org.mozilla.firefox" },
+            "file_manager":       { "name":     "Nautilus",
+                                    "command":  "nautilus" },
+            "network_manager":    { "name":     "Networks",
+                                    "command":  "nm-connection-editor" },
+            "bluetooth_manager":  { "name":     "Bluetooth Connections",
+                                    "command":  "blueman-manager" },
+        }
     },
     "theme": {
         "theme": "catppuccin",

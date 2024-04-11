@@ -3,8 +3,8 @@ local gears = require("gears")
 local gfs = gears.filesystem
 local beautiful = require("beautiful")
 
-local apps = require("config.apps")
 local menu = require("ui.widget.menu")
+local settings = require("config.user_settings")
 
 local capi = { awesome = awesome, mouse = mouse }
 
@@ -26,7 +26,7 @@ local main_menu = menu {
         text = "Web Browser",
         secondary_text = "Super+B",
         on_press = function()
-            awful.spawn(apps.web_browser)
+            awful.spawn(settings.program.default_apps.web_browser.command)
         end
     },
     menu.button {
@@ -35,7 +35,7 @@ local main_menu = menu {
         text = "Terminal",
         secondary_text = "Super+T",
         on_press = function()
-            awful.spawn(apps.terminal)
+            awful.spawn(settings.program.default_apps.terminal.command)
         end
     },
     menu.button {
@@ -44,7 +44,7 @@ local main_menu = menu {
         text = "File Manager",
         secondary_text = "Super+E",
         on_press = function()
-            awful.spawn(apps.file_manager)
+            awful.spawn(settings.program.default_apps.file_manager.command)
         end
     },
     menu.button {
@@ -52,7 +52,7 @@ local main_menu = menu {
         icon_color = beautiful.accent,
         text = "Text Editor",
         on_press = function()
-            awful.spawn(apps.text_editor)
+            awful.spawn(settings.program.default_apps.text_editor.command)
         end
     },
     menu.button {
@@ -60,7 +60,7 @@ local main_menu = menu {
         icon_color = beautiful.accent,
         text = "Code Editor",
         on_press = function()
-            awful.spawn(apps.code_editor)
+            awful.spawn(settings.program.default_apps.code_editor.command)
         end
     },
     menu.button {
@@ -101,7 +101,7 @@ local main_menu = menu {
                 icon_color = beautiful.third_accent,
                 text = "Edit config",
                 on_press = function()
-                    awful.spawn(apps.code_editor .. " '" .. conf_dir .. "'")
+                    awful.spawn(settings.program.default_apps.code_editor.command .. " '" .. conf_dir .. "'")
                 end
             },
             menu.button {

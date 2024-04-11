@@ -1,7 +1,6 @@
 local wibox = require("wibox")
 local gears = require("gears")
 local awful = require("awful")
-local naughty = require("naughty")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 local intersects = gears.geometry.rectangle.area_intersect_area
