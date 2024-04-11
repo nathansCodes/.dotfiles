@@ -92,6 +92,9 @@ powermenu.buttons = wibox.widget {
 capi.awesome.connect_signal("powermenu::show", powermenu.show)
 capi.awesome.connect_signal("powermenu::hide", powermenu.hide)
 
+local username = os.getenv("USER") or ""
+username = string.upper(username[1] or "") .. username:sub(2)
+
 return setmetatable(powermenu, { __call = function(_, s)
     s.powermenu = awful.popup {
         type = "splash",
