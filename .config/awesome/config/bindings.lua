@@ -116,8 +116,6 @@ awful.keyboard.append_global_keybindings {
 
 -- Rofi scripts
 awful.keyboard.append_global_keybindings {
-    awful.key({ super }, " ", function() awful.util.spawn(settings.program.default_apps.app_launcher.command) end,
-        { description = "start rofi", group = "rofi" }),
     awful.key({ super }, "'", function() awful.util.spawn("rofi -modi emoji -show emoji -theme ~/.config/rofi/applets/emoji.rasi") end,
         { description = "run prompt", group = "rofi" }),
     awful.key({ super }, "c", function() awful.spawn.with_shell("CM_LAUNCHER=rofi clipmenu -theme ~/.config/rofi/applets/clipboard.rasi") end,
