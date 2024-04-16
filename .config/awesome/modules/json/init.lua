@@ -22,7 +22,7 @@
 -- SOFTWARE.
 --
 
-local json = { _version = "0.1.2-naan187" }
+local json = { _version = "0.1.2-nathansCodes" }
 
 -------------------------------------------------------------------------------
 -- Encode
@@ -81,7 +81,9 @@ local function encode_table(val, stack, depth)
     end
     -- Encode
     for i, v in ipairs(val) do
-      table.insert(res, indent_str(depth+1) .. encode(v, stack, depth+1))
+      if type(v) ~= "function" then
+        table.insert(res, indent_str(depth+1) .. encode(v, stack, depth+1))
+      end
     end
     stack[val] = nil
     return "[\n" .. table.concat(res, ",\n"..indent_str(depth+1)) .. "\n" .. indent_str(depth) .. "]"
@@ -91,7 +93,9 @@ local function encode_table(val, stack, depth)
       if type(k) ~= "string" then
         error("invalid table: mixed or invalid key types")
       end
-      table.insert(res, encode(k, stack, depth+1) .. ": " .. encode(v, stack, depth+1))
+      if type(v) ~= "function" then
+          table.insert(res, encode(k, stack, depth+1) .. ": " .. encode(v, stack, depth+1))
+      end
     end
     stack[val] = nil
     return "{\n" .. indent_str(depth+1) .. table.concat(res, ",\n" .. indent_str(depth+1)) .. "\n" .. indent_str(depth) .. "}"
@@ -124,6 +128,7 @@ local type_func_map = {
 
 encode = function(val, stack, depth)
   local t = type(val)
+  if t == "function" then return end
   local f = type_func_map[t]
   if f then
     return f(val, stack, depth or 0)

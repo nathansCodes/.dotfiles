@@ -4,7 +4,7 @@ local wibox = require("wibox")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
 
-local apps = require("config.apps")
+local settings = require("config.user_settings")
 local button = require("ui.widget.button")
 
 local icon_path = beautiful.icon_theme_path
@@ -25,7 +25,7 @@ local function create_button(icon, launch_command)
             margins = dpi(10),
             {
                 widget = wibox.widget.imagebox,
-                image = icon_path .. "/32x32/apps/" ..  icon,
+                image = icon,
                 resize = false,
                 halign = "center",
                 valign = "center",
@@ -35,16 +35,25 @@ local function create_button(icon, launch_command)
 	}
 end
 
+local function get_icon(name)
+    return icon_path .. "/32x32/apps/" .. name
+end
+
+local browser = settings.program.default_apps.browser
+local file_manager = settings.program.default_apps.file_manager
+local term = settings.program.default_apps.terminal
+
+local discord_cmd = settings.theme.discord.install == "flatpak"
+    and "flatpak run org.mozilla.firefox" or "discord"
+
 local apps = {
-	firefox = create_button("firefox.svg", "firefox"),
-    file_manager = create_button("nautilus.svg", "nautilus"),
-	term = create_button("Alacritty.svg", apps.terminal),
-	libreoffice = create_button("libreoffice.svg", "libreoffice"),
-    steam = create_button("steam.svg", "steam"),
-	discord = create_button("discord.svg", "flatpak run com.discordapp.Discord"),
-	--gimp = create_button("gimp.svg", "gimp"),
-	godot = create_button("godot.svg", "godot"),
-	--keepassxc = create_button("keepassxc.svg", "keepassxc"),
+	firefox = create_button(browser:get_icon(), browser.command),
+    file_manager = create_button(file_manager:get_icon(), file_manager.command),
+	term = create_button(term:get_icon(), term.command),
+	libreoffice = create_button(get_icon("libreoffice.svg"), "libreoffice"),
+    steam = create_button(get_icon("steam.svg"), "steam"),
+	discord = create_button(get_icon("discord.svg"), discord_cmd),
+	godot = create_button(get_icon("godot.svg"), "godot"),
 }
 
 return apps

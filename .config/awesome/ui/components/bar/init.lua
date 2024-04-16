@@ -61,8 +61,8 @@ return function(s)
                 widget = wibox.container.background,
                 visible = false,
                 {
-                    widget = wibox.widget.systray(),
-                    screen = s,
+                    widget = wibox.widget.systray,
+                    screen = "primary",
                 }
             },
             {
@@ -83,11 +83,6 @@ return function(s)
 
     local system_stats = button {
         shape = gears.shape.rounded_bar,
-        -- on_release = function(_, _, _, _, b)
-        --     if b == 1 then
-        --         s.right_panel:toggle()
-        --     end
-        -- end,
         left = dpi(4),
         widget = {
             layout = wibox.layout.align.horizontal,

@@ -2,8 +2,10 @@ local awful = require("awful")
 local gears = require("gears")
 local gtable = gears.table
 local gfs = gears.filesystem
+local beautiful = require("beautiful")
 
 local json = require("modules.json")
+local helpers = require("helpers")
 
 local settings = {}
 
@@ -11,7 +13,30 @@ settings.defaults = {
     program = {
         autostart = { },
         default_apps = {
-            file_manager = "nautilus",
+            terminal          = { name    = "Alacritty",
+                                  command = "alacritty",
+                                  fallback_icon = "apps/terminal.svg" },
+            music_player      = { name    = "Spotube",
+                                  command = "spotube",
+                                  fallback_icon = "" },
+            text_editor       = { name    = "Neovim",
+                                  command = "alacritty -e nvim",
+                                  fallback_icon = "" },
+            code_editor       = { name    = "Neovim",
+                                  command = "alacritty -e nvim",
+                                  fallback_icon = "" },
+            browser           = { name    = "firefox",
+                                  command = "flatpak run org.mozilla.firefox",
+                                  fallback_icon = "apps/chromium.svg" },
+            file_manager      = { name    = "Nautilus",
+                                  command = "nautilus",
+                                  fallback_icon = "places/folder.svg" },
+            network_manager   = { name    = "Networks",
+                                  command = "nm-connection-editor",
+                                  fallback_icon = "" },
+            bluetooth_manager = { name    = "Bluetooth Connections",
+                                  command = "blueman-manager",
+                                  fallback_icon = "" },
         }
     },
     theme = {
@@ -41,19 +66,90 @@ settings.defaults = {
             lan = "eno1",
         }
     },
-    locale = {
-        langs = {
-            "us"
-        }
-    }
+    layouts = { "us" }
 }
+
+-- functions for handling default values
+
+local function apply_default_apps_defaults(default_apps, default_apps_defaults)
+    for key, default_default_app in pairs(default_apps_defaults) do
+        local default_app = default_apps[key]
+        if type(default_app) == "string" then
+            default_apps[key] = {
+                name = default_app,
+                command = default_app,
+                fallback_icon = default_default_app.fallback_icon
+            }
+        elseif type(default_app) == "table" then
+            if type(default_app.name) == "string" then
+                if type(default_app.command) ~= "string" then
+                    default_app.command = default_app.name
+                end
+            else
+                default_apps[key] = default_default_app
+            end
+        else
+            default_apps[key] = default_default_app
+        end
+        default_apps[key].get_icon = function(self)
+            local icons = beautiful.icon_theme_path .. "/32x32/apps/"
+
+            if type(self.icon) == "string" then
+                return icons..self.icon
+            end
+
+            if gfs.file_readable(icons..self.name..".svg") then
+                self.icon = self.name..".svg"
+            elseif gfs.file_readable(icons..helpers.str.switch_case_first_letter(self.name)..".svg") then
+                self.icon = helpers.str.upper_first_letter(self.name)..".svg"
+            else
+                self.icon = beautiful.icon_theme_path .. "/32x32/" .. default_app.fallback_icon
+            end
+
+            return icons..self.icon
+        end
+    end
+end
+
+--- Apply defaults if value hasn't been set. I can't use gears.table.crush
+--- because that overrides child tables instead of recursing into them
+local function apply_defaults(table, defaults)
+    for k, def in pairs(defaults) do
+        if type(def) == "table" then
+            if type(table[k]) ~= "table" then
+                table[k] = def
+            else
+                if k == "default_apps" then
+                    apply_default_apps_defaults(table[k], def)
+                else
+                    apply_defaults(table[k], def)
+                end
+            end
+        else
+            if table[k] == nil then
+                table[k] = def
+            end
+        end
+    end
+end
+
+collectgarbage("collect")
 
 local settings_path = gfs.get_configuration_dir() .. "settings.json"
 
--- TODO: handle this better. The longer the user_settings.json, the longer the startup time
-local json_str = io.popen("cat " .. settings_path, "r"):read("*all")
+local json_str = ""
+local data
 
-local data = gtable.crush(settings.defaults, json.decode(json_str), true)
+if gfs.file_readable(settings_path) then
+    -- TODO: handle this better. The longer the settings.json, the longer the startup time
+    json_str = io.popen("cat " .. settings_path, "r"):read("*all")
+
+    data = json.decode(json_str)
+
+    apply_defaults(data, settings.defaults)
+else
+    data = settings.defaults
+end
 
 local data_proxy = {}
 

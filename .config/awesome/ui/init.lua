@@ -27,5 +27,3 @@ end)
 
 -- launcher
 require("ui.components.launcher")
-
-

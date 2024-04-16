@@ -2,8 +2,8 @@ local awful = require("awful")
 local naughty = require("naughty")
 local beautiful = require("beautiful")
 local hotkeys_popup = require("awful.hotkeys_popup")
-local apps = require("config.apps")
 local main_menu = require("ui.components.main_menu")
+local settings = require("config.user_settings")
 
 local capi = { awesome = awesome, client = client }
 
@@ -63,12 +63,19 @@ awful.keyboard.append_global_keybindings {
             }
         end,
         { description = "test notification", group = "awesome" }),
-    awful.key({ super, }, "t", function() awful.spawn(apps.terminal) end,
-        { description = "open a new alacritty window", group = "launcher" }),
-    awful.key({ super, }, "b", function() awful.spawn(apps.web_browser) end,
-        { description = "open firefox", group = "launcher" }),
-    awful.key({ super, }, "e", function() awful.spawn(apps.file_manager) end,
-        { description = "open file manager (thunar)", group = "launcher" }),
+    awful.key({ super, }, "t", function() awful.spawn(settings.program.default_apps.terminal.command) end,
+        { description = "open a new terminal window", group = "launcher" }),
+    awful.key({ super, }, "b", function()
+        local launch_cmd = settings.program.default_apps.browser.command
+        if launch_cmd == "firefox" then
+            launch_cmd = settings.theme.firefox.install == "flatpak"
+                and "flatpak run org.mozilla.firefox" or launch_cmd
+        end
+        awful.spawn(launch_cmd)
+    end,
+        { description = "open web browser", group = "launcher" }),
+    awful.key({ super, }, "e", function() awful.spawn(settings.program.default_apps.file_manager.command) end,
+        { description = "open file manager", group = "launcher" }),
     awful.key {
         modifiers = { super },
         key = "r",
@@ -109,8 +116,6 @@ awful.keyboard.append_global_keybindings {
 
 -- Rofi scripts
 awful.keyboard.append_global_keybindings {
-    awful.key({ super }, " ", function() awful.util.spawn(apps.app_launcher) end,
-        { description = "start rofi", group = "rofi" }),
     awful.key({ super }, "'", function() awful.util.spawn("rofi -modi emoji -show emoji -theme ~/.config/rofi/applets/emoji.rasi") end,
         { description = "run prompt", group = "rofi" }),
     awful.key({ super }, "c", function() awful.spawn.with_shell("CM_LAUNCHER=rofi clipmenu -theme ~/.config/rofi/applets/clipboard.rasi") end,
