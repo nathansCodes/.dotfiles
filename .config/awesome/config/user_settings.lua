@@ -157,8 +157,24 @@ end
 
 local data_proxy = {}
 
+--- Not tested. Maybe it works, maybe it doesn't. No guarantee
+function settings.update_default_app(app_data)
+    local actaul_data = json.decode(json_str)
+    actaul_data.program = actaul_data.program or {}
+    actaul_data.program.default_apps = actaul_data.program.default_apps or {}
+    actaul_data.program.default_apps[app_data.kind] = {
+        name = app_data.name,
+        command = app_data.command or app_data.name,
+        icon = app_data.icon or nil,
+    }
+    json_str = json.encode(actual_data)
+    awful.spawn.with_shell("echo -n '"..json_str.."' > "..settings_path)
+end
+
 local function update_json()
-    json_str = json.encode(data)
+    local actaul_data = gtable.clone(data, false)
+    actaul_data.program.default_apps = {}
+    json_str = json.encode(actual_data)
     awful.spawn.with_shell("echo -n '"..json_str.."' > "..settings_path)
 end
 
