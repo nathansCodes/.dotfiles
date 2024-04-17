@@ -197,9 +197,6 @@ local function setmetatables(t, proxy)
                 end,
                 __newindex = function(_, key, val)
                     rawset(v, key, val)
-                    if not startup then
-                        update_json()
-                    end
                 end
             })
             setmetatables(v, proxy[k])
@@ -208,11 +205,12 @@ local function setmetatables(t, proxy)
 end
 
 setmetatables(data, data_proxy)
-startup = false
 
 local function __newindex(_, k, v)
     data_proxy[k] = v
-    update_json()
+    if not startup then
+        update_json()
+    end
 end
 
 function settings.reload()
@@ -230,4 +228,7 @@ local mt = {}
 mt.__index = data_proxy
 mt.__newindex = __newindex
 
-return setmetatable(settings, mt)
+setmetatable(settings, mt)
+
+startup = false
+return settings
