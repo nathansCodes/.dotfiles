@@ -71,42 +71,42 @@ settings.defaults = {
 
 -- functions for handling default values
 
-local function apply_default_apps_defaults(default_apps, default_apps_defaults)
-    for key, default_default_app in pairs(default_apps_defaults) do
-        local default_app = default_apps[key]
-        if type(default_app) == "string" then
-            default_apps[key] = {
-                name = default_app,
-                command = default_app,
-                fallback_icon = default_default_app.fallback_icon
+local function set_default_apps(apps, fallbacks)
+    for key, fallback in pairs(fallbacks) do
+        local app = apps[key]
+        if type(app) == "string" then
+            apps[key] = {
+                name = app,
+                command = app,
+                fallback_icon = fallback.fallback_icon
             }
-        elseif type(default_app) == "table" then
-            if type(default_app.name) == "string" then
-                if type(default_app.command) ~= "string" then
-                    default_app.command = default_app.name
+        elseif type(app) == "table" then
+            if type(app.name) == "string" then
+                if type(app.command) ~= "string" then
+                    app.command = app.name
                 end
             else
-                default_apps[key] = default_default_app
+                apps[key] = fallback
             end
         else
-            default_apps[key] = default_default_app
+            apps[key] = fallback
         end
-        default_apps[key].get_icon = function(self)
+        apps[key].get_icon = function(self)
             local icons = beautiful.icon_theme_path .. "/32x32/apps/"
 
-            if type(self.icon) == "string" then
+            if type(self.icon) == "string" and gfs.file_readable(icons..self.icon) then
                 return icons..self.icon
             end
 
             if gfs.file_readable(icons..self.name..".svg") then
-                self.icon = self.name..".svg"
+                self.icon = icons..self.name..".svg"
             elseif gfs.file_readable(icons..helpers.str.switch_case_first_letter(self.name)..".svg") then
-                self.icon = helpers.str.upper_first_letter(self.name)..".svg"
+                self.icon = icons..helpers.str.switch_case_first_letter(self.name)..".svg"
             else
-                self.icon = beautiful.icon_theme_path .. "/32x32/" .. default_app.fallback_icon
+                self.icon = beautiful.icon_theme_path .. "/32x32/" .. app.fallback_icon
             end
 
-            return icons..self.icon
+            return self.icon
         end
     end
 end
@@ -120,7 +120,7 @@ local function apply_defaults(table, defaults)
                 table[k] = def
             else
                 if k == "default_apps" then
-                    apply_default_apps_defaults(table[k], def)
+                    set_default_apps(table[k], def)
                 else
                     apply_defaults(table[k], def)
                 end
@@ -147,6 +147,10 @@ if gfs.file_readable(settings_path) then
     data = json.decode(json_str)
 
     apply_defaults(data, settings.defaults)
+    if not data.program.default_apps then
+        data.program.default_apps = {}
+        set_default_apps(data.program.default_apps, settings.defaults.program.default_apps)
+    end
 else
     data = settings.defaults
 end
