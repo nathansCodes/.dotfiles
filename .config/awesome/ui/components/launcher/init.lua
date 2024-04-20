@@ -17,6 +17,13 @@ local capi = { awesome = awesome, tag = tag }
 --- Number of apps to be shown at once
 local num_apps = 7
 
+local entryindex = 1
+local startindex = 1
+local move = false
+
+local unfiltered = {}
+local filtered = {}
+
 local horizontal_separator = wibox.widget {
     orientation = "horizontal",
     forced_height = dpi(1.5),
@@ -45,8 +52,6 @@ local prompt = wibox.widget {
     valign = "center",
     font = beautiful.font .. "13"
 }
-
-local entry_cache = {}
 
 local entries = wibox.widget {
     homogeneous = false,
@@ -100,7 +105,7 @@ launcherdisplay:setup {
 -- Functions
 
 local function next(mouse_scroll)
-    if entryindex <= #filtered - num_apps then
+    if entryindex <= #filtered-1 then
         entries:get_widgets_at(entryindex, 1)[1]:unhover()
         entryindex = entryindex + 1
         entries:get_widgets_at(entryindex, 1)[1]:hover()
