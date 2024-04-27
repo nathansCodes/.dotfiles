@@ -208,9 +208,19 @@ return function(s)
         end
     end)
 
-    client_signal("request::autoactivate", hide_if_client_overlaps)
-    -- request::manage doesn't work???
-    client_signal("manage", check_focused)
+    client_signal("request::manage", function(c)
+        -- add a little bit of delay to avoid it using the client's initial geometry,
+        -- which may be incorrect and could lead to the dock being incorrectly shown or hidden
+        gears.timer {
+            timeout = 0.1,
+            single_shot = true,
+            call_now = false,
+            autostart = true,
+            callback = function()
+                hide_if_client_overlaps(c)
+            end
+        }
+    end)
     client_signal("request::unmanage", check_focused)
     client_signal("tagged", check_focused)
     -- TODO: fix this. currently it does the exact opposite of the expected outcome

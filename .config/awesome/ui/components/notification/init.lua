@@ -1,7 +1,4 @@
 local awful = require("awful")
-local wibox = require("wibox")
-local gears = require("gears")
-local gfs = gears.filesystem
 local naughty = require("naughty")
 local beautiful = require("beautiful")
 local dpi = beautiful.xresources.apply_dpi
@@ -23,7 +20,7 @@ naughty.connect_signal("request::display", function(n)
 
     local i = #notifboxes + 1
 
-    local notifbox = awful.popup {
+    local notifbox = naughty.layout.box {
         minimum_width  = dpi(400),
         minimum_height = dpi(150),
         maximum_width  = dpi(400),
@@ -39,8 +36,9 @@ naughty.connect_signal("request::display", function(n)
         shape = helpers.ui.rrect(10),
         bg    = beautiful.base,
         fg    = n.urgency == "critical" and beautiful.error or beautiful.text,
+        border_width = 0,
 
-        widget = notifbox_builder.build(n)
+        widget_template = notifbox_builder.build(n)
     }
 
     function notifbox:move_all_remaining(w)

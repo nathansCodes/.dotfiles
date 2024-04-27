@@ -26,7 +26,7 @@ for _, k in ipairs(user_autostart_programs) do
     local type = string.lower(k.type)
 
     local spawn_func = getmetatable(awful.spawn).__call
-    if type == "daemon" or type == "startup" then
+    if type == "startup" then
         spawn_func = awful.spawn.once
     elseif type == "app" then
         spawn_func = awful.spawn.raise_or_spawn
@@ -34,6 +34,6 @@ for _, k in ipairs(user_autostart_programs) do
         spawn_func = awful.spawn.with_shell
     end
 
-    spawn_func(k.program)
+    spawn_func(k.command)
 end
 

@@ -26,7 +26,7 @@ local main_menu = menu {
         text = "Web Browser",
         secondary_text = "Super+B",
         on_press = function()
-            awful.spawn(settings.program.default_apps.web_browser.command)
+            awful.spawn(settings.program.default_apps.browser.command)
         end
     },
     menu.button {

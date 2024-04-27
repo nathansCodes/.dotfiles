@@ -26,7 +26,7 @@ awful.keyboard.append_global_keybindings {
         { description = "reload awesome", group = "awesome" }),
     awful.key({ super, shift }, "q", capi.awesome.quit,
         { description = "quit awesome", group = "awesome" }),
-    awful.key({ super, shift }, "l", function() capi.awesome.emit_signal("lockscreen::lock") end,
+    awful.key({ super, shift }, "k", function() capi.awesome.emit_signal("lockscreen::lock") end,
         { description = "open file manager", group = "launcher" }),
     awful.key({ super }, "x",
         function()
