@@ -68,11 +68,6 @@
   https://github.com/naan187/.dotfiles/assets/99505972/fe197e49-b5c3-409c-b18e-779c36aaec8e
 </details>
 
-<details>
-  <summary> <b>Simple and beautiful <a href="https://github.com/naan187/nvim">Neovim</a> & tmux configs</b> </summary>
-  <img src="https://github.com/naan187/.dotfiles/assets/99505972/17a657bd-af7d-4143-ba5f-9c7ae61034e3" \>
-</details>
-
 ## My Setup
 - OS: [Nobara Linux](https://nobaraproject.org)
 - WM: [AwesomeWM](https://github.com/awesomeWM/awesome)
