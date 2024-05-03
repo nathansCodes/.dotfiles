@@ -88,6 +88,10 @@
 ### Prerequisites
 - [AwesomeWM](https://github.com/AwesomeWM/awesome?tab=readme-ov-file##building-and-installation) (duh)
   Use the git version. 4.3 is old and outdated. This config WILL NOT work with Awesome 4.3
+Optional:
+- [rofi-calc](https://github.com/svenstaro/rofi-calc) for a rofi calculator (Super+/)
+- [rofi-emoji](https://github.com/Mange/rofi-emoji) for a rofi emoji picker (Super+')
+
 
 1. Clone the repo *in your home directory*
    ```sh
