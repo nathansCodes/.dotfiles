@@ -147,6 +147,7 @@ return function(s)
     local is_hovered = false
 
     local function hide_if_client_overlaps(c)
+        if not s or not s.dock then return end
         if c == nil or (c.first_tag and not c.first_tag.selected)
             or is_hovered or s.launcher_visible then
             s.dock:show()
@@ -172,11 +173,13 @@ return function(s)
     -- signals to control whether or not the dock should be shown
 
     s.dock:connect_signal("mouse::enter", function()
+        if not s or not s.dock then return end
         is_hovered = true
         s.dock:show()
     end)
 
     s.dock:connect_signal("mouse::leave", function()
+        if not s or not s.dock then return end
         local mouse_coords = capi.mouse.coords()
         local mouse_bounds = {
             x = mouse_coords.x,
@@ -195,6 +198,7 @@ return function(s)
         hide_if_client_overlaps(c)
     end)
     client_signal("property::fullscreen", function(c)
+        if not s or not s.dock then return end
         if c.fullscreen and c.screen == s then
             animator.target = 0
             s.dock_visible = false
@@ -209,6 +213,7 @@ return function(s)
     end)
 
     client_signal("request::manage", function(c)
+        if not s or not s.dock then return end
         -- add a little bit of delay to avoid it using the client's initial geometry,
         -- which may be incorrect and could lead to the dock being incorrectly shown or hidden
         gears.timer {

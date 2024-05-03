@@ -99,6 +99,7 @@ return function(s)
     }
 
     capi.awesome.connect_signal("screenshot::countdown_tick", function(_, remaining)
+        if not s then return end
         if remaining ~= 0 then
             screenshot_ticker:set_text(tostring(remaining))
         else
@@ -112,6 +113,7 @@ return function(s)
     }
 
     capi.client.connect_signal("property::fullscreen", function(c)
+        if not s then return end
         s.bar.ontop = not c.fullscreen
     end)
 
@@ -175,6 +177,7 @@ return function(s)
     }
 
     capi.awesome.connect_signal("lockscreen::locked", function()
+        if not s then return end
         -- I think this is the only way to get the bar to appear above the lockscreen
         s.bar.visible = false
         s.bar.visible = true
@@ -188,6 +191,7 @@ return function(s)
     end)
 
     capi.awesome.connect_signal("lockscreen::unlock", function()
+        if not s then return end
         power_button.visible = true
         taglist.visible = true
         systray.visible = true
