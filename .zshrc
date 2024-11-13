@@ -16,6 +16,7 @@ bindkey -v
 
 # options
 setopt AUTO_CD
+setopt NO_NOMATCH
 setopt CD_SILENT
 setopt APPEND_HISTORY
 setopt -h # HIST_IGNORE_DUPS
@@ -77,3 +78,11 @@ esac
 
 eval "$(starship init zsh)"
 
+
+# pnpm
+export PNPM_HOME="/home/nathan/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
