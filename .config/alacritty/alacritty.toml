@@ -9,7 +9,7 @@ shape = "Underline"
 builtin_box_drawing = true
 
 [font.normal]
-family = "CaskaydiaCove Nerd Font"
+family = "CaskaydiaMono Nerd Font"
 
 [[keyboard.bindings]]
 action = "Paste"
@@ -362,7 +362,7 @@ mods = "Shift"
 hide_when_typing = true
 
 [terminal.shell]
-program = "/bin/zsh"
+program = "/bin/tmux"
 
 [window]
 decorations = "full"

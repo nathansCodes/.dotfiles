@@ -26,17 +26,6 @@ return {
     -- disable trouble
     { "folke/trouble.nvim", enabled = false },
 
-    -- {
-    --     "Jezda1337/nvim-html-css",
-    --     dependencies = {
-    --         "nvim-treesitter/nvim-treesitter",
-    --         "nvim-lua/plenary.nvim"
-    --     },
-    --     config = function()
-    --         require("html-css"):setup()
-    --     end
-    -- },
-
     -- override nvim-cmp and add cmp-emoji
     {
         "hrsh7th/nvim-cmp",
@@ -45,6 +34,20 @@ return {
         opts = function(_, opts)
             table.insert(opts.sources, { name = "emoji" })
             table.insert(opts.sources, { name = "html-css" })
+
+            local cmp = require("cmp");
+
+            local cmp_select = { behaviour = cmp.SelectBehavior.Select }
+
+            opts.mapping = cmp.mapping.preset.insert({
+                -- scroll up and down the documentation window
+                ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+                ['<C-d>'] = cmp.mapping.scroll_docs(4),
+                ["<C-k>"] = cmp.mapping.select_prev_item(cmp_select),
+                ["<C-j>"] = cmp.mapping.select_next_item(cmp_select),
+                ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+                ["<C-g>"] = cmp.mapping.complete(),
+            })
         end,
     },
 
@@ -56,7 +59,7 @@ return {
             -- stylua: ignore
             {
                 "<leader>fp",
-                function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
+                function() require("telescope.builtin").find_files { cwd = require("lazy.core.config").options.root } end,
                 desc = "Find Plugin File",
             },
         },
@@ -260,10 +263,7 @@ return {
         },
     },
 
-    {
-        "ap/vim-css-color",
-        ft = { "html", "css" },
-    },
+    "ap/vim-css-color",
 
     {
         "OmniSharp/omnisharp-vim",

@@ -30,9 +30,6 @@ wk.add {
         { "<C-=>", "<C-W>=" },
         { "<C-|>", "<C-W>|" },
     },
-
-    { "<C-k>", "<C-p>", mode = "c" },
-    { "<C-j>", "<C-n>", mode = "c" },
 }
 
 -- plugin keymaps
