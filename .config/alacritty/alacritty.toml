@@ -177,16 +177,6 @@ key = "J"
 mode = "Vi|~Search"
 
 [[keyboard.bindings]]
-chars = "<Up>"
-key = "P"
-mods = "Control"
-
-[[keyboard.bindings]]
-chars = "<Down>"
-key = "N"
-mods = "Control"
-
-[[keyboard.bindings]]
 action = "Right"
 key = "L"
 mode = "Vi|~Search"
@@ -336,18 +326,6 @@ mode = "Search"
 mods = "Control"
 
 [[keyboard.bindings]]
-action = "SearchHistoryPrevious"
-key = "P"
-mode = "Search"
-mods = "Control"
-
-[[keyboard.bindings]]
-action = "SearchHistoryNext"
-key = "N"
-mode = "Search"
-mods = "Control"
-
-[[keyboard.bindings]]
 action = "SearchFocusNext"
 key = "Return"
 mode = "Search|~Vi"
@@ -362,7 +340,8 @@ mods = "Shift"
 hide_when_typing = true
 
 [terminal.shell]
-program = "/bin/tmux"
+program = "/bin/zellij"
+args = ["-l", "welcome"]
 
 [window]
 decorations = "full"
