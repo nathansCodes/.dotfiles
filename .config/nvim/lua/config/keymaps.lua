@@ -15,7 +15,6 @@ wk.add {
     { "<C-c>", "<Esc>", mode = "i" },
     { "<C-c>", "<Esc>", mode = "v" },
 
-    { "<leader>p", '"_dP', mode = "x" },
     { "<leader>y", '"+y', mode = "v" },
     { "<leader>y", '"+y', mode = "n" },
 }

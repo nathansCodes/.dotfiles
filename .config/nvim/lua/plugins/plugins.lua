@@ -180,7 +180,7 @@ return {
     {
         "terrortylor/nvim-comment",
         config = function()
-            require('nvim_comment').setup { create_mappings = true }
+            require("nvim_comment").setup { create_mappings = true }
         end
     },
 
@@ -263,10 +263,18 @@ return {
         },
     },
 
-    "ap/vim-css-color",
-
     {
         "OmniSharp/omnisharp-vim",
         ft = "cs",
-    }
+    },
+
+    {
+        "snacks.nvim",
+        opts = {
+            scroll = { enabled = false },
+        },
+    },
+
+    "ap/vim-css-color",
+    "mbbill/undotree",
 }
