@@ -22,9 +22,9 @@ setopt APPEND_HISTORY
 setopt -h # HIST_IGNORE_DUPS
 
 # aliases
-alias l="eza --icons"
-alias ls="eza --icons --git -l"
-alias lt="eza --icons --git --tree"
+alias l="eza --icons --hyperlink"
+alias ls="eza --icons --hyperlink --git -l"
+alias lt="eza --icons --hyperlink --git --tree"
 
 alias v="nvim"
 alias t="tmux"
