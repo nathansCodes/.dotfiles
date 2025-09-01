@@ -340,7 +340,7 @@ mods = "Shift"
 hide_when_typing = true
 
 [terminal.shell]
-program = "/bin/zellij"
+program = "zellij"
 args = ["-l", "welcome"]
 
 [window]
