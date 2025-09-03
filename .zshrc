@@ -11,6 +11,7 @@ compinit
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
+export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"
 setopt autocd beep notify
 bindkey -v
 
@@ -61,20 +62,6 @@ export TERM=alacritty
 export XDG_CONFIG_HOME=$HOME/.config
 
 export PATH="$HOME/.config/rofi/scripts:$HOME/.cargo/bin:$PATH:$HOME/.local/bin"
-
-case "$TERM" in (rxvt|rxvt-*|st|st-*|*xterm*|(dt|k|E)term|alacritty)
-    local term_title () { print -n "\e]0;${(j: :q)@}\a" }
-    precmd () {
-      local DIR="$(print -P '%d')"
-      term_title "$DIR"
-    }
-    preexec () {
-      local DIR="$(print -P '%d')"
-      local CMD="${(j:\n:)${(f)1}}"
-      term_title "$DIR" "$CMD"
-    }
-  ;;
-esac
 
 eval "$(starship init zsh)"
 
